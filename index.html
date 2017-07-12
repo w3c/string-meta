@@ -1,0 +1,552 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+<title>Requirements for Language and Direction Metadata in Data Formats</title>
+<meta charset="utf-8"/>
+<script src="https://www.w3.org/Tools/respec/respec-w3c-common" class="remove"></script>
+<script class="remove">
+      var respecConfig = {
+          // specification status (e.g. WD, LCWD, WG-NOTE, etc.). If in doubt use ED.
+          specStatus:          "ED",
+          //publishDate:  		"2017-06-24",
+          //previousPublishDate:  "2017-06-24",
+          //previousMaturity:  	"WG-NOTE",
+
+
+          noRecTrack:           true,
+          shortName:            "string-meta",
+          copyrightStart: 		"2017",
+          edDraftURI:   		"https://w3c.github.io/string-meta/",
+
+          // if this is a LCWD, uncomment and set the end of its review period
+          // lcEnd: "2009-08-05",
+
+          // editors, add as many as you like
+          // only "name" is required
+          //authors:  [
+          //    { name: "Person", mailto: "someone@example.com",
+          //      company: "Invited Expert" },
+		  //	     ],
+          editors:  [
+              { name: "Addison Phillips", mailto: "addison@amazon.com",
+                company: "Invited Expert" },
+              { name: "Richard Ishida", mailto: "ishida@w3.org",
+                company: "W3C" },
+			     ],
+         
+
+          wg:           "Internationalization Working Group",
+          wgURI:         "https://www.w3.org/International/core/",
+          wgPublicList: "www-international",
+		  bugTracker: { new: "https://github.com/w3c/string-meta/issues", 
+		  				open: "https://github.com/w3c/string-meta/issues" } ,
+		otherLinks: [
+			{
+			key: "Github",
+			data: [
+				{
+			  	value: "repository",
+			  	href: "https://github.com/w3c/string-meta"
+		 		}
+				]
+			}
+			],
+		  
+          
+          // URI of the patent status for this WG, for Rec-track documents
+          // !!!! IMPORTANT !!!!
+          // This is important for Rec-track documents, do not copy a patent URI from a random
+          // document unless you know what you're doing. If in doubt ask your friendly neighbourhood
+          // Team Contact.
+          wgPatentURI:  "https://www.w3.org/2004/01/pp-impl/32113/status",
+          // !!!! IMPORTANT !!!! MAKE THE ABOVE BLINK IN YOUR HEAD
+      };
+    </script>
+<link rel="stylesheet" href="local.css" type="text/css" />
+<style type="text/css">
+.unicode {
+	font-style: normal
+}
+.unicode:link {
+	color: #FF0000;
+	background-color: #FFFFFF
+}
+.unicode:visited {
+	color: #808080;
+	background-color: #FFFFFF
+}
+.unicode:active {
+	color: #0000FF;
+	background-color: #FFFFFF
+}
+em.unicode {
+	font-style: normal
+}
+ins {
+	background-color: #FF6;
+}
+
+p.cjk-demo {
+	font-size: 200%; 
+	text-align: center;
+	font-family: serif;
+}
+</style>
+</head>
+
+<body>
+<div id="abstract">
+  <p>This document describes the requirements for language and base 
+  direction metadata for data formats used on the Web.
+  formats.</p>
+</div>
+
+
+<div id="sotd">
+  <p>This document 
+  </p>
+  <div class="note"> <p style="font-weight: bold; font-size: 
+  120%">Sending comments on this document</p> 
+  <p>If you wish to make 
+  comments regarding this document, please raise them as 
+  <a href="https://github.com/w3c/bidi-lang-req/issues" style="font-size: 120%;">github issues</a>. 
+  Only send comments by email if you are 
+  unable to raise issues on github (see links below). All comments are 
+  welcome.</p> <p>To make it easier to track comments, please raise 
+  separate issues or emails for each comment, and point to the section 
+  you are commenting on using a URL for the dated version of the 
+  document.</p>
+  </div>
+</div>
+
+<section id="Introduction">
+<h2>Introduction</h2>
+
+<p>Natural language information on the Web depends on and benefits from 
+the presence of language and direction metadata. Along with support for 
+Unicode, mechanisms for including and specifying the base direction and 
+language of spans of text are one of the key considerations in 
+development of new formats and technologies for the Web.</p>
+
+<p>Markup formats, such as HTML and XML, as well as related styling 
+languages, such as CSS and XSL, are reasonably mature and provide support for 
+the interchange and presentation of the world's langauges via built-in 
+features.</p>
+
+<p>This document was developed as a result of observations by the 
+Internationalization Working Group over a series of specification 
+reviews related to formats based on JSON, WebIDL, and other 
+non-markup data languages. Unlike markup formats, such as XML, these 
+data languages generally do not provide extensible attributes and were 
+not conceived with built-in language or direction metadata.</p>
+	
+	
+<section id="Why is this important?">
+<h3>Why is this important?</h3>
+
+<p>The language of content is important when processing and presenting 
+natural language data for a variety of reasons. When this data is not 
+present, the resulting degradation in appearance or functionality can 
+frustrate users&mdash;or render the content unintelligible. Some of the 
+affected processes include:</p>
+<ul>
+	<li>Selection of fonts and rendering to prevent "ransom noting" 
+	(and especially the selection of the correct 
+	Chinese/Japanese/Korean font due to important presentational 
+	variations for the same characters in these languages)</li> 
+	<li>Spell checking and other content checking (such as abuse 
+	detection) </li> 
+	<li>Indexing, search, and other natural language 
+	text operations </li> 
+	<li>Filtering according to intended audience 
+	and language negotiation </li>
+	<li>Selection of a text-to-speech voice and processor, such as used 
+	for accessibility or in a voice-based interface</li>
+</ul>
+
+<p>Similarly, direction metadata is important to the Web. When a string 
+contains text in a script that runs right-to-left (RTL), it must be 
+possible to eventually display that string correctly when it reaches an 
+end user. For that to happen, it is necessary to establish what 'base 
+direction' needs to be applied to the string as a whole. The 
+appropriate base direction cannot always be deduced by simply looking 
+at the string; even if it were possible, the producer and consumer of 
+the string would need to use the same heuristics to interpret its 
+direction.</p>
+  
+<p>Static content, such as the body of a Web page or the contents of an 
+e-book, often has language or direction information provided by the document format 
+or as part of the content metadata. Data formats found on the Web 
+generally do not supply this metadata. Base specifications such as 
+Microformats, WebIDL, JSON, and more, have tended to store natural 
+language text in string objects, without additional metadata.</p>
+
+<p>This places a burden on application authors and data format 
+designers to provide the metadata on their own initiative. When 
+standardized formats do not address the resulting issues, the result 
+can be that, while the data arrives intact, its processing or 
+presentation cannot be wholly recovered.</p>
+
+<p>Suppose that you are building a Web page to show a 
+customer's library of e-books. The e-books exist in a catalog of data 
+and consist of the usual data values. A JSON file for a single entry 
+might look something like:</p>
+
+<pre>
+{
+    "id": "978-0-1234-5678-X",
+    "title": "Moby Dick",
+    "authors": [ "Herman Melville" ],
+    "language": "en-US",
+    "pubDate": "1851-10-18",
+    "publisher": "Mark Twain Press",
+    "coverImage": "https://example.com/images/mobidick_cover.jpg",
+    // etc.
+},
+</pre>
+
+<p>Each of the above is a data field in a database somewhere. There is 
+even language information about the contents of the book 
+(<kbd>"language": "en-US"</kbd>).</p>
+
+<p>A well-internationalized catalog would include additional metadata 
+to what is shown above, though. For each of the fields containing 
+natural language text, such as the <kbd>title</kbd> and 
+<kbd>authors</kbd> fields, there will be a language attribute and base 
+direction stored as metadata. (There may be other values as well, such 
+as pronunciation metadata for sorting East Asian language information.) 
+These data fields are used in a variety of ways to influence and enable 
+the processing and display of the items. But the data structure 
+provides no place to store these.</p>
+
+<p>One work-around might be to encode the values using a mix of HTML 
+and Unicode bidi controls, so that the data value looks like this:</p>
+
+<pre>
+   "title": "&lt;span lang='en-US' dir='ltr'&gt;&amp;lrm;Mobi Dick&lt;/span&gt;"
+</pre>
+
+<p>But JSON is a data interchange format. The content may not end up 
+displaying the title field in an HTML context. The JSON might very well 
+be used to populate, say, a local data store which uses native controls 
+to show the title. And both the producer and consumer of the data don't 
+currently expect to introspect the data. They want to generate it 
+directly from a local data store, such as a database, or push it 
+directly into processing. They may have other considerations, such as 
+field length, that are affected by the inseration of additional 
+controls or markup.</p> 
+
+</section>
+
+<section id="Isn't Unicode Enough?">
+<h3>Isn't Unicode Enough?</h3>
+
+<p>[[!Unicode]] and its character encodings (such as UTF-8) are key elements 
+of the Web and its formats. They provide the ability to encode and 
+exchange text in any language consistently throughout the Internet. 
+However, Unicode by itself does not guarantee perfect presentation and 
+processing of natural language text, even though it does guarantee 
+perfect interchange.</p>
+
+<p>Several features of Unicode are sometimes suggested as part of the 
+solution to providing language and direction metadata. Specificially, 
+Unicode bidi controls are suggested for handling direction metadata. In 
+addition, there are "tag" characters in the U+E0000 block of Unicode 
+for use as language tags. These characters are deprecated and their use 
+is "strongly discouraged" (to quote Unicode).</p>
+
+<p>There are a variety of reasons why the addition of characters to 
+data in an interchange format is not a good idea. These include:</p>
+
+<ul>
+  <li>Most data sources (used to assemble data files) do not contain 
+  these characters; the processing assembling or serializing the data 
+  will need to introspect and insert the necessary characters.</li>
+  <li>Many data formats have externally provided limitations on 
+  content, such the length limits. Inserting additional characters into 
+  the data may violate these externally applied requirements, interfere 
+  with processing. In the worst case, the data values may be corrupted 
+  or lost as a result.</li>
+</ul>
+</section>
+
+</section>
+
+<section id="Language Identification">
+	<h2>Language Identification</h2>
+<section id="Definitions">
+<h3>Definitions</h3>
+<p><dfn id="langmeta">Language metadata</dfn> typically indicates the 
+intended linguistic audience or user of the resource as a whole, and 
+it's possible to imagine that this could, for a multilingual resource, 
+involve a property value that is a list of languages. A property that 
+is about language metadata may have more than one value, since it aims 
+to describe all potential users of the information</p>
+
+<p><dfn id="tpl">Text-processing language</dfn> is the language of a 
+particular range of text (which could be a whole resource or just part 
+of it). A property that represents the text-processing language needs 
+to have a single value, because it describes the text content in such a 
+way that tools such as spell-checkers, default font applicators, 
+hyphenation and line breakers, case converters, voice browsers, and 
+other language-sensitive applications know which set of rules or 
+resources to apply to a specific range of text. Such applications 
+generally need an unambiguous statement about the language they are 
+working on.</p>
+
+</section>
+
+<section id="Language Tagging Use Cases">
+<h2>Language Tagging Use Cases</h2>
+<p>Kensuke is reading an old Tibetan manuscript from the Dunhuang 
+collection. The tool he is using to read the manuscript has access to 
+annotations created by scholars working in the various languages of the 
+International Dunhuang Project, who are commenting on the text. The  
+section of the manuscript he is currently looking at has commentaries 
+by people writing in Chinese, Japanese and Russian. Each of these 
+commentaries is stored in a separate  annotation, but the annotations 
+point to the same point in the target document. Each commentary is 
+mainly written in the language of the scholar, but may contain excerpts 
+from the manuscript and other sources written in Tibetan as well quoted 
+text in Chinese and English.</p> 
+
+<p>Kensuke speaks Japanese, so he wants to be presented with the 
+Japanese commentary.</p>
+
+<p>The body containing the Japanese commentary has a <code class="kw" 
+translate="no">language</code> property set to <code class="kw" 
+translate="no">ja</code> (Japanese). The tool he is using knows that he 
+wants to read Japanese commentaries, and it uses this information to 
+select and present to him the text contained in that body.  This is 
+language information being used as metadata – it indicates to the 
+application doing the retrieval that the intended consumer of the 
+information  wants Japanese. </p>
+
+<p>The Japanese commentary for this particular annotation starts with a 
+sentence in Japanese, but later contains some excerpts from Chinese and 
+Tibetan sources. It's possible for the value of the <code class="kw" 
+translate="no">language</code> property, when used as metadata, to 
+contain three language tags, <code class="kw" 
+translate="no">ja,zh,bo</code> (japanese, chinese, and tibetan, 
+respectively), but i'm not sure how useful that is in this particular 
+use case. </p>
+
+<p>Having identified the relevant annotation text to present to 
+Kensuke, his application has to then display it so that he can read it. 
+It's important to apply the correct font to the text. In the following 
+examples, the first paragraph has no language tag applied. The 
+subsequent paragraphs are labeled <code class="kw">ja</code> 
+(<em>Japanese</em>), <code class="kw">zh-Hans</code> (<em>Simplified 
+Chinese</em>), and <code class="kw">zh-Hant</code> (<em>Traditional 
+Chinese</em>) respectively.</p>
+
+<p class="cjk-demo"> 雪, 刃, 直, 令, 垔 </p>
+<p class="cjk-demo" lang="ja"> 雪, 刃, 直, 令, 垔 </p>
+<p class="cjk-demo" lang="zh-Hans"> 雪, 刃, 直, 令, 垔 </p>
+<p class="cjk-demo" lang="zh-Hant"> 雪, 刃, 直, 令, 垔 </p>
+
+<p>You should be able to see slight but important differences in 
+Japanese vs Chinese fonts. It's important to apply a Japanese font to 
+the Japanese text that Kensuke is reading. There are also 
+language-specific differences in the way text is wrapped at the end of 
+a line. For these reasons we need to identify the actual language of 
+the text to which the font or the wrapping algorithm will be applied. 
+Also, a voice browser will need to know whether to use Japanese or 
+Chinese pronunciations for the ideographic characters contained in the 
+annotation body text, and as mentioned before, various other text 
+rendering or analysis tools need to know the language of the text they 
+are dealing with.</p> 
+
+<p>If the <code class="kw" translate="no">language</code> property 
+value contains only <code class="kw" translate="no">ja</code>, that's a 
+good indicator that the application should expect the first sentence 
+and the annotation in general to be in Japanese, unless instructed 
+otherwise.  If, however, the <code class="kw" 
+translate="no">language</code> property has the value <code class="kw" 
+translate="no">bo,ja,zh</code>, it's not clear what the default font, 
+etc, should be. In that case, we need a way to indicate that the first 
+sentence in the text presented to Kensuke is actually in Japanese.</p> 
+
+<p>We also need a way to indicate the change of language to Chinese and 
+Tibetan later in the commentary for this annotation, so that 
+appropriate fonts and wrapping algorithms can be applied there. One 
+proposal from members of the Annotation WG was to require HTML/XML 
+formats for such annotation bodies, and use the <code class="kw" 
+translate="no">lang</code> or <code class="kw" 
+translate="no">xml:lang</code> attributes in markup to denote the 
+language changes.</p> 
+
+<p>(Use case from Felix) If Kensuke's body contains quoted text in 
+Chinese and Tibetan it would be useful to know that if you were someone 
+who wanted to locate all annotations containing text in more than one 
+language.</p> 
+
+<footer> <p>1. Open this 
+page in Firefox and Chrome to see the differences. The default font for 
+one is Japanese, the other Chinese. See also <a 
+href="https://en.wikipedia.org/wiki/Variant_Chinese_character">https://en.wikipedia.org/wiki/Variant_Chinese_character</a> 
+for more about font and glyph variants in ideographic 
+characters&nbsp;&#xA0;.</p> </footer>
+
+</section>
+
+</section>
+
+
+<section id="Bidi">
+<section id="Bidirectional Use Cases">
+  <h2>Bidirectional Use Cases</h2> 
+  
+  <p>If your specification or application provides a way of correctly 
+  displaying the following strings when they reach the point of display 
+  to the user, you will have solved the majority of the problems. For 
+  that to happen, there must be a way to tell  the required base 
+  direction for each string.</p>
+  
+  <p>All examples show characters from left to right in the order they 
+  are stored in memory. We use Hebrew text so as to avoid issues 
+  related to the display of cursive characters in Arabic. We will also 
+  use these tests as examples for the concepts on this page.</p>
+  
+  <p>Tests 1-4 need to be displayed using an RTL base direction. Test 5 
+  needs to be displayed as LTR text.</p>
+  
+<section id="test1">
+  <h3>Test #1</h3>
+  <p dir="rtl" style="text-align:center;"><code><bdo dir="ltr">&quot;בינלאומי!&quot;</bdo></code>  </p>
+  <p>For presentation to a user, the  characters above should be presented in the reverse order to what you see on this page. The Hebrew characters will be reversed by applying the Unicode Bidirectional Algorithm (UBA). However, the UBA cannot make the exclamation mark appear to the left of the Hebrew text, where it belongs, unless the base direction is set to RTL.</p>
+  <p>This is what the text of the string should look like if displayed correctly by a consumer:&nbsp; <img src="string-base-direction-data/test1.png" alt="Test 1"/></p>
+</section>
+<section id="test2">
+  <h3>Test #2</h3>
+  <p style="text-align:center;"><code>
+    <bdo dir="ltr">&quot;bidi בינלאומי&quot;</bdo>
+  </code></p>
+  <p>For presentation to a user, the text &quot;bidi&quot; must appear to the right of the Hebrew letters.<code></code> The UBA cannot do this unless it knows that the overall base direction is RTL.</p>
+  <p>This is what the text of the string should look like if displayed correctly by a consumer:&nbsp; <img src="string-base-direction-data/test2.png" alt="Test 2"/></p>
+</section>
+
+<section id="test3">
+  <h3>Test #3</h3>
+  <p style="text-align:center;"><code><bdo dir="ltr">&quot;&lt;span&gt;בינלאומי!&lt;/span&gt;&quot;</bdo></code></p>
+  <p>This test is intended for consuming applications that treat the markup in the string as actual markup. As for test #1, the exclamation mark must appear to the left of the Hebrew letters, regardless of the LTR directionality of the markup surrounding it.</p>
+  <p>This is what the text of the string should look like if displayed correctly by a consumer:&nbsp; <img src="string-base-direction-data/test1.png" alt="Test 3"/></p>
+</section>
+
+<section id="test4"> 
+  <h3>Test #4</h3>
+  <p style="text-align:center;"><code>
+    <bdo dir="ltr">&quot;&lt;span dir='rtl'&gt;one שתיים three&lt;/span&gt;&quot;</bdo></code></p>
+  <p>If the consuming application is expected to parse the markup as actual markup, the list in the element content above should be displayed to the user in the order &quot;three שתיים one&quot;.<code></code> This requires the UBA to know that the intended base direction of the string is RTL. The key point of this test is that the base direction information is carried in the markup.</p>
+  <p>This is what the text of the string should look like if displayed correctly by a consumer:&nbsp; <img src="string-base-direction-data/test4.png" alt="Test 4"/></p>
+</section>
+
+<section id="test5">
+  <h3>Test #5</h3>
+  <p style="text-align:center;"><code><bdo dir="ltr">&quot;123 456 789&quot;</bdo></code></p>
+  <p>When presented to a user, the order of the numbers must remain the same even when the directional context of the surrounding text is RTL. There are no strong directional characters in this string.<code></code></p>
+  <p>This is what the text of the string should look like if displayed correctly by a consumer:&nbsp; <img src="string-base-direction-data/test5.png" alt="Test 5"/></p>
+</section>
+</section>
+
+
+
+
+<section id="mainpoint">
+  <h2>The main issue</h2>
+  <p>The main issue is how  a consumer of a string will know what  base direction should be used for that string when it is eventually displayed to a user. A number of alternatives are considered below.</p>
+
+</section>
+
+
+
+
+<section id="ancilliary">
+  <h2>Ancillary issues</h2>
+  <p>Apart from the question of how a consumer will know what base direction to use for a string, the following are things that need to be considered for an end to end process that supports proper application of base direction to strings.</p>
+
+<section id="producers">
+  <h3>Producing</h3>
+  <p>A string may become a string in a number of ways, including a content author typing strings into a plain text editor or text message, or a script scraping text from web pages, or acquisition of an existing set of strings from another application or repository, or, if you are lucky, a dedicated system with an interface that allows base direction to be specified during input. In this article, the <b class="newterm">producer</b> of a string is the human or mechanism that creates a string for storage or transmission to a consumer of strings.</p>
+  <p>When a  string is created, it's necessary to (a) detect the appropriate base direction to be associated with the string, and (b) take steps, where needed, to set the string up in a way that communicates the base direction.</p>
+  <p><code></code>For example, in the case of a string that is extracted from an HTML form, the base direction can be detected from the computed value of the form's field. Such a value could be inherited from an earlier element, such as the <code class="kw" translate="no">html</code> element, or set using markup or styling on the <code class="kw" translate="no">input</code> element itself. The user could also set the direction of the text by <a href="https://www.w3.org/International/questions/qa-html-dir#userexplicit">using  keyboard shortcut keys</a> to change the direction of the form field. The <code class="kw" translate="no">dirname</code> attribute provides a way of automatically communicating that value with a form submission.</p>
+  <p>If the producer of the string is receiving the string from a location where it was stored by another producer, and where the base direction has already been established, the producer should understand that the base direction has already been set.</p>
+</section>
+
+<section id="consumers">
+  <h3>Consuming</h3>
+  <p>A <b class="newterm">consumer</b> is an application or process that takes a string and places it into a context where it will be exposed to a user. It must ensure that the base direction of the string is correctly applied to the string in that context. </p>
+  <p>Applying the base direction may involve constructing additional markup or adding control codes or some such to indicate the base direction. It must also isolate embedded strings from the surrounding text to avoid spill-over effects of the bidi algorithm.</p>
+</section>
+
+<section id="agreements">
+  <h3>Decoding information  </h3>
+  <p>Any time a producer of a string takes special steps to add information about the base direction of that string it must do so with the expectation that the consumer of the string will understand how the producer did so. Even if no action is taken by the producer, the consumer must decide what rules to follow in order to decide on the appropriate base direction.</p>
+  <p>In some systems, the behaviour of the producer and the consumer of a string will both be specified. In others, such agreements may not be available.</p>
+</section>
+</section>
+<section id="firststrong">
+  <h2>First-strong</h2>
+  <p> First-strong detection looks for the first character with a strong Unicode directional property in a string, and sets the base direction to match it. Many developers assume that this provides a robust solution, but first-strong detection alone is not always adequate to communicate base direction.</p>
+  <p>Note that, if the producer is relying  on the consumer using first-strong character detection to establish the contextual base direction of a string, the consumer  needs to be aware that it should also use that approach. Although first-strong detection is outlined in the UBA, it is not the only possible higher level protocol mentioned for detecting string direction. For example, Twitter and Facebook currently use different default heuristics for guessing the base direction of text – neither use just simple first-strong detection, and one uses a completely different method.</p>
+  <p>The first-strong detection algorithm needs to skip characters at the start of the string that don't have a strong directional property.</p>
+  <p>It also needs to skip embedded runs of text that are directionally isolated from the text around it, if it is to follow the UBA. Isolation may be achieved by Unicode formatting characters, such as RLI, LRI and FSI, or by markup in the string if that markup is to be interpreted as actual markup by the consumer (eg. &lt;span dir=&quot;rtl&quot;&gt; in HTML5).</p>
+  <p>The principle problem encountered with first-strong detection is that the first strong character is not always representative of the base direction that needs to be applied to that string, such as in test #2 above.</p>
+  <p>If a string contains markup that will be parsed by the consumer as markup, there are additional problems. Any such markup at the start of the string must also be skipped when searching for the first strong directional character. If, however, there is angle bracket content that is intended to be an <em>example</em> of markup, rather than actual markup, the markup must not be skipped. It isn't clear how a consumer of the string would know the difference between this case and the previous one.</p>
+  <p>If parseable markup in the string contains information about the intended direction of the string, that information should be used rather than relying on first-strong heuristics. This is problematic in a couple of ways: (a) it assumes that the consumer of the string understands the semantics of the markup, which may be ok if there is an agreement between all parties to use, say, HTML markup only, but would be problematic when dealing with random XML vocabularies, and (b) the consumer must be able to to recognise and handle a situation where only the initial part of the string has markup, ie. the markup applies to an inline span of text rather than the string as a whole.</p>
+  <p>If no strong directional character is found in the string, the direction should be assumed to be LTR.  </p>
+  <p>The remaining sections look at ways that a string may be stored with additional information where text direction cannot be detected accurately by the first-strong method.</p>
+</section>
+
+
+
+
+<section id="rlm">
+  <h2>Augmenting first-strong by inserting RLM markers</h2>
+  <p>It is possible for a producer of a string to attach an RLM/LRM character to the beginning of  those strings where the wrong base direction would otherwise be assumed when using a simple first-strong heuristic. </p>
+  <p>If the producer is a human, they could theoretically apply one of these characters when creating a string in order to signal the directionality, although they are very likely to not have a way of inputting RLM/LRM characters, especially on mobile devices.</p>
+  <p>However, humans often create text that will later become strings in environments where such action is unnecessary.  For example, if a person types information into an HTML form and relies on the form's base direction or use of shortcut keys to make the string look correct in the form field, they would not need to add RLM/LRM  to make the string 'look correct' for themselves, but outside of that context the string would look incorrect unless an appropriate strong character was added to it. Similarly, strings scraped from a web page that has <code class="kw" translate="no">dir=rtl</code> set in the <code class="kw" translate="no">html</code> element would not normally have or need an RLM/LRM character at the start of the string in HTML.</p>
+  <p>This approach is therefore only appropriate for general use if it is acceptable to change the value of the string. </p>
+  <p>Apart from changing the identity of the string, adding characters to it may have an effect on things such as string length or pointer positions, which may become problematic.</p>
+  <p>As a variant of the first-strong heuristic approach, the consumer would still need to also use first-strong heuristics to apply the correct directionality to the string.</p>
+  <p>If directional information is contained in markup that will be parsed as such by the consumer (eg. <code class="kw" translate="no">dir=rtl</code> in HTML),  the producer  of the string should understand that markup in order to set or not set an RLM/LRM character as appropriate. If the producer always adds RLM/LRM to the start of such strings, the consumer should know that. If it relies instead on the markup being understood, the consumer needs to understand the markup.</p>
+  <p>The producer of a string should not automatically apply RLM or LRM to the start of the string, but  should test whether it is needed. For example, if there's already an RLM there, no need to add another. If the context is correctly conveyed by first-strong heuristics, no need to add additional characters either. Note, however, that testing whether supplementary directional information of this kind is needed is only possible if the producer has access, and knows that it has access, to the original context of the string.</p>
+</section>
+
+
+
+
+<section id="paired">
+  <h2>Paired formatting characters</h2>
+  <p>This approach inserts paired Unicode formatting characters at the start and end of a string to indicate the base direction. </p>
+  <p>If paired formatting characters are used, they should be isolating, ie. starting with RLI, LRI, FSI, and not with RLE or LRE.</p>
+  <p>However, It would not be enough to simply apply the UBA first-strong heuristics to such a string, because the Unicode bidi algorithm is unable to ascertain the base direction for a string that starts with RLI/LRI/FSI and ends with PDI. This is because the algorithm skips over isolated sequences and treats them  as a neutral character.  A consumer of the string would have to take special steps, in this case, to uncover the first-strong character. </p>
+  <p>This approach is also only appropriate if it is acceptable to change the value of the string. In addition to possible issues  such as changed string length or pointer positions, this approach runs the risk of  one of the paired characters getting lost, either through handling errors, or through text truncation, etc.</p>
+  <p>A  producer and a consumer of a string would need to recognise and handle a situation where a string begins with a paired formatting character but doesn't end with it  because the formatting characters only describe a part of the string. </p>
+  <p>Unicode specifies a limit to the number of embeddings that are effective, and embeddings could build up over time to exceed that limit.</p>
+  <p>Consuming applications would need to recognise and appropriately handle the isolating formatting characters. At the moment such support for RLI/LRI/FSI is not pervasive.</p>
+</section>
+
+
+
+<section id="metadata">
+  <h2>Metadata</h2>
+  <p>If it is possible to pass metadata with the string and the consumer knows how to retrieve the meaning of that metadata, this can provide a simple, effective and efficient method of communicating the intended base direction without affecting the actual content of the string.</p>
+  <p>Metadata not only removes the problem of whether or not, and how, to parse markup in a string to determine the direction, but even in the simplest strings, without markup, it avoids the need to inspect and run heuristics on the string to determine its base direction.</p>
+  <p>There needs to be metadata available for each individual string. Alternatively, metadata can be inherited, but some mechanism must be available to override the inherited direction for a particular string which differs in direction from the inherited value.  </p>
+  <p>Metadata is probably most effective, however (especially for the original creator of the strings), if it is only passed with a string in those cases where first-strong detection is otherwise going to produce a wrong result. This would mean that consumers of strings should not only recognise the metadata, but should also expect to  rely on first-strong heuristics for strings without metadata. It also means that producers of strings need to recognise situations where directional information is needed and set the metadata.</p>
+</section>
+</section>
+
+
+<section id="Acknowledgements">
+<h2>Acknowledgements</h2>
+
+<p>The Internationalization (I18N) Working Group would like to thank 
+the following contributors to this document: Felix Sasaki, </p>
+
+</section>
+
+
+</body>
+</html>
