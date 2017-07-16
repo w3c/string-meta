@@ -219,10 +219,12 @@ the processing and display of the items. But the data structure
 provides no place to store these.</p>
 
 <p>One work-around might be to encode the values using a mix of HTML 
-and Unicode bidi controls, so that the data value looks like this:</p>
+and Unicode bidi controls, so that a data value might look like one of 
+the following:</p>
 
 <pre>
-   "title": "&lt;span lang='en-US' dir='ltr'&gt;&amp;lrm;Mobi Dick&lt;/span&gt;"
+   "title": "&lt;span lang='en-US' dir='ltr'&gt;Mobi Dick&lt;/span&gt;"
+   "authors": [ "\u200eHerman Melville" ], // contains LRM as first character
 </pre>
 
 <p>But JSON is a data interchange format. The content may not end up 
@@ -367,15 +369,16 @@ translate="no">ja</code>&quot; (Japanese). The tool he is using knows that he
   <p class="cjk-demo" lang="zh-Hant"> 雪, 刃, 直, 令, 垔 </p-->
   
   <p>So, it's important to apply a Japanese font to 
-    the Japanese text that Kensuke is reading. There are also 
-    language-specific differences in the way text is wrapped at the end of 
-    a line. For these reasons we need to identify the actual language of 
-    the text to which the font or the wrapping algorithm will be applied. 
-    Also, a voice browser will need to know whether to use Japanese or 
-    Chinese pronunciations for the ideographic characters contained in the 
-    annotation body text, and as mentioned before, various other text 
-    rendering or analysis tools need to know the language of the text they 
-    are dealing with.  </p>
+	the Japanese text that Kensuke is reading. There are also 
+	language-specific differences in the way text is wrapped at the end 
+	of a line. For these reasons we need to identify the actual 
+	language of the text to which the font or the wrapping algorithm 
+	will be applied. Also, a voice browser will need to know whether to 
+	use Japanese or Chinese pronunciations for the ideographic 
+	characters contained in the annotation body text, and as mentioned 
+	before, various other text rendering or analysis tools need to know 
+	the language of the text they are dealing with. </p>
+    
   <p>We also need a way to indicate the change of language to Chinese and 
     Tibetan later in the commentary for some annotations, so that 
     appropriate fonts and wrapping algorithms can be applied there. 
@@ -384,8 +387,13 @@ translate="no">ja</code>&quot; (Japanese). The tool he is using knows that he
   </p>
 </section>
 <section id="mainpoint2">
-  <h2>The main issue</h2>
-  <p>The main issue is how  a consumer of a string will know what  language-related features should be used for that string when it is eventually displayed to or presented to a user. A number of alternatives are considered below.</p>
+  <h2>The main issue</h2> 
+  
+  <p>The main issue is how a consumer of a 
+  string will know which language-related features should be used for 
+  that string when it is eventually processed or displayed to the 
+  user. A number of alternatives are considered below.</p>
+  
 </section>
   <section id="langapproach1">
     <h2>Approach one</h2>
@@ -496,15 +504,64 @@ translate="no">xml:lang</code> attributes in markup to denote the
 
 
 <section id="rlm">
-  <h2>Augmenting first-strong by inserting RLM markers</h2>
-  <p>It is possible for a producer of a string to attach an RLM/LRM character to the beginning of  those strings where the wrong base direction would otherwise be assumed when using a simple first-strong heuristic. </p>
-  <p>If the producer is a human, they could theoretically apply one of these characters when creating a string in order to signal the directionality, although they are very likely to not have a way of inputting RLM/LRM characters, especially on mobile devices.</p>
-  <p>However, humans often create text that will later become strings in environments where such action is unnecessary.  For example, if a person types information into an HTML form and relies on the form's base direction or use of shortcut keys to make the string look correct in the form field, they would not need to add RLM/LRM  to make the string 'look correct' for themselves, but outside of that context the string would look incorrect unless an appropriate strong character was added to it. Similarly, strings scraped from a web page that has <code class="kw" translate="no">dir=rtl</code> set in the <code class="kw" translate="no">html</code> element would not normally have or need an RLM/LRM character at the start of the string in HTML.</p>
-  <p>This approach is therefore only appropriate for general use if it is acceptable to change the value of the string. </p>
-  <p>Apart from changing the identity of the string, adding characters to it may have an effect on things such as string length or pointer positions, which may become problematic.</p>
-  <p>As a variant of the first-strong heuristic approach, the consumer would still need to also use first-strong heuristics to apply the correct directionality to the string.</p>
-  <p>If directional information is contained in markup that will be parsed as such by the consumer (eg. <code class="kw" translate="no">dir=rtl</code> in HTML),  the producer  of the string should understand that markup in order to set or not set an RLM/LRM character as appropriate. If the producer always adds RLM/LRM to the start of such strings, the consumer should know that. If it relies instead on the markup being understood, the consumer needs to understand the markup.</p>
-  <p>The producer of a string should not automatically apply RLM or LRM to the start of the string, but  should test whether it is needed. For example, if there's already an RLM there, no need to add another. If the context is correctly conveyed by first-strong heuristics, no need to add additional characters either. Note, however, that testing whether supplementary directional information of this kind is needed is only possible if the producer has access, and knows that it has access, to the original context of the string.</p>
+  <h2>Augmenting <q>first-strong</q> by inserting RLM markers</h2> 
+  
+  <p>It is possible for a producer of a string to attach an RLM or LRM 
+  character to the beginning of the string when the wrong base 
+  direction would otherwise be assumed by a process using a simple first-strong 
+  heuristic. </p> 
+  
+  <p>If the producer is a human, they could theoretically apply one of 
+  these characters when creating a string in order to signal the 
+  directionality. One problem, especially on mobile devices, is the 
+  availability or inconvenience of inputting an RLM/LRM character. In 
+  addition, because the characters are invisible and because Unicode 
+  bidi is complicated, it can be difficult for the user to know that a 
+  bidi control will be necessary.</p> 
+  
+  <p>However, humans often do create text that will later become 
+  strings in environments where the bidi algorithm will need help.  For 
+  example, if a person types information into an HTML form and relies 
+  on the form's base direction or use of shortcut keys to make the 
+  string look correct in the form field, they would not need to add 
+  RLM/LRM  to make the string 'look correct' for themselves, but 
+  outside of that context the string would look incorrect unless an 
+  appropriate strong character was added to it. Similarly, strings 
+  scraped from a web page that has <code class="kw" 
+  translate="no">dir=rtl</code> set in the <code class="kw" 
+  translate="no">html</code> element would not normally have or need an 
+  RLM/LRM character at the start of the string in HTML.</p> 
+  
+  <p>This approach is therefore only appropriate for 
+  general use if it is acceptable to change the value of the string. 
+  </p> 
+  
+  <p>Apart from changing the identity of the string, adding 
+  characters to it may have an effect on things such as string length 
+  or pointer positions, which may become problematic.</p> 
+  
+  <p>When inserting an LRM or RLM character, the consumer still depends on 
+  applying a first-strong heuristic to get the proper direction; 
+  consumers that don't apply first-strong can get the direction 
+  wrong.</p> 
+  
+  <p>If directional information is contained in markup that will be 
+  parsed as such by the consumer (for example, <code class="kw" 
+  translate="no">dir=rtl</code> in HTML),  the producer  of the string 
+  needs to understand that markup in order to set or not set an RLM/LRM 
+  character as appropriate. If the producer always adds RLM/LRM to the 
+  start of such strings, the consumer is expected to know that. If the 
+  producer relies instead on the markup being understood, the consumer 
+  is expected to understand the markup.</p> 
+  
+  <p>The producer of a string should not automatically apply RLM or LRM 
+  to the start of the string, but  should test whether it is needed. 
+  For example, if there's already an RLM there, no need to add another. 
+  If the context is correctly conveyed by first-strong heuristics, no 
+  need to add additional characters either. Note, however, that testing 
+  whether supplementary directional information of this kind is needed 
+  is only possible if the producer has access, and knows that it has 
+  access, to the original context of the string.</p>
 </section>
 
 
