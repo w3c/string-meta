@@ -130,7 +130,7 @@ development of new formats and technologies for the Web.</p>
 
 <p>Markup formats, such as HTML and XML, as well as related styling 
 languages, such as CSS and XSL, are reasonably mature and provide support for 
-the interchange and presentation of the world's langauges via built-in 
+the interchange and presentation of the world's languages via built-in 
 features.</p>
 
 <p>This document was developed as a result of observations by the 
@@ -264,7 +264,7 @@ data in an interchange format is not a good idea. These include:</p>
   these characters; the processing assembling or serializing the data 
   will need to introspect and insert the necessary characters.</li>
   <li>Many data formats have externally provided limitations on 
-  content, such the length limits. Inserting additional characters into 
+  content, such as length limits. Inserting additional characters into 
   the data may violate these externally applied requirements, and interfere 
   with processing. In the worst case, the data values may be corrupted 
   or lost as a result.</li>
@@ -524,9 +524,9 @@ translate="no">xml:lang</code> attributes in markup to denote the
   <p>Note that, if the producer is relying  on the consumer using first-strong character detection to establish the contextual base direction of a string, the consumer  needs to be aware that it should also use that approach. Although first-strong detection is outlined in the UBA, it is not the only possible higher level protocol mentioned for detecting string direction. For example, Twitter and Facebook currently use different default heuristics for guessing the base direction of text – neither use just simple first-strong detection, and one uses a completely different method.</p>
   <p>The first-strong detection algorithm needs to skip characters at the start of the string that don't have a strong directional property.</p>
   <p>It also needs to skip embedded runs of text that are directionally isolated from the text around it, if it is to follow the UBA. Isolation may be achieved by Unicode formatting characters, such as RLI, LRI and FSI, or by markup in the string if that markup is to be interpreted as actual markup by the consumer (eg. &lt;span dir=&quot;rtl&quot;&gt; in HTML5).</p>
-  <p>The principle problem encountered with first-strong detection is that the first strong character is not always representative of the base direction that needs to be applied to that string, such as in test #2 above.</p>
+  <p>The principal problem encountered with first-strong detection is that the first strong character is not always representative of the base direction that needs to be applied to that string, such as in test #2 above.</p>
   <p>If a string contains markup that will be parsed by the consumer as markup, there are additional problems. Any such markup at the start of the string must also be skipped when searching for the first strong directional character. If, however, there is angle bracket content that is intended to be an <em>example</em> of markup, rather than actual markup, the markup must not be skipped. It isn't clear how a consumer of the string would know the difference between this case and the previous one.</p>
-  <p>If parseable markup in the string contains information about the intended direction of the string, that information should be used rather than relying on first-strong heuristics. This is problematic in a couple of ways: (a) it assumes that the consumer of the string understands the semantics of the markup, which may be ok if there is an agreement between all parties to use, say, HTML markup only, but would be problematic, for example, when dealing with random XML vocabularies, and (b) the consumer must be able to to recognise and handle a situation where only the initial part of the string has markup, ie. the markup applies to an inline span of text rather than the string as a whole.</p>
+  <p>If parseable markup in the string contains information about the intended direction of the string, that information should be used rather than relying on first-strong heuristics. This is problematic in a couple of ways: (a) it assumes that the consumer of the string understands the semantics of the markup, which may be ok if there is an agreement between all parties to use, say, HTML markup only, but would be problematic, for example, when dealing with random XML vocabularies, and (b) the consumer must be able to  recognise and handle a situation where only the initial part of the string has markup, ie. the markup applies to an inline span of text rather than the string as a whole.</p>
   <p>If no strong directional character is found in the string, the direction should be assumed to be LTR.  </p>
   <p>The remaining sections look at ways that a string may be stored with additional information where text direction cannot be detected accurately by the first-strong method.</p>
 </section>
