@@ -414,9 +414,40 @@ translate="no">xml:lang</code> attributes in markup to denote the
   <h2>Approach three</h2>
   <p>Dictionary</p>
 </section>
-<section id="langapproach4">
-  <h2>Approach four</h2>
-  <p>something else</p>
+<section id="unicodeTags">
+  <h2>Unicode tag characters</h2> 
+  
+  <p>Unicode tag characters are deprecated. We are unaware of any 
+  implementations that interpret or understand them. These tag characters
+  were intended for use in language tagging within plain text contexts
+  and are often suggested as an alternate means of providing in-band
+  non-markup language tagging.</p>
+
+  <p>Here is how Unicode tags work:</p>
+  
+  <p>There are two special characters, <kbd translate="no">BEGIN 
+  (U+E0001)</kbd> and <kbd translate="no">END (U+E007F)</kbd> that mark 
+  the beginning and end of the tag sequence respectively. The remainder 
+  of the Unicode tag block for forming tags mirrors the printable ASCII 
+  characters. That is, U+E0020 is space, U+E0041 is capital A, and so 
+  forth. A [[BCP47]] language tag can be spelled out using the 
+  upper/lowercase letters, digits, and the hyphen character. ASCII tags 
+  can be transmogrified into tags by adding 0xE0000 to each character's 
+  code point. Additional structure, such as a language priority list 
+  (see [[RFC4647]]) can be constructed using other characters such as 
+  comma or semi-colon.</p>
+
+  <p>These characters are supplementary characters. That is, they are 
+  encoded using 4-bytes per character in UTF-8 and they are encoded as 
+  a surrogate pair (2 16-bit code units) in UTF-16. Surrogate pairs are 
+  needed for languages such as Java and JavaScript and the use of 
+  surrgates makes the strings somewhat opaque. Applications that treat 
+  the characters as unknown Unicode will display them as tofu (hollow 
+  box replacement characters) and may count them towards length limits, 
+  etc. So they are only useful when applications or interchange 
+  mechanisms are fully aware of them and can remove them or disregard 
+  them appropriately.</p>
+
 </section>
 </section>
 
