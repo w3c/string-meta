@@ -327,16 +327,20 @@ working on.</p>
 <section id="Language Tagging Use Cases">
   <h3>Language Tagging Use Cases</h3>
   <p>Kensuke is reading an old Tibetan manuscript from the Dunhuang 
-    collection. The tool he is using to read the manuscript has access to 
-    annotations created by scholars working in the various languages of the 
-    International Dunhuang Project, who are commenting on the text. The  
-    section of the manuscript he is currently looking at has commentaries 
-    by people writing in Chinese, Japanese, and Russian. Each of these 
-    commentaries is stored in a separate  annotation, but the annotations 
-    point to the same point in the target document. Each commentary is 
-    mainly written in the language of the scholar, but may contain excerpts 
-    from the manuscript and other sources written in Tibetan as well quoted 
-    text in Chinese and English. Some commentaries may contain parallel annotations, each in a different language. For example, there are some with the same text translated into Japanese, Chinese and Tibetan.</p>
+	collection. The tool he is using to read the manuscript has access 
+	to annotations created by scholars working in the various languages 
+	of the International Dunhuang Project, who are commenting on the 
+	text. The section of the manuscript he is currently looking at has 
+	commentaries by people writing in Chinese, Japanese, and Russian. 
+	Each of these commentaries is stored in a separate  annotation, but 
+	the annotations point to the same point in the target document. 
+	Each commentary is mainly written in the language of the scholar, 
+	but may contain excerpts from the manuscript and other sources 
+	written in Tibetan as well quoted text in Chinese and English. Some 
+	commentaries may contain parallel annotations, each in a different 
+	language. For example, there are some with the same text translated 
+	into Japanese, Chinese and Tibetan.</p>
+	
   <p>Kensuke speaks Japanese, so he generally wants to be presented with the 
     Japanese commentary.</p>
  <section>
@@ -349,8 +353,20 @@ translate="no">ja</code>&quot; (Japanese). The tool he is using knows that he
      language information being used as metadata about the intended audience – it indicates to the 
      application doing the retrieval that the intended consumer of the 
     information  wants Japanese.</p>
-   <p>Some of the annotations contain text in more than one language. For example, there are several with commentary in  Chinese, Japanese and Tibetan. For these annotations, it's appropriate to set the <code class="kw" translate="no">language</code> property to &quot;<code class="kw" translate="no">ja,zh,bo</code>&quot; – indicating that both Japanese and Chinese readers may want to find it.</p>
-   <p>The language tagging that is happening here is likely to be at the resource level, rather than the string level. It's possible, however, that the text-processing language for strings inside the resource may be assumed by looking at the resource level language tag – but only if it is a single language tag. If the tag contains &quot;ja,zh,bo&quot; it's not clear which strings are in Japanese, which are in Chinese, and which are in Tibetan.</p>
+    
+   <p>Some of the annotations contain text in more than one language. 
+   For example, there are several with commentary in  Chinese, Japanese 
+   and Tibetan. For these annotations, it's appropriate to set the 
+   <code class="kw" translate="no">language</code> property to 
+   &quot;<code class="kw" translate="no">ja,zh,bo</code>&quot; – 
+   indicating that both Japanese and Chinese readers may want to find 
+   it.</p> <p>The language tagging that is happening here is likely to 
+   be at the resource level, rather than the string level. It's 
+   possible, however, that the text-processing language for strings 
+   inside the resource may be assumed by looking at the resource level 
+   language tag – but only if it is a single language tag. If the tag 
+   contains &quot;ja,zh,bo&quot; it's not clear which strings are in 
+   Japanese, which are in Chinese, and which are in Tibetan.</p>
  </section>
 
 <section>
@@ -373,13 +389,17 @@ translate="no">ja</code>&quot; (Japanese). The tool he is using knows that he
 	language-specific differences in the way text is wrapped at the end 
 	of a line. For these reasons we need to identify the actual 
 	language of the text to which the font or the wrapping algorithm 
-	will be applied. Also, a voice browser will need to know whether to 
-	use Japanese or Chinese pronunciations for the ideographic 
-	characters contained in the annotation body text, and as mentioned 
-	before, various other text rendering or analysis tools need to know 
+	will be applied.</p>
+	
+	<p>Another consideration that might apply is the use of 
+	text-to-speech. A voice browser will need to know whether to use 
+	Japanese or Chinese pronunciations, voices, and dictionaries for the ideographic characters 
+	contained in the annotation body text.</p>
+	
+	<p>Various other text rendering or analysis tools need to know 
 	the language of the text they are dealing with. </p>
     
-  <p>We also need a way to indicate the change of language to Chinese and 
+    <p>We also need a way to indicate the change of language to Chinese and 
     Tibetan later in the commentary for some annotations, so that 
     appropriate fonts and wrapping algorithms can be applied there. 
   
@@ -396,13 +416,14 @@ translate="no">ja</code>&quot; (Japanese). The tool he is using knows that he
   
 </section>
   <section id="langapproach1">
-    <h2>Approach one</h2>
-    <p>One 
-    proposal from members of the Annotation WG was to require HTML/XML 
-    formats for such annotation bodies, and use the <code class="kw" 
-translate="no">lang</code> or <code class="kw" 
+    <h2>Require HTML or XML for content</h2>
+    
+	<p>One proposal from members of the Annotation WG was to require 
+	HTML/XML formats for such annotation bodies, and use the <code 
+	class="kw" translate="no">lang</code> or <code class="kw" 
 translate="no">xml:lang</code> attributes in markup to denote the 
     language changes. </p>
+    
   </section>
   
   <section id="langapproach2">
@@ -624,8 +645,15 @@ translate="no">xml:lang</code> attributes in markup to denote the
 <section id="Acknowledgements">
 <h2>Acknowledgements</h2>
 
+<!-- Order new entries by family name -->
 <p>The Internationalization (I18N) Working Group would like to thank 
-the following contributors to this document: Felix Sasaki, </p>
+the following contributors to this document: 
+    Mati Allouche, 
+    Felix Sasaki, 
+    Najib Tounsi, 
+    
+ and many others.</p>
+
 <p>The following pages formed the initial basis of this document:</p>
 <ul>
   <li><a href="https://w3c.github.io/i18n-discuss/notes/annotation-language-use-cases.html">Use cases for language information in web annotations</a></li>
