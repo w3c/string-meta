@@ -438,37 +438,37 @@ translate="no">xml:lang</code> attributes in markup to denote the
 <section id="unicodeTags">
   <h2>Unicode tag characters</h2> 
   
-  <p>Unicode tag characters are deprecated. We are unaware of any 
+  <p>Unicode tag characters are strongly deprecated by the Unicode Consortium. We are unaware of any 
   implementations that interpret or understand them. These tag characters
   were intended for use in language tagging within plain text contexts
   and are often suggested as an alternate means of providing in-band
   non-markup language tagging.</p>
 
   <p>Here is how Unicode tags work:</p>
-  
-  <p>There are two special characters, <kbd translate="no">BEGIN 
-  (U+E0001)</kbd> and <kbd translate="no">END (U+E007F)</kbd> that mark 
-  the beginning and end of the tag sequence respectively. The remainder 
-  of the Unicode tag block for forming tags mirrors the printable ASCII 
+  <p>A language tag is just one of the potential tags that could be applied using this system, so each language tag begins with a tag identification character, in this case U+E0001. The  remainder 
+  of the Unicode  block for forming tags mirrors the printable ASCII 
   characters. That is, U+E0020 is space, U+E0041 is capital A, and so 
-  forth. A [[BCP47]] language tag can be spelled out using the 
+  forth. Following the tag identification character, you use them to spell out a [[BCP47]] language tag  using the 
   upper/lowercase letters, digits, and the hyphen character. ASCII tags 
   can be transmogrified into tags by adding 0xE0000 to each character's 
   code point. Additional structure, such as a language priority list 
   (see [[RFC4647]]) can be constructed using other characters such as 
   comma or semi-colon.</p>
-
-  <p>These characters are supplementary characters. That is, they are 
+  <p>Tag lengths, therefore, are a minimum of three characters, and can easily be 12 or more. Furthermore, these characters are supplementary characters. That is, they are 
   encoded using 4-bytes per character in UTF-8 and they are encoded as 
   a surrogate pair (2 16-bit code units) in UTF-16. Surrogate pairs are 
   needed for languages such as Java and JavaScript and the use of 
-  surrgates makes the strings somewhat opaque. Applications that treat 
-  the characters as unknown Unicode will display them as tofu (hollow 
-  box replacement characters) and may count them towards length limits, 
-  etc. So they are only useful when applications or interchange 
-  mechanisms are fully aware of them and can remove them or disregard 
-  them appropriately.</p>
-
+  surrgates makes the strings somewhat opaque. </p>
+  <p>The end of a tag's scope is signalled by the end of the string, or can be signalled explicitly using the tag identification character followed by a cancel tag (ie. for language, &lt;U+E0001, U+E007F&gt;).</p>
+  <p>Applications that treat 
+    the characters as unknown Unicode will display them as tofu (hollow 
+    box replacement characters) and may count them towards length limits, 
+    etc. So they are only useful when applications or interchange 
+    mechanisms are fully aware of them and can remove them or disregard 
+    them appropriately.</p>
+  <p>Language tags in use, for example in markup language attributes, are case-insensitive. Applications handling Unicode tag characters would have to apply similar case-insensitivity to ensure correct identification of the language. (The Unicode data doesn't specify case conversion pairings for these characters.)</p>
+  <p>Moreover, language tags need to have valid subtags to conform to the Unicode Standard. Valid tags are kept in an IANA registry and new tags are added regularly, so applications dealing with this kind of tagging would need to always check each tag against the latest version of the registry.</p>
+  <p>An issue with these tag characters is that they do not allow nesting of language tags. (But they do allow the end of a language tag to overlap the start of a different tag.)</p>
 </section>
 </section>
 
