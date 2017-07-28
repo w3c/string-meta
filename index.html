@@ -451,37 +451,70 @@ translate="no">xml:lang</code> attributes in markup to denote the
   non-markup language tagging.</p>
 
   <p>Here is how Unicode tags work:</p>
-  <p>A language tag is just one of the potential tags that could be applied using this system, so each language tag begins with a tag identification character, in this case U+E0001. The  remainder 
-  of the Unicode  block for forming tags mirrors the printable ASCII 
-  characters. That is, U+E0020 is space, U+E0041 is capital A, and so 
-  forth. Following the tag identification character, you use them to spell out a [[!BCP47]] language tag  using the 
-  upper/lowercase letters, digits, and the hyphen character. ASCII tags 
-  can be transmogrified into tags by adding 0xE0000 to each character's 
-  code point. Additional structure, such as a language priority list 
-  (see [[RFC4647]]) can be constructed using other characters such as 
-  comma or semi-colon.</p>
-  <p>Tag lengths, therefore, are a minimum of three characters, and can easily be 12 or more. Furthermore, these characters are supplementary characters. That is, they are 
-  encoded using 4-bytes per character in UTF-8 and they are encoded as 
-  a surrogate pair (two 16-bit code units) in UTF-16. Surrogate pairs are 
-  needed for languages such as Java and JavaScript and the use of 
-  surrogates makes the strings somewhat opaque. </p>
-  <p>The end of a tag's scope is signalled by the end of the string, or can be signalled explicitly using the tag identification character followed by a cancel tag (ie. for language, &lt;U+E0001, U+E007F&gt;).</p>
-  <p>Applications that treat 
-    the characters as unknown Unicode characters will display them as tofu (hollow 
-    box replacement characters) and may count them towards length limits, 
-    etc. So they are only useful when applications or interchange 
-    mechanisms are fully aware of them and can remove them or disregard 
-    them appropriately.</p>
-  <p>Language tags in use, for example in markup language attributes, are case-insensitive. Applications handling Unicode tag characters would have to apply similar case-insensitivity to ensure correct identification of the language. (The Unicode data doesn't specify case conversion pairings for these characters.)</p>
-  <p>Moreover, language tags need to be formed from valid subtags to conform to [[!BCP47]]. Valid subtags are kept in an IANA registry and new subtags are added regularly, so applications dealing with this kind of tagging would need to always check each subtag against the latest version of the registry.</p>
   
-  <p>An issue with these tag characters is that they do not allow 
+  <p>A language tag is just one of the potential tags that could be 
+  applied using this system, so each language tag begins with a tag 
+  identification character, in this case U+E0001. The  remainder of the 
+  Unicode  block for forming tags mirrors the printable ASCII 
+  characters. That is, U+E0020 is space, U+E0041 is capital A, and so 
+  forth. Following the tag identification character, you use them to 
+  spell out a [[!BCP47]] language tag  using the upper/lowercase 
+  letters, digits, and the hyphen character. ASCII tags can be 
+  transmogrified into tags by adding 0xE0000 to each character's code 
+  point. Additional structure, such as a language priority list (see 
+  [[RFC4647]]) can be constructed using other characters such as comma 
+  or semi-colon.</p>
+  
+  <p>Tag lengths, therefore, are a minimum of three characters, and can 
+  easily be 12 or more. Furthermore, these characters are supplementary 
+  characters. That is, they are encoded using 4-bytes per character in 
+  UTF-8 and they are encoded as a surrogate pair (two 16-bit code 
+  units) in UTF-16. Surrogate pairs are needed for languages such as 
+  Java and JavaScript and the use of surrogates makes the strings 
+  somewhat opaque. </p>
+  
+  <p>The end of a tag's scope is signalled by the end of the string, or 
+  can be signalled explicitly using the cancel tag character U+E007F, 
+  either alone (to cancel all tags) or preceeded by the language tag 
+  identification character U+E0001 (i.e. the sequence 
+  &lt;U+E0001,U+E007F&gt; to end only language tags).</p>
+  
+  <p>Applications that treat 
+	the characters as unknown Unicode characters will display them as 
+	tofu (hollow box replacement characters) and may count them towards 
+	length limits, etc. So they are only useful when applications or 
+	interchange mechanisms are fully aware of them and can remove them 
+	or disregard them appropriately. Although the characters are not 
+	supposed to be displayed or have any effect on text processing, in 
+	practice they can interfere with normal text processes such as 
+	truncation. line wrapping, hyphenation, spell-checking and so 
+	forth.</p>
+    
+  <p>By design, [[!BCP47]] language tags are intended to be ASCII 
+  case-insensitive. Applications handling Unicode tag characters would 
+  have to apply similar case-insensitivity to ensure correct 
+  identification of the language. (The Unicode data doesn't specify 
+  case conversion pairings for these characters; this complicates the 
+  processing and matching of langauge tag values encoded using the tag 
+  characters.)</p>
+  
+  <p>Moreover, language tags need to be formed from valid subtags to 
+  conform to [[!BCP47]]. Valid subtags are kept in an IANA registry and 
+  new subtags are added regularly, so applications dealing with this 
+  kind of tagging would need to always check each subtag against the 
+  latest version of the registry.</p>
+  
+  <p>Another issue with these tag characters is that they do not allow 
   nesting of language tags. For example, if a string contains two 
   languages, such as a quote in French inside an English sentence, 
   Unicode tag characters can only indicate where one language starts. 
   To indicate nested languages, tags would need to be embedded into the 
-  text not just prefixed to the front. (But they do allow the end of a 
-  language tag to overlap the start of a different tag.)</p>
+  text not just prefixed to the front.</p>
+  
+  <p>Finally, although never implemented, other types of tags could be 
+  embedded into a string or document using Unicode tag characters. It 
+  is possible for these tags to overlap sections of text tagged with a 
+  language tag.</p>
   
 </section>
 </section>
