@@ -147,7 +147,7 @@ not conceived with built-in language or direction metadata.</p>
 <p>Information about language of content is important when processing and presenting 
 natural language data for a variety of reasons. When this data is not 
 present, the resulting degradation in appearance or functionality can 
-frustrate users&mdash;or render the content unintelligible. Some of the 
+frustrate users, render the content unintelligible, or disable important features. Some of the 
 affected processes include:</p>
 <ul>
 	<li>Selection of fonts and rendering to prevent "ransom noting", and especially the selection of the correct 
@@ -448,7 +448,7 @@ translate="no">xml:lang</code> attributes in markup to denote the
   <p>A language tag is just one of the potential tags that could be applied using this system, so each language tag begins with a tag identification character, in this case U+E0001. The  remainder 
   of the Unicode  block for forming tags mirrors the printable ASCII 
   characters. That is, U+E0020 is space, U+E0041 is capital A, and so 
-  forth. Following the tag identification character, you use them to spell out a [[BCP47]] language tag  using the 
+  forth. Following the tag identification character, you use them to spell out a [[!BCP47]] language tag  using the 
   upper/lowercase letters, digits, and the hyphen character. ASCII tags 
   can be transmogrified into tags by adding 0xE0000 to each character's 
   code point. Additional structure, such as a language priority list 
@@ -456,19 +456,27 @@ translate="no">xml:lang</code> attributes in markup to denote the
   comma or semi-colon.</p>
   <p>Tag lengths, therefore, are a minimum of three characters, and can easily be 12 or more. Furthermore, these characters are supplementary characters. That is, they are 
   encoded using 4-bytes per character in UTF-8 and they are encoded as 
-  a surrogate pair (2 16-bit code units) in UTF-16. Surrogate pairs are 
+  a surrogate pair (two 16-bit code units) in UTF-16. Surrogate pairs are 
   needed for languages such as Java and JavaScript and the use of 
   surrgates makes the strings somewhat opaque. </p>
   <p>The end of a tag's scope is signalled by the end of the string, or can be signalled explicitly using the tag identification character followed by a cancel tag (ie. for language, &lt;U+E0001, U+E007F&gt;).</p>
   <p>Applications that treat 
-    the characters as unknown Unicode will display them as tofu (hollow 
+    the characters as unknown Unicode characters will display them as tofu (hollow 
     box replacement characters) and may count them towards length limits, 
     etc. So they are only useful when applications or interchange 
     mechanisms are fully aware of them and can remove them or disregard 
     them appropriately.</p>
   <p>Language tags in use, for example in markup language attributes, are case-insensitive. Applications handling Unicode tag characters would have to apply similar case-insensitivity to ensure correct identification of the language. (The Unicode data doesn't specify case conversion pairings for these characters.)</p>
-  <p>Moreover, language tags need to have valid subtags to conform to the Unicode Standard. Valid tags are kept in an IANA registry and new tags are added regularly, so applications dealing with this kind of tagging would need to always check each tag against the latest version of the registry.</p>
-  <p>An issue with these tag characters is that they do not allow nesting of language tags. (But they do allow the end of a language tag to overlap the start of a different tag.)</p>
+  <p>Moreover, language tags need to be formed from valid subtags to conform to [[!BCP47]]. Valid subtags are kept in an IANA registry and new subtags are added regularly, so applications dealing with this kind of tagging would need to always check each subtag against the latest version of the registry.</p>
+  
+  <p>An issue with these tag characters is that they do not allow 
+  nesting of language tags. For example, if a string contains two 
+  languages, such as a quote in French inside an English sentence, 
+  Unicode tag characters can only indicate where one language starts. 
+  To indicate nested languages, tags would need to be embedded into the 
+  text not just prefixed to the front. (But they do allow the end of a 
+  language tag to overlap the start of a different tag.)</p>
+  
 </section>
 </section>
 
