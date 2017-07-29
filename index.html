@@ -122,39 +122,53 @@ p.cjk-demo {
 <section id="Introduction">
 <h2>Introduction</h2>
 
-<p>Natural language information on the Web depends on and benefits from 
-the presence of language and direction metadata. Along with support for 
-Unicode, mechanisms for including and specifying the base direction and 
-language of spans of text are one of the key considerations in 
-development of new formats and technologies for the Web.</p>
-
-<p>Markup formats, such as HTML and XML, as well as related styling 
-languages, such as CSS and XSL, are reasonably mature and provide support for 
-the interchange and presentation of the world's languages via built-in 
-features.</p>
-
 <p>This document was developed as a result of observations by the 
 Internationalization Working Group over a series of specification 
 reviews related to formats based on JSON, WebIDL, and other 
 non-markup data languages. Unlike markup formats, such as XML, these 
 data languages generally do not provide extensible attributes and were 
 not conceived with built-in language or direction metadata.</p>
+
+<p>Natural language information on the Web depends on and benefits from 
+the presence of language and direction metadata. Along with support for 
+Unicode, mechanisms for including and specifying the base direction and 
+the natural language of spans of text are one of the key 
+internationalization considerations when developing new formats and 
+technologies for the Web.</p>
+
+<p>Markup formats, such as HTML and XML, as well as related styling 
+languages, such as CSS and XSL, are reasonably mature and provide 
+support for the interchange and presentation of the world's languages 
+via built-in features. Data formats need similar support in order to 
+ensure a complete and consistent support for the world's languages and 
+cultures.</p>
+
 	
 	
 <section id="Why is this important?">
 <h3>Why is this important?</h3>
 
-<p>Information about language of content is important when processing and presenting 
-natural language data for a variety of reasons. When this data is not 
-present, the resulting degradation in appearance or functionality can 
-frustrate users, render the content unintelligible, or disable important features. Some of the 
-affected processes include:</p>
+<p>Information about the language of content is important when processing 
+and presenting natural language data for a variety of reasons. When 
+language information is not present, the resulting degradation in appearance or 
+functionality can frustrate users, render the content unintelligible, 
+or disable important features. Some of the affected processes 
+include:</p> 
+
 <ul>
-	<li>Selection of fonts and rendering to prevent "ransom noting", and especially the selection of the correct 
+	<li>Selection of fonts and configuration of rendering options to 
+	enable the proper display of different languages. This includes 
+	prevention of problems such as: <ul>
+		<li>"ransom noting" (showing text using multiple different fonts)</li>
+		<li>language specific glyph selection,especially the selection of the correct 
 	Chinese/Japanese/Korean font due to important presentational 
-	variations for the same characters in these languages.</li> 
-	<li>Spell checking and other content checking (such as abuse 
-	detection) </li> 
+	variations for the same characters in these languages
+		<li>displaying blanks, spaces, question marks, or other 
+		disappearnace of characters due to the lack of glyphs in the 
+		selected font</li> 
+	</ul></li>
+	<li>Spell checking and other content processing (such as abuse 
+	detection, hyphenation, etc.) </li> 
 	<li>Indexing, search, and other natural language 
 	text operations </li> 
 	<li>Filtering according to intended audience 
@@ -166,8 +180,8 @@ affected processes include:</p>
 <p>Similarly, direction metadata is important to the Web. When a string 
 contains text in a script that runs right-to-left (RTL), it must be 
 possible to eventually display that string correctly when it reaches an 
-end user. For that to happen, it is necessary to establish what 'base 
-direction' needs to be applied to the string as a whole. The 
+end user. For that to happen, it is necessary to establish what <dfn>base 
+direction</dfn> needs to be applied to the string as a whole. The 
 appropriate base direction cannot always be deduced by simply looking 
 at the string; even if it were possible, the producer and consumer of 
 the string would need to use the same heuristics to interpret its 
@@ -185,6 +199,9 @@ designers to provide the metadata on their own initiative. When
 standardized formats do not address the resulting issues, the result 
 can be that, while the data arrives intact, its processing or 
 presentation cannot be wholly recovered.</p>
+
+<section id="baseExample">
+	<h3>An Example</h3>
 
 <p>Suppose that you are building a Web page to show a 
 customer's library of e-books. The e-books exist in a catalog of data 
@@ -237,6 +254,7 @@ directly into processing. They may have other considerations, such as
 field length, that are affected by the insertion of additional 
 controls or markup.</p> 
 
+</section>
 </section>
 
 <section id="unicode-enough">
@@ -403,27 +421,20 @@ translate="no">ja</code>&quot; (Japanese). The tool he is using knows that he
     Tibetan later in the commentary for some annotations, so that 
     appropriate fonts and wrapping algorithms can be applied there. 
   
-    <footer> </footer>
   </p>
 </section>
 </section>
 
 
 
-<section id="mainpoint2">
-  <h2>The main issue</h2> 
-  
-  <p>The main issue is how a consumer of a 
-  string will know which language-related features should be used for 
-  that string when it is eventually processed or displayed to the 
-  user. A number of alternatives are considered below.</p>
-  
-</section>
-
-  
   <section id="languageApproaches">
     <h2>Approaches to Tagging Language</h2>
-    
+
+   <p>The main issue is how a consumer of a 
+  string will know which language-related features should be used for 
+  that string when it is eventually processed or displayed to the 
+  user. A number of alternatives are considered below.</p>   
+  
   <section id="langapproach1">
     <h2>Require HTML or XML for content</h2>
     
@@ -437,15 +448,17 @@ translate="no">xml:lang</code> attributes in markup to denote the
 
   
   <section id="langapproach2">
-    <h2>Approach two</h2>
+    <h2>Create a new datatype in JSON-LD</h2>
     <p>JSON-LD</p>
   </section>
 
 
 
 <section id="langapproach3">
-  <h2>Approach three</h2>
-  <p>Dictionary</p>
+  <h2>Provide a "dictionary"</h2>
+  <p>Provide a "dictionary" or canned pre-built extension that can be
+  used commonly across a number of different document formats using
+  the same base data format, such as JSON.</p>
 </section>
 <section id="unicodeTags">
   <h2>Unicode tag characters</h2> 
@@ -456,7 +469,7 @@ translate="no">xml:lang</code> attributes in markup to denote the
   and are often suggested as an alternate means of providing in-band
   non-markup language tagging.</p>
 
-  <p>Here is how Unicode tags work:</p>
+  <p>Here is how Unicode tags are supposed to work:</p>
   
   <p>A language tag is just one of the potential tags that could be 
   applied using this system, so each language tag begins with a tag 
@@ -703,6 +716,7 @@ translate="no">xml:lang</code> attributes in markup to denote the
 <p>The Internationalization (I18N) Working Group would like to thank 
 the following contributors to this document: 
     Mati Allouche, 
+    Tobie Langel,
     Felix Sasaki, 
     Najib Tounsi, 
     
