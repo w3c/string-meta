@@ -144,6 +144,36 @@ ensure a complete and consistent support for the world's languages and
 cultures.</p>
 
 	
+
+
+<section id="terminology">
+	<h2>Terminology</h2>
+	<p>This section defines terminology necessary to understand the contents of this document.</p>
+	
+  
+  <p>A <dfn>producer</dfn>, in this document, is any process where natural language string data is created for later storage, processing, or interchange.</p>
+  <p>A <dfn>consumer</dfn>, in this document, is any process that receives natural language strings, either for display or processing.</p>
+  
+<section id="producers">  
+  <h3>Producers</h3>  
+  <p>A string can be created in a number of ways, including a content author typing strings into a plain text editor, text message, or editing tool; or a script scraping text from web pages; or acquisition of an existing set of strings from another application or repository. Any source of strings might provide an interface or API that determines or allows the base direction or language to be specified at creation or it may provide a suitable default when the direction is not provided or specified. In this document, the <b class="newterm">producer</b> of a string is source, be it human or a mechanism, that creates a string for storage or transmission.</p>
+  <p>When a  string is created, it's necessary to (a) detect or capture the appropriate language and base direction to be associated with the string, and (b) take steps, where needed, to set the string up in a way that stores and communicates the language and base direction.</p>
+  <p>For example, in the case of a string that is extracted from an HTML form, the base direction can be detected from the computed value of the form's field. Such a value could be inherited from an earlier element, such as the <code class="kw" translate="no">html</code> element, or set using markup or styling on the <code class="kw" translate="no">input</code> element itself. The user could also set the direction of the text by <a href="https://www.w3.org/International/questions/qa-html-dir#userexplicit">using  keyboard shortcut keys</a> to change the direction of the form field. The <code class="kw" translate="no">dirname</code> attribute provides a way of automatically communicating that value with a form submission.</p>
+  <p>Similarly, language information in an HTML form  would most likely be inherited from the <code class="kw" translate="no">lang</code> attribute on the <code class="kw" translate="no">html</code> tag, or any element in the tree with a <code class="kw" translate="no">lang</code> attribute.</p>
+  <p>If the producer of the string is receiving the string from a location where it was stored by another producer, and where the base direction/language has already been established, the producer should understand that the base direction has already been set.</p>
+</section>
+<section id="consumers">
+  <h3>Consumers</h3>
+  <p>A <b class="newterm">consumer</b> is an application or process that receives a string for processing and possibly places it into a context where it will be exposed to a user. For display purposes, it must ensure that the base direction and language of the string is correctly applied to the string in that context. For processing purposes, it must at least persist the language and direction and may need to use the language and direction data in order to perform language-specific operations.</p>
+  <p>Displaying the string usually involves applying the base direction and language by constructing additional markup, adding control codes, or setting display properties. This indicates to rendering software the base direction or language that should be applied to the string in this display context to get the string to appear correctly. For text direction, it must also isolate embedded strings from the surrounding text to avoid spill-over effects of the bidi algorithm [[UAX9]]. For language, it must make clear the boundaries for the range of text to which the language applies.</p>
+</section>
+<section id="agreements">
+  <h3>Decoding Information</h3>
+  <p>Any time a producer of a string takes special steps to collect and communicate information about the base direction and language of that string, it must do so with the expectation that the consumer of the string will understand how the producer encoded this information. If no action is taken by the producer, the consumer must still decide what rules to follow in order to decide on the appropriate base direction and language, even if it is only in the form of using some default.</p>
+  <p>In some systems, the behaviour of the producer and the consumer of a string will both be specified. In others, such agreements may not be available.</p>
+</section>
+</section>
+
 	
 <section id="Why is this important?">
 <h3>Why is this important?</h3>
@@ -298,33 +328,6 @@ data in an interchange format is not a good idea. These include:</p>
 </section>
 </section>
 
-
-<section id="producers_consumers">
-	<h2>Producers and consumers</h2>
-	<p>It's not possible to consider alternatives to string metadata in a vacuum. Apart from the question of how a consumer will know what base direction to use for a string, the following are things that need to be considered for an end to end process that supports proper application of base direction to strings.</p>
-
-<section id="producers">
-  <h3>Producing</h3>
-  <p>A string can be created in a number of ways, including a content author typing strings into a plain text editor or text message, or a script scraping text from web pages, or acquisition of an existing set of strings from another application or repository. Any source of strings might provide an interface or API that determines or allows the base direction to be specified at creation or provides a suitable default when the direction is not provided or specified. In this document, the <b class="newterm">producer</b> of a string is the human or mechanism that creates a string for storage or transmission to a consumer of strings.</p>
-  <p>When a  string is created, it's necessary to (a) detect the appropriate language and base direction to be associated with the string, and (b) take steps, where needed, to set the string up in a way that stored and communicates the language and base direction.</p>
-  <p>For example, in the case of a string that is extracted from an HTML form, the base direction can be detected from the computed value of the form's field. Such a value could be inherited from an earlier element, such as the <code class="kw" translate="no">html</code> element, or set using markup or styling on the <code class="kw" translate="no">input</code> element itself. The user could also set the direction of the text by <a href="https://www.w3.org/International/questions/qa-html-dir#userexplicit">using  keyboard shortcut keys</a> to change the direction of the form field. The <code class="kw" translate="no">dirname</code> attribute provides a way of automatically communicating that value with a form submission.</p>
-  <p>Similarly, language information in an HTML form  would most likely be inherited from the <code class="kw" translate="no">lang</code> attribute on the <code class="kw" translate="no">html</code> tag, or any element in the tree with a <code class="kw" translate="no">lang</code> attribute.</p>
-  <p>If the producer of the string is receiving the string from a location where it was stored by another producer, and where the base direction/language has already been established, the producer should understand that the base direction has already been set.</p>
-</section>
-<section id="consumers">
-  <h3>Consuming</h3>
-  <p>A <b class="newterm">consumer</b> is an application or process that takes a string and places it into a context where it will be exposed to a user. It must ensure that the base direction and language of the string is correctly applied to the string in that context. </p>
-  <p>Applying the base direction and language may involve constructing additional markup or adding control codes or some such to indicate the base direction or language that should be applied to the string in its display context. For text direction, it must also isolate embedded strings from the surrounding text to avoid spill-over effects of the bidi algorithm. For language, it must make clear the boundaries for the range of text to which the language applies.</p>
-</section>
-<section id="agreements">
-  <h3>Decoding Information</h3>
-  <p>Any time a producer of a string takes special steps to collect and communicate information about the base direction and language of that string, it must do so with the expectation that the consumer of the string will understand how the producer encoded this information. If no action is taken by the producer, the consumer must still decide what rules to follow in order to decide on the appropriate base direction and language, even if it is only in the form of using some default.</p>
-  <p>In some systems, the behaviour of the producer and the consumer of a string will both be specified. In others, such agreements may not be available.</p>
-</section>
-</section>
-
-
-
 <section id="Language Identification">
   <h2>Language Identification</h2>
 <section id="Definitions">
@@ -336,7 +339,7 @@ involve a property value that is a list of languages. A property that
 is about language metadata may have more than one value, since it aims 
 to describe all potential users of the information</p>
 
-<p><dfn id="tpl">Text-processing language</dfn> is the language of a 
+<p>The <dfn id="tpl">text-processing language</dfn> is the language of a 
 particular range of text (which could be a whole resource or just part 
 of it). A property that represents the text-processing language needs 
 to have a single value, because it describes the text content in such a 
