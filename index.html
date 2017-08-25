@@ -153,14 +153,21 @@ cultures.</p>
   
   <p>A <dfn>producer</dfn>, in this document, is any process where natural language string data is created for later storage, processing, or interchange.</p>
   <p>A <dfn>consumer</dfn>, in this document, is any process that receives natural language strings, either for display or processing.</p>
+ 
+ </section>
+ 
+ <section id="producers_consumers">
+  <h2>The String Lifecycle</h2>
+  
+  <p>It's not possible to consider alternatives for handling string metadata in a vacuum: we need to establish a framework for talking about string handling and data formats.</p>
   
 <section id="producers">  
   <h3>Producers</h3>  
-  <p>A string can be created in a number of ways, including a content author typing strings into a plain text editor, text message, or editing tool; or a script scraping text from web pages; or acquisition of an existing set of strings from another application or repository. Any source of strings might provide an interface or API that determines or allows the base direction or language to be specified at creation or it may provide a suitable default when the direction is not provided or specified. In this document, the <b class="newterm">producer</b> of a string is source, be it human or a mechanism, that creates a string for storage or transmission.</p>
+  <p>A string can be created in a number of ways, including a content author typing strings into a plain text editor, text message, or editing tool; or a script scraping text from web pages; or acquisition of an existing set of strings from another application or repository. Any source of strings might provide an interface or API that determines or allows the base direction or language to be specified at creation. It might also provide a suitable default when the direction or language is not provided or specified. In this document, the <b class="newterm">producer</b> of a string is the source, be it human or a mechanism, that creates a string for storage or transmission.</p>
   <p>When a  string is created, it's necessary to (a) detect or capture the appropriate language and base direction to be associated with the string, and (b) take steps, where needed, to set the string up in a way that stores and communicates the language and base direction.</p>
   <p>For example, in the case of a string that is extracted from an HTML form, the base direction can be detected from the computed value of the form's field. Such a value could be inherited from an earlier element, such as the <code class="kw" translate="no">html</code> element, or set using markup or styling on the <code class="kw" translate="no">input</code> element itself. The user could also set the direction of the text by <a href="https://www.w3.org/International/questions/qa-html-dir#userexplicit">using  keyboard shortcut keys</a> to change the direction of the form field. The <code class="kw" translate="no">dirname</code> attribute provides a way of automatically communicating that value with a form submission.</p>
   <p>Similarly, language information in an HTML form  would most likely be inherited from the <code class="kw" translate="no">lang</code> attribute on the <code class="kw" translate="no">html</code> tag, or any element in the tree with a <code class="kw" translate="no">lang</code> attribute.</p>
-  <p>If the producer of the string is receiving the string from a location where it was stored by another producer, and where the base direction/language has already been established, the producer should understand that the base direction has already been set.</p>
+  <p>If the producer of the string is receiving the string from a location where it was stored by another producer, and where the base direction/language has already been established, the producer needs to understand that the language and base direction has already been set and convert or encode that information for its consumers.</p>
 </section>
 <section id="consumers">
   <h3>Consumers</h3>
@@ -168,9 +175,9 @@ cultures.</p>
   <p>Displaying the string usually involves applying the base direction and language by constructing additional markup, adding control codes, or setting display properties. This indicates to rendering software the base direction or language that should be applied to the string in this display context to get the string to appear correctly. For text direction, it must also isolate embedded strings from the surrounding text to avoid spill-over effects of the bidi algorithm [[UAX9]]. For language, it must make clear the boundaries for the range of text to which the language applies.</p>
 </section>
 <section id="agreements">
-  <h3>Decoding Information</h3>
-  <p>Any time a producer of a string takes special steps to collect and communicate information about the base direction and language of that string, it must do so with the expectation that the consumer of the string will understand how the producer encoded this information. If no action is taken by the producer, the consumer must still decide what rules to follow in order to decide on the appropriate base direction and language, even if it is only in the form of using some default.</p>
-  <p>In some systems, the behaviour of the producer and the consumer of a string will both be specified. In others, such agreements may not be available.</p>
+  <h3>Encoding Agreements</h3>
+  <p>Any time a producer of a string takes special steps to collect and communicate information about the base direction and language of that string, it must do so with the expectation that the consumer of the string will understand how the producer encoded this information. If no action is taken by the producer, the consumer must still decide what rules to follow in order to decide on the appropriate base direction and language, even if it is only to provide some form of default value.</p>
+  <p>In some systems or document formats, the necessary behaviour of the producers and consumers of a string are fully specified. In others, such agreements are not available; it is up to users to provide an agreement for how to encode, transmit, and later decode the necessary language or direction informat. Low level specifications, such as JSON, do not provide a string metadata structure by default, so any document formats based on these need to provide the "agreement" themselves.</p>
 </section>
 </section>
 
