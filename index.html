@@ -148,11 +148,12 @@ cultures.</p>
 
 <section id="terminology">
 	<h2>Terminology</h2>
-	<p>This section defines terminology necessary to understand the contents of this document.</p>
+	<p>This section defines terminology necessary to understand the contents of this document. The terms defined here are specific to this document.</p>
 	
   
-  <p>A <dfn>producer</dfn>, in this document, is any process where natural language string data is created for later storage, processing, or interchange.</p>
-  <p>A <dfn>consumer</dfn>, in this document, is any process that receives natural language strings, either for display or processing.</p>
+  <p>A <dfn>producer</dfn> is any process where natural language string data is created for later storage, processing, or interchange.</p>
+  <p>A <dfn>consumer</dfn> is any process that receives natural language strings, either for display or processing.</p>
+  <p>An <dfn>agreement</dfn> is the common understanding between a producer and consumer about the encoding of string metadata: how it is to be understood, serialized, read, transmitted, removed, etc.</p>
  
  </section>
  
@@ -314,7 +315,7 @@ perfect interchange.</p>
 <p>Several features of Unicode are sometimes suggested as part of the 
 solution to providing language and direction metadata. Specificially, 
 Unicode bidi controls are suggested for handling direction metadata. In 
-addition, there are "tag" characters in the U+E0000 block of Unicode 
+addition, there are "tag" characters in the <kbd>U+E0000</kbd> block of Unicode 
 for use as language tags. These characters are deprecated and their use 
 is "strongly discouraged" (to quote Unicode).</p>
 
@@ -323,14 +324,15 @@ data in an interchange format is not a good idea. These include:</p>
 
 <ul>
   <li>Most data sources (used to assemble data files) do not contain 
-  these characters; the processing assembling or serializing the data 
-  will need to introspect and insert the necessary characters.</li>
+  these characters; the process of assembling or serializing the data 
+  will need to introspect and insert the necessary characters. Consumers must then deserialize and instrospect the information using an identical <a>agreement</a>.</li>
   <li>Many data formats have externally provided limitations on 
   content, such as length limits. Inserting additional characters into 
   the data may violate these externally applied requirements, and interfere 
-  with processing. In the worst case, the data values may be corrupted 
+  with processing. In the worst case, portions (or all of) the data value itself might be corrupted 
   or lost as a result.</li>
-  <li>It changes the identity of the string. This may have important consequences in certain contexts.</li>
+  <li>Inserting additional characters changes the identity of the string. This may have important consequences in certain contexts.</li>
+  <li>Inserting and removing characters from the string is not a common operation for most data serialization libraries. Any processing that adds language or direction controls would need to introspect the string to see if these are already present or might need to do other processing to insert or modify the contents of the string as part of serializing the data.</li>
 </ul>
 </section>
 </section>
