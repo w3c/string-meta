@@ -434,7 +434,7 @@ translate="no">ja</code>&quot; (Japanese). The tool he is using knows that he
 	contained in the annotation body text.</p>
 	
 	<p>Various other text rendering or analysis tools need to know 
-	the language of the text they are dealing with. </p>
+	the language of the text they are dealing with. Many different types of text processing depend on information about the language of the content in order to provide the proper processing or results and this goes beyond mere presentation of the text. For example, if Kensuke wanted to search for an annotation, the application might provide a full text search capability. In order to index the words in the annotations, the application would need to split the text according to word boundaries. In Japanese and Chinese, which do not use spaces in-between words, this often involves using dictionaries and heuristics that are language specific.</p>
     
     <p>We also need a way to indicate the change of language to Chinese and 
     Tibetan later in the commentary for some annotations, so that 
@@ -449,10 +449,9 @@ translate="no">ja</code>&quot; (Japanese). The tool he is using knows that he
   <section id="languageApproaches">
     <h2>Approaches to Tagging Language</h2>
 
-   <p>The main issue is how a consumer of a 
-  string will know which language-related features should be used for 
-  that string when it is eventually processed or displayed to the 
-  user. A number of alternatives are considered below.</p>   
+   <p>The main issue is how a <a>producer</a> of a string knows how to encode and a <a>consumer</a> of a 
+  string will know how to find and interpret the language-related features that ought to be used for 
+  that string when it is eventually processed or displayed to the user. A number of alternatives are considered below.</p>   
   
   <section id="langapproach1">
     <h2>Require HTML or XML for content</h2>
@@ -468,7 +467,16 @@ translate="no">xml:lang</code> attributes in markup to denote the
   
   <section id="langapproach2">
     <h2>Create a new datatype in JSON-LD</h2>
-    <p>JSON-LD</p>
+    <p>If a new datatype were added to JSON to support natural language strings, then specifications could easily specify that type for use in document formats. Since the format is standardized, <a>producers</a> and <a>consumers</a> would not need to guess about direction or language information when it is encoded. Such a serialization might look like the following:</p>
+    
+    <pre>
+myLocalizedString: "Hello World!"@en^ltr          // language and direction
+myLocalizedString_fr: "Bonjour monde !"@fr        // language only
+myLocalizedString_ar: "مرحبا بالعالم!"@ar-EG^rtl  // both language and direction information
+myLocalizedString_und: "שלום עולם!"^rtl           // direction information only
+myLanguageNeutralString: "978-0-123-4567-X"       // no language or direction for this non-natural-language string</pre>
+
+  <p>The downside of adding a datatype is that JSON is a widely implemented format, including many ad-hoc implementations. Any new serialization form would likely break or cause interoperability problems with these existing implementations. JSON is not designed to be a "versioned" format. Any serialization form used would need to be transparent to existing JSON processors and thus could introduce unwanted data or data corruption to existing fields and formats.</p>
   </section>
 
 
