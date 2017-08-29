@@ -315,7 +315,7 @@ perfect interchange.</p>
 <p>Several features of Unicode are sometimes suggested as part of the 
 solution to providing language and direction metadata. Specificially, 
 Unicode bidi controls are suggested for handling direction metadata. In 
-addition, there are "tag" characters in the <kbd>U+E0000</kbd> block of Unicode 
+addition, there are "tag" characters in the <code>U+E0000</code> block of Unicode 
 for use as language tags. These characters are deprecated and their use 
 is "strongly discouraged" (to quote Unicode).</p>
 
@@ -485,16 +485,14 @@ myLanguageNeutralString: "978-0-123-4567-X"       // language-neutral string</pr
   <h2>Provide a "dictionary"</h2>
   <p>Provide a "dictionary" or canned pre-built extension that can be
   used commonly across a number of different document formats using
-  the same base data format, such as JSON. One such example is reproduced in the example below.</p>
+  the same base data format, such as JSON. The following example might serve as a model for such a dictionary.</p>
   
 <div class="example">
 <p><code>Localizable</code> dictionary</p>
-<pre class="def idl"><span class="idlDictionary" data-idl="" data-title="Localizable">dictionary <span class="idlDictionaryID"><a href="#dom-localizable" class="internalDFN" data-link-type="dfn" data-for="">
-	<code>Localizable</code></a></span> {<span class="idlMember" id="idl-def-localizable-lang" data-idl="" data-title="lang" data-dfn-for="localizable">
-    <span class="idlMemberType"><a href="https://www.w3.org/TR/WebIDL-1/#idl-DOMString">DOMString</a></span>
-    <span class="idlMemberName"><a data-lt="lang" href="#dom-localizable-lang" class="internalDFN" data-link-type="dfn" data-for="Localizable"><code>lang</code></a></span>;</span>
-    <span class="idlMember" id="idl-def-localizable-dir" data-idl="" data-title="dir" data-dfn-for="localizable">    
-	<span class="idlMemberType"><a href="#dom-textdirection" class="internalDFN" data-link-type="dfn"><code>TextDirection</code></a></span> <span class="idlMemberName"><a data-lt="dir" href="#dom-localizable-dir" class="internalDFN" data-link-type="dfn" data-for="Localizable"><code>dir</code></a></span> = <span class="idlMemberValue">"auto"</span>;</span>
+<pre class="def idl" data-dfn-for="Localizable" data-link-for="Localizable">
+<span class="idlDictionary" data-idl="" data-title="Localizable">dictionary <span class="idlDictionaryID"><code>Localizable</code></a></span> {
+	<span class="idlMember" id="idl-def-localizable-lang" data-idl="" data-title="lang" data-dfn-for="localizable"><span class="idlMemberType"><a href="https://www.w3.org/TR/WebIDL-1/#idl-DOMString">DOMString</a></span> <span class="idlMemberName"><a data-lt="lang" href="#dom-localizable-lang" class="internalDFN" data-link-type="dfn" data-for="Localizable"><code>lang</code></a></span>;</span>
+    <span class="idlMember" id="idl-def-localizable-dir" data-idl="" data-title="dir" data-dfn-for="localizable"><span class="idlMemberType"><a href="#dom-textdirection" class="internalDFN" data-link-type="dfn"><code>TextDirection</code></a></span> <span class="idlMemberName"><a data-lt="dir" href="#dom-localizable-dir" class="internalDFN" data-link-type="dfn" data-for="Localizable"><code>dir</code></a></span> = <span class="idlMemberValue">"auto"</span>;</span>
 };</span>
 </pre><dl><dt><dfn data-dfn-for="localizable" data-dfn-type="dfn" id="dom-localizable-lang" data-idl="" data-title="lang">
 	
@@ -526,7 +524,17 @@ dir</code></dfn> member</dt>
 
 <p>By defining the language and direction in a WebIDL dictionary form, specifications can incorporate language and direction metadata for a given String value succinctly. Implementations can recyle the dictionary implementation straightforwardly.</p>
 
-<p>On the down side, the serialized file containing dictionary-based data values still contains additional fields and may be more difficult to read.</p>
+<p>On the down side, the serialized file containing dictionary-based data values still contains additional fields and may be more difficult to read. Here's an example:</p>
+
+<pre>
+[
+  displayItems: [{
+    label: <span dir=rtl">"البند الخاص (للبيع!)",</span>
+    dir: "rtl",
+    lang: "ar-AE",
+    amount: { },
+  }]
+]</pre>
 
 </section>
 <section id="unicodeTags">
@@ -540,32 +548,21 @@ dir</code></dfn> member</dt>
 
   <p>Here is how Unicode tags are supposed to work:</p>
   
-  <p>A language tag is just one of the potential tags that could be 
-  applied using this system, so each language tag begins with a tag 
-  identification character, in this case U+E0001. The  remainder of the 
-  Unicode  block for forming tags mirrors the printable ASCII 
-  characters. That is, U+E0020 is space, U+E0041 is capital A, and so 
-  forth. Following the tag identification character, you use them to 
-  spell out a [[!BCP47]] language tag  using the upper/lowercase 
-  letters, digits, and the hyphen character. ASCII tags can be 
-  transmogrified into tags by adding 0xE0000 to each character's code 
-  point. Additional structure, such as a language priority list (see 
-  [[RFC4647]]) can be constructed using other characters such as comma 
-  or semi-colon.</p>
-  
-  <p>Tag lengths, therefore, are a minimum of three characters, and can 
-  easily be 12 or more. Furthermore, these characters are supplementary 
-  characters. That is, they are encoded using 4-bytes per character in 
-  UTF-8 and they are encoded as a surrogate pair (two 16-bit code 
-  units) in UTF-16. Surrogate pairs are needed for languages such as 
-  Java and JavaScript and the use of surrogates makes the strings 
-  somewhat opaque. </p>
+  <p>A [[!BCP47]] language tag is just one of the potential tags that could be applied using this system, so each language tag begins with a tag identification character, in this case <code>U+E0001</code>. The remainder of the Unicode  block for forming tags mirrors the printable ASCII characters. That is, <code>U+E0020</code> is space (mirroring <code>U+0020</code>), <code>U+E0041</code> is capital A (mirroring <code>U+0041</code>), and so forth. Following the tag identification character, you use each tag character to spell out a [[!BCP47]] language tag  using the upper/lowercase letters, digits, and the hyphen character. Normal language tags, which are composed from ASCII letters, digits and hyphens, can be transmogrified into tags by adding <code>0xE0000</code> to each character's code point. Additional structure, such as a language priority list (see [[RFC4647]]) might be constructed using other characters such as comma or semi-colon, although Unicode does not define or even necessarily permit this.</p>
   
   <p>The end of a tag's scope is signalled by the end of the string, or 
   can be signalled explicitly using the cancel tag character U+E007F, 
   either alone (to cancel all tags) or preceeded by the language tag 
-  identification character U+E0001 (i.e. the sequence 
-  &lt;U+E0001,U+E007F&gt; to end only language tags).</p>
+  identification character <code>U+E0001</code> (i.e. the sequence 
+  <code>&lt;U+E0001,U+E007F&gt;</code> to end only language tags).</p>
+  
+    
+  <p>Tags therefore have a minimum of three characters, and can 
+  easily be 12 or more. Furthermore, these characters are supplementary 
+  characters. That is, they are encoded using 4-bytes per character in 
+  UTF-8 and they are encoded as a surrogate pair (two 16-bit code 
+  units) in UTF-16. Surrogate pairs are needed to encode these characters in string types for languages such as 
+  Java and JavaScript that use UTF-16 internally. The use of surrogates makes the strings somewhat opaque. For example, <code>U+E0020</code> is encoded in UTF-16 as <kbd>0xDB40.DC20</kbd> and in UTF-8 as the byte sequence <kbd>0xF3.A0.80.A0</kbd>.</p>
   
   <p>Applications that treat 
 	the characters as unknown Unicode characters will display them as 
