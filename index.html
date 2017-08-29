@@ -177,7 +177,7 @@ cultures.</p>
 </section>
 <section id="agreements">
   <h3>Encoding Agreements</h3>
-  <p>Any time a producer of a string takes special steps to collect and communicate information about the base direction and language of that string, it must do so with the expectation that the consumer of the string will understand how the producer encoded this information. If no action is taken by the producer, the consumer must still decide what rules to follow in order to decide on the appropriate base direction and language, even if it is only to provide some form of default value.</p>
+  <p>Between any <a data-lt="producers">producer</a> and <a data-lt="consumers">consumer</a>, there needs to be an <b class="newterm">agreement</b> about what the document format contains and what the data in each field or attribute means. Any time a producer of a string takes special steps to collect and communicate information about the base direction or language of that string, it must do so with the expectation that the consumer of the string will understand how the producer encoded this information. If no action is taken by the producer, the consumer must still decide what rules to follow in order to decide on the appropriate base direction and language, even if it is only to provide some form of default value.</p>
   <p>In some systems or document formats, the necessary behaviour of the producers and consumers of a string are fully specified. In others, such agreements are not available; it is up to users to provide an agreement for how to encode, transmit, and later decode the necessary language or direction informat. Low level specifications, such as JSON, do not provide a string metadata structure by default, so any document formats based on these need to provide the "agreement" themselves.</p>
 </section>
 </section>
@@ -467,14 +467,14 @@ translate="no">xml:lang</code> attributes in markup to denote the
   
   <section id="langapproach2">
     <h2>Create a new datatype in JSON-LD</h2>
-    <p>If a new datatype were added to JSON to support natural language strings, then specifications could easily specify that type for use in document formats. Since the format is standardized, <a>producers</a> and <a>consumers</a> would not need to guess about direction or language information when it is encoded. Such a serialization might look like the following:</p>
+    <p>If a new datatype were added to JSON to support natural language strings, then specifications could easily specify that type for use in document formats. Since the format is standardized, <a data-lt="producer">producers</a> and <a data-lt="consumer">consumers</a> would not need to guess about direction or language information when it is encoded. Such a serialization might look like the following:</p>
     
-    <pre>
+    <pre class=example>
 myLocalizedString: "Hello World!"@en^ltr          // language and direction
+myLocalizedString_ar: "مرحبا بالعالم!"@ar-EG^rtl  // right-to-left example
 myLocalizedString_fr: "Bonjour monde !"@fr        // language only
-myLocalizedString_ar: "مرحبا بالعالم!"@ar-EG^rtl  // both language and direction information
 myLocalizedString_und: "שלום עולם!"^rtl           // direction information only
-myLanguageNeutralString: "978-0-123-4567-X"       // no language or direction for this non-natural-language string</pre>
+myLanguageNeutralString: "978-0-123-4567-X"       // language-neutral string</pre>
 
   <p>The downside of adding a datatype is that JSON is a widely implemented format, including many ad-hoc implementations. Any new serialization form would likely break or cause interoperability problems with these existing implementations. JSON is not designed to be a "versioned" format. Any serialization form used would need to be transparent to existing JSON processors and thus could introduce unwanted data or data corruption to existing fields and formats.</p>
   </section>
@@ -485,7 +485,49 @@ myLanguageNeutralString: "978-0-123-4567-X"       // no language or direction fo
   <h2>Provide a "dictionary"</h2>
   <p>Provide a "dictionary" or canned pre-built extension that can be
   used commonly across a number of different document formats using
-  the same base data format, such as JSON.</p>
+  the same base data format, such as JSON. One such example is reproduced in the example below.</p>
+  
+<div class="example">
+<p><code>Localizable</code> dictionary</p>
+<pre class="def idl"><span class="idlDictionary" data-idl="" data-title="Localizable">dictionary <span class="idlDictionaryID"><a href="#dom-localizable" class="internalDFN" data-link-type="dfn" data-for="">
+	<code>Localizable</code></a></span> {<span class="idlMember" id="idl-def-localizable-lang" data-idl="" data-title="lang" data-dfn-for="localizable">
+    <span class="idlMemberType"><a href="https://www.w3.org/TR/WebIDL-1/#idl-DOMString">DOMString</a></span>
+    <span class="idlMemberName"><a data-lt="lang" href="#dom-localizable-lang" class="internalDFN" data-link-type="dfn" data-for="Localizable"><code>lang</code></a></span>;</span>
+    <span class="idlMember" id="idl-def-localizable-dir" data-idl="" data-title="dir" data-dfn-for="localizable">    
+	<span class="idlMemberType"><a href="#dom-textdirection" class="internalDFN" data-link-type="dfn"><code>TextDirection</code></a></span> <span class="idlMemberName"><a data-lt="dir" href="#dom-localizable-dir" class="internalDFN" data-link-type="dfn" data-for="Localizable"><code>dir</code></a></span> = <span class="idlMemberValue">"auto"</span>;</span>
+};</span>
+</pre><dl><dt><dfn data-dfn-for="localizable" data-dfn-type="dfn" id="dom-localizable-lang" data-idl="" data-title="lang">
+	
+	<code>lang</code></dfn> member</dt>
+	<dd>A [[!BCP47]] language tag that specifies the primary language for the values of the human-readable
+members of the inheriting dictionary.</dd>
+<dt><dfn data-dfn-for="localizable" data-dfn-type="dfn" id="dom-localizable-dir" data-idl="" data-title="dir"><code>
+dir</code></dfn> member</dt>
+<dd>Specifies the base direction for the human-readable members of an inheriting dictionary.</dd></dl>
+<div data-dfn-for="TextDirection" data-link-for="TextDirection" id="textdirection-enum" typeof="bibo:Chapter" resource="#textdirection-enum" property="bibo:hasPart">
+	<p id="h-textdirection-enum" resource="#h-textdirection-enum"><dfn data-dfn-for="" data-dfn-type="dfn" id="dom-textdirection" data-idl="" data-title="TextDirection">
+       <code>TextDirection</code></dfn> enum</p>
+<pre class="def idl">
+	<span class="idlEnum" id="idl-def-textdirection" data-idl="" data-title="TextDirection">enum <span class="idlEnumID"><a data-lt="TextDirection" href="#dom-textdirection" class="internalDFN" data-link-type="dfn" data-for=""><code>TextDirection</code></a></span> {    
+		<a href="#dom-textdirection-auto" class="idlEnumItem">"auto"</a>,
+	    <a href="#dom-textdirection-ltr" class="idlEnumItem">"ltr"</a>,    
+	    <a href="#dom-textdirection-rtl" class="idlEnumItem">"rtl"</a>
+};</span>
+</pre>
+<p>The text-direction values are the following, implying that the value of the human-readable members is by default:</p>
+<dl><dt><dfn data-dfn-for="textdirection" data-dfn-type="dfn" id="dom-textdirection-auto" data-idl="" data-title="auto">
+	<code>auto</code></dfn></dt><dd> Directionality is determined by the Unicode Bidirectional Algorithm [[!UAX9]] algorithm.</dd>
+<dt><dfn data-dfn-for="textdirection" data-dfn-type="dfn" id="dom-textdirection-ltr" data-idl="" data-title="ltr">
+	<code>ltr</code></dfn></dt><dd>Left-to-right text.</dd>
+<dt><dfn data-dfn-for="textdirection" data-dfn-type="dfn" id="dom-textdirection-rtl" data-idl="" data-title="rtl">
+	<code>rtl</code></dfn></dt><dd>Right-to-left text.</dd></dl>
+</div>
+</div>
+
+<p>By defining the language and direction in a WebIDL dictionary form, specifications can incorporate language and direction metadata for a given String value succinctly. Implementations can recyle the dictionary implementation straightforwardly.</p>
+
+<p>On the down side, the serialized file containing dictionary-based data values still contains additional fields and may be more difficult to read.</p>
+
 </section>
 <section id="unicodeTags">
   <h2>Unicode tag characters</h2> 
