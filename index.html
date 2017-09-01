@@ -323,13 +323,13 @@ is "strongly discouraged" (to quote Unicode).</p>
 data in an interchange format is not a good idea. These include:</p>
 
 <ul>
-  <li>Most data sources (used to assemble data files) do not contain 
-  these characters; the process of assembling or serializing the data 
-  will need to introspect and insert the necessary characters. Consumers must then deserialize and instrospect the information using an identical <a>agreement</a>.</li>
-  <li>Many data formats have externally provided limitations on 
-  content, such as length limits. Inserting additional characters into 
+  <li>Most of the data sources used to assemble the documents on the Web will not contain 
+  these characters; producers, in the process of assembling or serializing the data, 
+  will need to introspect and insert the characters as needed&mdash;changing the data from the original source. Consumers must then deserialize and introspect the information using an identical <a>agreement</a>. The consumer has no way of knowing if the characters found in the data were inserted by the producer (and should be removed) or if the characters were part of the source data. Overzealous producers might introduce additional and unnecessary characters, for example adding an additional layer of bidi control codes to a string that would not otherwise require it. Equally, an overzealous consumer might remove characters that are needed by or intended for downstream processes.</li>
+  <li>Another challenge is that many applications that use these data formats have limitations on 
+  content, such as length limits or character set restrictions. Inserting additional characters into 
   the data may violate these externally applied requirements, and interfere 
-  with processing. In the worst case, portions (or all of) the data value itself might be corrupted 
+  with processing. In the worst case, portions (or all of) the data value itself might be rejected, corrupted, 
   or lost as a result.</li>
   <li>Inserting additional characters changes the identity of the string. This may have important consequences in certain contexts.</li>
   <li>Inserting and removing characters from the string is not a common operation for most data serialization libraries. Any processing that adds language or direction controls would need to introspect the string to see if these are already present or might need to do other processing to insert or modify the contents of the string as part of serializing the data.</li>
@@ -456,11 +456,15 @@ translate="no">ja</code>&quot; (Japanese). The tool he is using knows that he
   <section id="langapproach1">
     <h2>Require HTML or XML for content</h2>
     
-	<p>One proposal from members of the Annotation WG was to require 
-	HTML/XML formats for such annotation bodies, and use the <code 
-	class="kw" translate="no">lang</code> or <code class="kw" 
-translate="no">xml:lang</code> attributes in markup to denote the 
-    language changes. </p>
+	<p>One proposal from members of the Annotation WG was to require HTML/XML formats for such annotation bodies, and use the <code 
+	class="kw" translate="no">lang</code> or <code class="kw" translate="no">xml:lang</code> attributes in markup to denote the 
+    language changes. (This approach would also apply to base direction by using HTML's built-in <code>dir</code> attribute; there is no built-in attribute in XML.)</p>
+    
+    <p>The benefit for content that already uses markup is clear. The content will already provide complete markup necessary for the display and processing of the text or it can be extracted from the source page context. HTML and XML processors already know how to deal with this markup and provide ready validation.</p>
+    
+    <p>The downside of this approach is that many data values are just strings. As with adding Unicode tags or Unicode bidi controls, the addition of markup to strings alters the original string content. Producers are required to introspect strings and add markup as needed. Consumers must likewise remove any additional markup introduced by the producer.</p>
+    
+    <p>The addition of markup also requires consumers to guard against the usual problems with markup insertion, such as XSS attacks.</p>
     
   </section>
 
