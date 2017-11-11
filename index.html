@@ -8,7 +8,7 @@
       var respecConfig = {
           // specification status (e.g. WD, LCWD, WG-NOTE, etc.). If in doubt use ED.
           specStatus:          "ED",
-          //publishDate:  		"2017-06-24",
+          publishDate:  		"2017-11-11",
           //previousPublishDate:  "2017-06-24",
           //previousMaturity:  	"WG-NOTE",
 
@@ -151,9 +151,9 @@ cultures.</p>
 	<p>This section defines terminology necessary to understand the contents of this document. The terms defined here are specific to this document.</p>
 	
   
-  <p>A <dfn>producer</dfn> is any process where natural language string data is created for later storage, processing, or interchange.</p>
-  <p>A <dfn>consumer</dfn> is any process that receives natural language strings, either for display or processing.</p>
-  <p>An <dfn>agreement</dfn> is the common understanding between a producer and consumer about the encoding of string metadata: how it is to be understood, serialized, read, transmitted, removed, etc.</p>
+  <p>A <dfn data-lt="producer|producers">producer</dfn> is any process where natural language string data is created for later storage, processing, or interchange.</p>
+  <p>A <dfn data-lt="consumer|consumers">consumer</dfn> is any process that receives natural language strings, either for display or processing.</p>
+  <p>A <dfn data-lt="agreement|agreements|serialization agreement|serialization agreements">serialization agreement</dfn> (or "agreement" for short) is the common understanding between a producer and consumer about the serialization of string metadata: how it is to be understood, serialized, read, transmitted, removed, etc.</p>
  
  </section>
  
@@ -176,8 +176,8 @@ cultures.</p>
   <p>Displaying the string usually involves applying the base direction and language by constructing additional markup, adding control codes, or setting display properties. This indicates to rendering software the base direction or language that should be applied to the string in this display context to get the string to appear correctly. For text direction, it must also isolate embedded strings from the surrounding text to avoid spill-over effects of the bidi algorithm [[UAX9]]. For language, it must make clear the boundaries for the range of text to which the language applies.</p>
 </section>
 <section id="agreements">
-  <h3>Encoding Agreements</h3>
-  <p>Between any <a data-lt="producers">producer</a> and <a data-lt="consumers">consumer</a>, there needs to be an <b class="newterm">agreement</b> about what the document format contains and what the data in each field or attribute means. Any time a producer of a string takes special steps to collect and communicate information about the base direction or language of that string, it must do so with the expectation that the consumer of the string will understand how the producer encoded this information. If no action is taken by the producer, the consumer must still decide what rules to follow in order to decide on the appropriate base direction and language, even if it is only to provide some form of default value.</p>
+  <h3>Serialization Agreements</h3>
+  <p>Between any <a>producer</a> and <a>consumer</a>, there needs to be an <a>agreement</a> about what the document format contains and what the data in each field or attribute means. Any time a producer of a string takes special steps to collect and communicate information about the base direction or language of that string, it must do so with the expectation that the consumer of the string will understand how the producer encoded this information. If no action is taken by the producer, the consumer must still decide what rules to follow in order to decide on the appropriate base direction and language, even if it is only to provide some form of default value.</p>
   <p>In some systems or document formats, the necessary behaviour of the producers and consumers of a string are fully specified. In others, such agreements are not available; it is up to users to provide an agreement for how to encode, transmit, and later decode the necessary language or direction informat. Low level specifications, such as JSON, do not provide a string metadata structure by default, so any document formats based on these need to provide the "agreement" themselves.</p>
 </section>
 </section>
@@ -239,7 +239,7 @@ can be that, while the data arrives intact, its processing or
 presentation cannot be wholly recovered.</p>
 
 <section id="baseExample">
-	<h3>An Example</h3>
+<h3>An Example</h3>
 
 <p>Suppose that you are building a Web page to show a 
 customer's library of e-books. The e-books exist in a catalog of data 
@@ -299,6 +299,24 @@ controls or markup. Each of these considerations places special burden on implem
 to create arbitrary means of serializing, deserializing, managing, and exchanging
 the necessary metadata, with interoperability as a casualty along the way.</p> 
 
+<section id="additionalRequirements">
+<h4>Additional Requirements</h4>
+
+<p>The above example shows a data record available in a single language. Some applications might require the ability to send multiple languages for the same field, such as when localizing an application or when multilingual data is available.</p>
+
+<p>A given serialization agreement might need to represent several translations of the same field and these might include mixed direction text. For example, the value <kbd>title</kbd> might have several translations. They might be serialized like the following:</p>
+
+<pre>
+	"title": [ en: { "value": "Moby Dick", "lang": "en" }
+	           ar: { "value": "موبي ديك", "lang": "ar"  "dir": "rtl"}, 
+	           ja: { "value": "白鯨", "lang": "ja" },
+	           zh-Hans: { "value": "莫比迪克", "lang": "zh-Hans", "dir": "ltr"} ],
+</pre>
+
+<p>In some cases, a serialization might provide a means (defined in the specification for that document format) for setting a default value for language or direction for the whole of the document. This allows the serialized document to omit language and direction metadata from individual fields in cases where they match the default.</p>
+
+</section>
+
 </section>
 </section>
 
@@ -337,6 +355,201 @@ data in an interchange format is not a good idea. These include:</p>
 </section>
 </section>
 
+
+<section id="languageApproaches">
+<h2>Best Practices for Tagging Language and Direction</h2>
+
+   <p>The main issue is how a <a>producer</a> of a string knows how to encode and a <a>consumer</a> of a string will know how to find and interpret the language-related features that ought to be used for that string when it is eventually processed or displayed to the user. This section describes the current best practices, as well as several alternatives that were considered (with reasons for why they are not considered the best practice).</p>   
+   
+   <section id="bestPractices">
+  <h2>Current Best Practices for Tagging Language and Direction</h2>
+  
+  <p class=note>The TAG and I18N WG are currently discussing what the best practice recommendations should be. This subsection represents our understanding currently.</p>
+  
+  <p>Make each natural language string field <dfn>Localizable</dfn>. This uses a "dictionary" or canned pre-built extension that can be used commonly across a number of different document formats using the same base data format, such as JSON. The following example is a model for such a dictionary.</p>
+  
+<div class="example">
+<p><code>Localizable</code> dictionary</p>
+<pre class="def idl" data-dfn-for="Localizable" data-link-for="Localizable">
+<span class="idlDictionary" data-idl="" data-title="Localizable">dictionary <span class="idlDictionaryID"><code>Localizable</code></a></span> {
+	<span class="idlMember" id="idl-def-localizable-lang" data-idl="" data-title="lang" data-dfn-for="localizable"><span class="idlMemberType"><a href="https://www.w3.org/TR/WebIDL-1/#idl-DOMString">DOMString</a></span> <span class="idlMemberName"><a data-lt="lang" href="#dom-localizable-lang" class="internalDFN" data-link-type="dfn" data-for="Localizable"><code>lang</code></a></span>;</span>
+    <span class="idlMember" id="idl-def-localizable-dir" data-idl="" data-title="dir" data-dfn-for="localizable"><span class="idlMemberType"><a href="#dom-textdirection" class="internalDFN" data-link-type="dfn"><code>TextDirection</code></a></span> <span class="idlMemberName"><a data-lt="dir" href="#dom-localizable-dir" class="internalDFN" data-link-type="dfn" data-for="Localizable"><code>dir</code></a></span> = <span class="idlMemberValue">"auto"</span>;</span>
+};</span>
+</pre><dl><dt><dfn data-dfn-for="localizable" data-dfn-type="dfn" id="dom-localizable-lang" data-idl="" data-title="lang">
+	
+	<code>lang</code></dfn> member</dt>
+	<dd>A [[!BCP47]] language tag that specifies the primary language for the values of the human-readable
+members of the inheriting dictionary.</dd>
+<dt><dfn data-dfn-for="localizable" data-dfn-type="dfn" id="dom-localizable-dir" data-idl="" data-title="dir"><code>
+dir</code></dfn> member</dt>
+<dd>Specifies the base direction for the human-readable members of an inheriting dictionary.</dd></dl>
+<div data-dfn-for="TextDirection" data-link-for="TextDirection" id="textdirection-enum" typeof="bibo:Chapter" resource="#textdirection-enum" property="bibo:hasPart">
+	<p id="h-textdirection-enum" resource="#h-textdirection-enum"><dfn data-dfn-for="" data-dfn-type="dfn" id="dom-textdirection" data-idl="" data-title="TextDirection">
+       <code>TextDirection</code></dfn> enum</p>
+<pre class="def idl">
+	<span class="idlEnum" id="idl-def-textdirection" data-idl="" data-title="TextDirection">enum <span class="idlEnumID"><a data-lt="TextDirection" href="#dom-textdirection" class="internalDFN" data-link-type="dfn" data-for=""><code>TextDirection</code></a></span> {    
+		<a href="#dom-textdirection-auto" class="idlEnumItem">"auto"</a>,
+	    <a href="#dom-textdirection-ltr" class="idlEnumItem">"ltr"</a>,    
+	    <a href="#dom-textdirection-rtl" class="idlEnumItem">"rtl"</a>
+};</span>
+</pre>
+<p>The text-direction values are the following, implying that the value of the human-readable members is by default:</p>
+<dl><dt><dfn data-dfn-for="textdirection" data-dfn-type="dfn" id="dom-textdirection-auto" data-idl="" data-title="auto">
+	<code>auto</code></dfn></dt><dd> Directionality is determined by the Unicode Bidirectional Algorithm [[!UAX9]] algorithm.</dd>
+<dt><dfn data-dfn-for="textdirection" data-dfn-type="dfn" id="dom-textdirection-ltr" data-idl="" data-title="ltr">
+	<code>ltr</code></dfn></dt><dd>Left-to-right text.</dd>
+<dt><dfn data-dfn-for="textdirection" data-dfn-type="dfn" id="dom-textdirection-rtl" data-idl="" data-title="rtl">
+	<code>rtl</code></dfn></dt><dd>Right-to-left text.</dd></dl>
+</div>
+</div>
+
+<p>By defining the language and direction in a WebIDL dictionary form, specifications can incorporate language and direction metadata for a given String value succinctly. Implementations can recyle the dictionary implementation straightforwardly.</p>
+
+<p>On the down side, the serialized file containing dictionary-based data values still contains additional fields and may be more difficult to read. Here's an example:</p>
+
+<pre>
+[
+  displayItems: [{
+    label: <span dir=rtl">"البند الخاص (للبيع!)",</span>
+    dir: "rtl",
+    lang: "ar-AE",
+    amount: { },
+  }]
+]</pre>
+
+
+<p>As shown in <a href="#additionalRequirements">Additional Requirements</a>, the <a>Localizable</a> strings can further be organized into localized arrays with multiple languages for the same value. By using the array format shown below, applications can have fast access to individual languages. The format embeds the <kbd>lang</kbd> field inside the enclosed <kbd>Localizable</kbd> so that the selected or preferred value can easily be extracted as a complete JavaScript or JSON object.</p>
+
+<pre>
+	"title": [ en: { "value": "Moby Dick", "lang": "en" },
+	           ar: { "value": "موبي ديك", "lang": "ar"  "dir": "rtl"}, 
+	           ja: { "value": "白鯨", "lang": "ja" },
+	           zh-Hans: { "value": "莫比迪克", "lang": "zh-Hans", "dir": "ltr"} ],
+</pre>
+
+<p>If fast access or language negotiation is not required, the array of <kbd>Localizable</kbd> objects can omit the additional level of indirection:</p>
+
+<pre>
+	"title": [ { "value": "Moby Dick", "lang": "en" },
+	           { "value": "موبي ديك", "lang": "ar"  "dir": "rtl"}, 
+	           { "value": "白鯨", "lang": "ja" },
+	           { "value": "莫比迪克", "lang": "zh-Hans", "dir": "ltr"} ],
+</pre>
+
+</section>
+
+<section id="otherApproaches">
+	
+	<h2>Other Approaches Considered</h2>
+	
+	<p>Other approaches that were considered are listed below.</p>
+  
+  <section id="langapproach1">
+    <h2>Require HTML or XML for content</h2>
+    
+	<p>One proposal from members of the Annotation WG was to require HTML/XML formats for such annotation bodies, and use the <code 
+	class="kw" translate="no">lang</code> or <code class="kw" translate="no">xml:lang</code> attributes in markup to denote the 
+    language changes. (This approach would also apply to base direction by using HTML's built-in <code>dir</code> attribute; there is no built-in attribute in XML.)</p>
+    
+    <p class=note>This proposal can be useful for <a>agreements</a> that support the interchange of HTML or XML markup data.</p>
+    
+    <p>The benefit for content that already uses markup is clear. The content will already provide complete markup necessary for the display and processing of the text or it can be extracted from the source page context. HTML and XML processors already know how to deal with this markup and provide ready validation.</p>
+    
+    <p>The downside of this approach is that many data values are just strings. As with adding Unicode tags or Unicode bidi controls, the addition of markup to strings alters the original string content. Producers are required to introspect strings and add markup as needed. Consumers must likewise remove any additional markup introduced by the producer.</p>
+    
+    <p>The addition of markup also requires consumers to guard against the usual problems with markup insertion, such as XSS attacks.</p>
+    
+  </section>
+
+  
+  <section id="langapproach2">
+    <h2>Create a new datatype in JSON-LD</h2>
+    <p>If a new datatype were added to JSON to support natural language strings, then specifications could easily specify that type for use in document formats. Since the format is standardized, <a data-lt="producer">producers</a> and <a data-lt="consumer">consumers</a> would not need to guess about direction or language information when it is encoded. Such a serialization might look like the following:</p>
+    
+    <pre class=example>
+myLocalizedString: "Hello World!"@en^ltr          // language and direction
+myLocalizedString_ar: "مرحبا بالعالم!"@ar-EG^rtl  // right-to-left example
+myLocalizedString_fr: "Bonjour monde !"@fr        // language only
+myLocalizedString_und: "שלום עולם!"^rtl           // direction information only
+myLanguageNeutralString: "978-0-123-4567-X"       // language-neutral string</pre>
+
+  <p>The downside of adding a datatype is that JSON is a widely implemented format, including many ad-hoc implementations. Any new serialization form would likely break or cause interoperability problems with these existing implementations. JSON is not designed to be a "versioned" format. Any serialization form used would need to be transparent to existing JSON processors and thus could introduce unwanted data or data corruption to existing fields and formats.</p>
+  </section>
+
+
+<section id="unicodeTags">
+  <h2>Unicode tag characters</h2> 
+  
+  <p>Unicode tag characters are strongly deprecated by the Unicode Consortium. We are unaware of any 
+  implementations that interpret or understand them. These tag characters
+  were intended for use in language tagging within plain text contexts
+  and are often suggested as an alternate means of providing in-band
+  non-markup language tagging.</p>
+
+  <p>Here is how Unicode tags are supposed to work:</p>
+  
+  <p>A [[!BCP47]] language tag is just one of the potential tags that could be applied using this system, so each language tag begins with a tag identification character, in this case <code>U+E0001</code>. The remainder of the Unicode  block for forming tags mirrors the printable ASCII characters. That is, <code>U+E0020</code> is space (mirroring <code>U+0020</code>), <code>U+E0041</code> is capital A (mirroring <code>U+0041</code>), and so forth. Following the tag identification character, you use each tag character to spell out a [[!BCP47]] language tag  using the upper/lowercase letters, digits, and the hyphen character. Normal language tags, which are composed from ASCII letters, digits and hyphens, can be transmogrified into tags by adding <code>0xE0000</code> to each character's code point. Additional structure, such as a language priority list (see [[RFC4647]]) might be constructed using other characters such as comma or semi-colon, although Unicode does not define or even necessarily permit this.</p>
+  
+  <p>The end of a tag's scope is signalled by the end of the string, or 
+  can be signalled explicitly using the cancel tag character U+E007F, 
+  either alone (to cancel all tags) or preceeded by the language tag 
+  identification character <code>U+E0001</code> (i.e. the sequence 
+  <code>&lt;U+E0001,U+E007F&gt;</code> to end only language tags).</p>
+  
+    
+  <p>Tags therefore have a minimum of three characters, and can 
+  easily be 12 or more. Furthermore, these characters are supplementary 
+  characters. That is, they are encoded using 4-bytes per character in 
+  UTF-8 and they are encoded as a surrogate pair (two 16-bit code 
+  units) in UTF-16. Surrogate pairs are needed to encode these characters in string types for languages such as 
+  Java and JavaScript that use UTF-16 internally. The use of surrogates makes the strings somewhat opaque. For example, <code>U+E0020</code> is encoded in UTF-16 as <kbd>0xDB40.DC20</kbd> and in UTF-8 as the byte sequence <kbd>0xF3.A0.80.A0</kbd>.</p>
+  
+  <p>Applications that treat 
+	the characters as unknown Unicode characters will display them as 
+	tofu (hollow box replacement characters) and may count them towards 
+	length limits, etc. So they are only useful when applications or 
+	interchange mechanisms are fully aware of them and can remove them 
+	or disregard them appropriately. Although the characters are not 
+	supposed to be displayed or have any effect on text processing, in 
+	practice they can interfere with normal text processes such as 
+	truncation. line wrapping, hyphenation, spell-checking and so 
+	forth.</p>
+    
+  <p>By design, [[!BCP47]] language tags are intended to be ASCII 
+  case-insensitive. Applications handling Unicode tag characters would 
+  have to apply similar case-insensitivity to ensure correct 
+  identification of the language. (The Unicode data doesn't specify 
+  case conversion pairings for these characters; this complicates the 
+  processing and matching of langauge tag values encoded using the tag 
+  characters.)</p>
+  
+  <p>Moreover, language tags need to be formed from valid subtags to 
+  conform to [[!BCP47]]. Valid subtags are kept in an IANA registry and 
+  new subtags are added regularly, so applications dealing with this 
+  kind of tagging would need to always check each subtag against the 
+  latest version of the registry.</p>
+  
+  <p>Another issue with these tag characters is that they do not allow 
+  nesting of language tags. For example, if a string contains two 
+  languages, such as a quote in French inside an English sentence, 
+  Unicode tag characters can only indicate where one language starts. 
+  To indicate nested languages, tags would need to be embedded into the 
+  text not just prefixed to the front.</p>
+  
+  <p>Finally, although never implemented, other types of tags could be 
+  embedded into a string or document using Unicode tag characters. It 
+  is possible for these tags to overlap sections of text tagged with a 
+  language tag.</p>
+  
+</section>
+</section>
+</section>
+
+<section id="useCases">
+	<h2>Requirements and Use Cases</h2>
+	
+	<p>This section of the document describes in depth the need for language and direction metadata and various use cases helpful in understanding the best practices and alternatives listed above.</p>
+	
 <section id="Language Identification">
   <h2>Language Identification</h2>
 <section id="Definitions">
@@ -445,168 +658,6 @@ translate="no">ja</code>&quot; (Japanese). The tool he is using knows that he
 </section>
 
 
-
-  <section id="languageApproaches">
-    <h2>Approaches to Tagging Language</h2>
-
-   <p>The main issue is how a <a>producer</a> of a string knows how to encode and a <a>consumer</a> of a 
-  string will know how to find and interpret the language-related features that ought to be used for 
-  that string when it is eventually processed or displayed to the user. A number of alternatives are considered below.</p>   
-  
-  <section id="langapproach1">
-    <h2>Require HTML or XML for content</h2>
-    
-	<p>One proposal from members of the Annotation WG was to require HTML/XML formats for such annotation bodies, and use the <code 
-	class="kw" translate="no">lang</code> or <code class="kw" translate="no">xml:lang</code> attributes in markup to denote the 
-    language changes. (This approach would also apply to base direction by using HTML's built-in <code>dir</code> attribute; there is no built-in attribute in XML.)</p>
-    
-    <p>The benefit for content that already uses markup is clear. The content will already provide complete markup necessary for the display and processing of the text or it can be extracted from the source page context. HTML and XML processors already know how to deal with this markup and provide ready validation.</p>
-    
-    <p>The downside of this approach is that many data values are just strings. As with adding Unicode tags or Unicode bidi controls, the addition of markup to strings alters the original string content. Producers are required to introspect strings and add markup as needed. Consumers must likewise remove any additional markup introduced by the producer.</p>
-    
-    <p>The addition of markup also requires consumers to guard against the usual problems with markup insertion, such as XSS attacks.</p>
-    
-  </section>
-
-  
-  <section id="langapproach2">
-    <h2>Create a new datatype in JSON-LD</h2>
-    <p>If a new datatype were added to JSON to support natural language strings, then specifications could easily specify that type for use in document formats. Since the format is standardized, <a data-lt="producer">producers</a> and <a data-lt="consumer">consumers</a> would not need to guess about direction or language information when it is encoded. Such a serialization might look like the following:</p>
-    
-    <pre class=example>
-myLocalizedString: "Hello World!"@en^ltr          // language and direction
-myLocalizedString_ar: "مرحبا بالعالم!"@ar-EG^rtl  // right-to-left example
-myLocalizedString_fr: "Bonjour monde !"@fr        // language only
-myLocalizedString_und: "שלום עולם!"^rtl           // direction information only
-myLanguageNeutralString: "978-0-123-4567-X"       // language-neutral string</pre>
-
-  <p>The downside of adding a datatype is that JSON is a widely implemented format, including many ad-hoc implementations. Any new serialization form would likely break or cause interoperability problems with these existing implementations. JSON is not designed to be a "versioned" format. Any serialization form used would need to be transparent to existing JSON processors and thus could introduce unwanted data or data corruption to existing fields and formats.</p>
-  </section>
-
-
-
-<section id="langapproach3">
-  <h2>Provide a "dictionary"</h2>
-  <p>Provide a "dictionary" or canned pre-built extension that can be
-  used commonly across a number of different document formats using
-  the same base data format, such as JSON. The following example might serve as a model for such a dictionary.</p>
-  
-<div class="example">
-<p><code>Localizable</code> dictionary</p>
-<pre class="def idl" data-dfn-for="Localizable" data-link-for="Localizable">
-<span class="idlDictionary" data-idl="" data-title="Localizable">dictionary <span class="idlDictionaryID"><code>Localizable</code></a></span> {
-	<span class="idlMember" id="idl-def-localizable-lang" data-idl="" data-title="lang" data-dfn-for="localizable"><span class="idlMemberType"><a href="https://www.w3.org/TR/WebIDL-1/#idl-DOMString">DOMString</a></span> <span class="idlMemberName"><a data-lt="lang" href="#dom-localizable-lang" class="internalDFN" data-link-type="dfn" data-for="Localizable"><code>lang</code></a></span>;</span>
-    <span class="idlMember" id="idl-def-localizable-dir" data-idl="" data-title="dir" data-dfn-for="localizable"><span class="idlMemberType"><a href="#dom-textdirection" class="internalDFN" data-link-type="dfn"><code>TextDirection</code></a></span> <span class="idlMemberName"><a data-lt="dir" href="#dom-localizable-dir" class="internalDFN" data-link-type="dfn" data-for="Localizable"><code>dir</code></a></span> = <span class="idlMemberValue">"auto"</span>;</span>
-};</span>
-</pre><dl><dt><dfn data-dfn-for="localizable" data-dfn-type="dfn" id="dom-localizable-lang" data-idl="" data-title="lang">
-	
-	<code>lang</code></dfn> member</dt>
-	<dd>A [[!BCP47]] language tag that specifies the primary language for the values of the human-readable
-members of the inheriting dictionary.</dd>
-<dt><dfn data-dfn-for="localizable" data-dfn-type="dfn" id="dom-localizable-dir" data-idl="" data-title="dir"><code>
-dir</code></dfn> member</dt>
-<dd>Specifies the base direction for the human-readable members of an inheriting dictionary.</dd></dl>
-<div data-dfn-for="TextDirection" data-link-for="TextDirection" id="textdirection-enum" typeof="bibo:Chapter" resource="#textdirection-enum" property="bibo:hasPart">
-	<p id="h-textdirection-enum" resource="#h-textdirection-enum"><dfn data-dfn-for="" data-dfn-type="dfn" id="dom-textdirection" data-idl="" data-title="TextDirection">
-       <code>TextDirection</code></dfn> enum</p>
-<pre class="def idl">
-	<span class="idlEnum" id="idl-def-textdirection" data-idl="" data-title="TextDirection">enum <span class="idlEnumID"><a data-lt="TextDirection" href="#dom-textdirection" class="internalDFN" data-link-type="dfn" data-for=""><code>TextDirection</code></a></span> {    
-		<a href="#dom-textdirection-auto" class="idlEnumItem">"auto"</a>,
-	    <a href="#dom-textdirection-ltr" class="idlEnumItem">"ltr"</a>,    
-	    <a href="#dom-textdirection-rtl" class="idlEnumItem">"rtl"</a>
-};</span>
-</pre>
-<p>The text-direction values are the following, implying that the value of the human-readable members is by default:</p>
-<dl><dt><dfn data-dfn-for="textdirection" data-dfn-type="dfn" id="dom-textdirection-auto" data-idl="" data-title="auto">
-	<code>auto</code></dfn></dt><dd> Directionality is determined by the Unicode Bidirectional Algorithm [[!UAX9]] algorithm.</dd>
-<dt><dfn data-dfn-for="textdirection" data-dfn-type="dfn" id="dom-textdirection-ltr" data-idl="" data-title="ltr">
-	<code>ltr</code></dfn></dt><dd>Left-to-right text.</dd>
-<dt><dfn data-dfn-for="textdirection" data-dfn-type="dfn" id="dom-textdirection-rtl" data-idl="" data-title="rtl">
-	<code>rtl</code></dfn></dt><dd>Right-to-left text.</dd></dl>
-</div>
-</div>
-
-<p>By defining the language and direction in a WebIDL dictionary form, specifications can incorporate language and direction metadata for a given String value succinctly. Implementations can recyle the dictionary implementation straightforwardly.</p>
-
-<p>On the down side, the serialized file containing dictionary-based data values still contains additional fields and may be more difficult to read. Here's an example:</p>
-
-<pre>
-[
-  displayItems: [{
-    label: <span dir=rtl">"البند الخاص (للبيع!)",</span>
-    dir: "rtl",
-    lang: "ar-AE",
-    amount: { },
-  }]
-]</pre>
-
-</section>
-<section id="unicodeTags">
-  <h2>Unicode tag characters</h2> 
-  
-  <p>Unicode tag characters are strongly deprecated by the Unicode Consortium. We are unaware of any 
-  implementations that interpret or understand them. These tag characters
-  were intended for use in language tagging within plain text contexts
-  and are often suggested as an alternate means of providing in-band
-  non-markup language tagging.</p>
-
-  <p>Here is how Unicode tags are supposed to work:</p>
-  
-  <p>A [[!BCP47]] language tag is just one of the potential tags that could be applied using this system, so each language tag begins with a tag identification character, in this case <code>U+E0001</code>. The remainder of the Unicode  block for forming tags mirrors the printable ASCII characters. That is, <code>U+E0020</code> is space (mirroring <code>U+0020</code>), <code>U+E0041</code> is capital A (mirroring <code>U+0041</code>), and so forth. Following the tag identification character, you use each tag character to spell out a [[!BCP47]] language tag  using the upper/lowercase letters, digits, and the hyphen character. Normal language tags, which are composed from ASCII letters, digits and hyphens, can be transmogrified into tags by adding <code>0xE0000</code> to each character's code point. Additional structure, such as a language priority list (see [[RFC4647]]) might be constructed using other characters such as comma or semi-colon, although Unicode does not define or even necessarily permit this.</p>
-  
-  <p>The end of a tag's scope is signalled by the end of the string, or 
-  can be signalled explicitly using the cancel tag character U+E007F, 
-  either alone (to cancel all tags) or preceeded by the language tag 
-  identification character <code>U+E0001</code> (i.e. the sequence 
-  <code>&lt;U+E0001,U+E007F&gt;</code> to end only language tags).</p>
-  
-    
-  <p>Tags therefore have a minimum of three characters, and can 
-  easily be 12 or more. Furthermore, these characters are supplementary 
-  characters. That is, they are encoded using 4-bytes per character in 
-  UTF-8 and they are encoded as a surrogate pair (two 16-bit code 
-  units) in UTF-16. Surrogate pairs are needed to encode these characters in string types for languages such as 
-  Java and JavaScript that use UTF-16 internally. The use of surrogates makes the strings somewhat opaque. For example, <code>U+E0020</code> is encoded in UTF-16 as <kbd>0xDB40.DC20</kbd> and in UTF-8 as the byte sequence <kbd>0xF3.A0.80.A0</kbd>.</p>
-  
-  <p>Applications that treat 
-	the characters as unknown Unicode characters will display them as 
-	tofu (hollow box replacement characters) and may count them towards 
-	length limits, etc. So they are only useful when applications or 
-	interchange mechanisms are fully aware of them and can remove them 
-	or disregard them appropriately. Although the characters are not 
-	supposed to be displayed or have any effect on text processing, in 
-	practice they can interfere with normal text processes such as 
-	truncation. line wrapping, hyphenation, spell-checking and so 
-	forth.</p>
-    
-  <p>By design, [[!BCP47]] language tags are intended to be ASCII 
-  case-insensitive. Applications handling Unicode tag characters would 
-  have to apply similar case-insensitivity to ensure correct 
-  identification of the language. (The Unicode data doesn't specify 
-  case conversion pairings for these characters; this complicates the 
-  processing and matching of langauge tag values encoded using the tag 
-  characters.)</p>
-  
-  <p>Moreover, language tags need to be formed from valid subtags to 
-  conform to [[!BCP47]]. Valid subtags are kept in an IANA registry and 
-  new subtags are added regularly, so applications dealing with this 
-  kind of tagging would need to always check each subtag against the 
-  latest version of the registry.</p>
-  
-  <p>Another issue with these tag characters is that they do not allow 
-  nesting of language tags. For example, if a string contains two 
-  languages, such as a quote in French inside an English sentence, 
-  Unicode tag characters can only indicate where one language starts. 
-  To indicate nested languages, tags would need to be embedded into the 
-  text not just prefixed to the front.</p>
-  
-  <p>Finally, although never implemented, other types of tags could be 
-  embedded into a string or document using Unicode tag characters. It 
-  is possible for these tags to overlap sections of text tagged with a 
-  language tag.</p>
-  
-</section>
-</section><!-- language approaches-->
 </section>
 
 
@@ -777,6 +828,7 @@ dir</code></dfn> member</dt>
   <p>Metadata is probably most effective, however (especially for the original creator of the strings), if it is only passed with a string in those cases where first-strong detection is otherwise going to produce a wrong result. This would mean that consumers of strings should not only recognise the metadata, but should also expect to  rely on first-strong heuristics for strings without metadata. It also means that producers of strings need to recognise situations where directional information is needed and set the metadata.</p>
 </section>
 </section>
+</section>
 
 
 <section id="Acknowledgements">
@@ -786,7 +838,9 @@ dir</code></dfn> member</dt>
 <p>The Internationalization (I18N) Working Group would like to thank 
 the following contributors to this document: 
     Mati Allouche, 
+    David Baron,
     Tobie Langel,
+    Sangwhan Moon,
     Felix Sasaki, 
     Najib Tounsi, 
     
