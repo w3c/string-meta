@@ -153,7 +153,7 @@ cultures.</p>
   
   <p>A <dfn data-lt="producer|producers">producer</dfn> is any process where natural language string data is created for later storage, processing, or interchange.</p>
   <p>A <dfn data-lt="consumer|consumers">consumer</dfn> is any process that receives natural language strings, either for display or processing.</p>
-  <p>A <dfn data-lt="agreement|agreements|serialization agreement|serialization agreements">serialization agreement</dfn> (or "agreement" for short) is the common understanding between a producer and consumer about the serialization of string metadata: how it is to be understood, serialized, read, transmitted, removed, etc.</p>
+  <p>A <dfn data-lt="agreement|agreements|serialization agreement|serialization agreements|serialization">serialization agreement</dfn> (or "agreement" for short) is the common understanding between a producer and consumer about the serialization of string metadata: how it is to be understood, serialized, read, transmitted, removed, etc.</p>
   <p><dfn data-lt="language negotiation">Language negotiation</dfn> is any process which selects or filters content based on language. Usually this implies selecting content in a single language (or falling back to some meaningful default language that is available) by finding the best matching values when several languages or locales [[LTLI]] are present in the content. Some common language negotiation algorithms include the Lookup algorithm in [[BCP47]] or the BestFitMatcher in [[ECMA-402]].</p>
 
  </section>
@@ -303,7 +303,7 @@ the necessary metadata, with interoperability as a casualty along the way.</p>
 <section id="additionalRequirements">
 <h4>Additional Requirements for Localization</h4>
 
-<p>The above example shows a data record available in a single language. Some applications might require the ability to send multiple languages for the same field, such as when localizing an application or when multilingual data is available. This is particularly true when the <a>producer</a> needs to support <a>consumers</a> that perform their own <a>language negotation</a> or when the consumer cannot know which language or languages will be selected for display.</p>
+<p>The above example shows a data record available in a single language. Some applications might require the ability to send multiple languages for the same field, such as when localizing an application or when multilingual data is available. This is particularly true when the <a>producer</a> needs to support <a>consumers</a> that perform their own <a>language negotiation</a> or when the consumer cannot know which language or languages will be selected for display.</p>
 
 <p><a>Serialization agreements</a> to support this therefore need to represent several different language variations of the same field. For instance, in the example above the values <kbd>title</kbd> or <kbd>description</kbd> might each have translations available for display to users who speak a language other than English. Or an application might have localized strings that the <a>consumer</a> can select at runtime. In some cases, all language variations might be shown to the user. In other cases, the different language values might be matched to user preferences as part of <a>language negotiation</a> to select the most appropriate language to show.</p>
 
