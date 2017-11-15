@@ -165,7 +165,7 @@ cultures.</p>
   
 <section id="producers">  
   <h3>Producers</h3>  
-  <p>A string can be created in a number of ways, including a content author typing strings into a plain text editor, text message, or editing tool; or a script scraping text from web pages; or acquisition of an existing set of strings from another application or repository. Any source of strings might provide an interface or API that determines or allows the base direction or language to be specified at creation. It might also provide a suitable default when the direction or language is not provided or specified. In this document, the <b class="newterm">producer</b> of a string is the source, be it human or a mechanism, that creates a string for storage or transmission.</p>
+  <p>A string can be created in a number of ways, including a content author typing strings into a plain text editor, text message, or editing tool; or a script scraping text from web pages; or acquisition of an existing set of strings from another application or repository. In the data formats under consideration in this document, many strings come from back end data repositories or databases of various kinds. Sources of strings often provide an interface, API, or metadata that includes information about the base direction and language of the data. Some also provide a suitable default for when the direction or language is not provided or specified. In this document, the <b class="newterm">producer</b> of a string is the source, be it human or a mechanism, that creates or provides a string for storage or transmission.</p>
   <p>When a  string is created, it's necessary to (a) detect or capture the appropriate language and base direction to be associated with the string, and (b) take steps, where needed, to set the string up in a way that stores and communicates the language and base direction.</p>
   <p>For example, in the case of a string that is extracted from an HTML form, the base direction can be detected from the computed value of the form's field. Such a value could be inherited from an earlier element, such as the <code class="kw" translate="no">html</code> element, or set using markup or styling on the <code class="kw" translate="no">input</code> element itself. The user could also set the direction of the text by <a href="https://www.w3.org/International/questions/qa-html-dir#userexplicit">using  keyboard shortcut keys</a> to change the direction of the form field. The <code class="kw" translate="no">dirname</code> attribute provides a way of automatically communicating that value with a form submission.</p>
   <p>Similarly, language information in an HTML form  would most likely be inherited from the <code class="kw" translate="no">lang</code> attribute on the <code class="kw" translate="no">html</code> tag, or any element in the tree with a <code class="kw" translate="no">lang</code> attribute.</p>
@@ -175,6 +175,7 @@ cultures.</p>
   <h3>Consumers</h3>
   <p>A <b class="newterm">consumer</b> is an application or process that receives a string for processing and possibly places it into a context where it will be exposed to a user. For display purposes, it must ensure that the base direction and language of the string is correctly applied to the string in that context. For processing purposes, it must at least persist the language and direction and may need to use the language and direction data in order to perform language-specific operations.</p>
   <p>Displaying the string usually involves applying the base direction and language by constructing additional markup, adding control codes, or setting display properties. This indicates to rendering software the base direction or language that should be applied to the string in this display context to get the string to appear correctly. For text direction, it must also isolate embedded strings from the surrounding text to avoid spill-over effects of the bidi algorithm [[UAX9]]. For language, it must make clear the boundaries for the range of text to which the language applies.</p>
+  <p>Note that a consumer of one document format might be a <a>producer</a> of another document format.</p>
 </section>
 <section id="agreements">
   <h3>Serialization Agreements</h3>
@@ -238,6 +239,8 @@ designers to provide the metadata on their own initiative. When
 standardized formats do not address the resulting issues, the result 
 can be that, while the data arrives intact, its processing or 
 presentation cannot be wholly recovered.</p>
+
+<p>In a distributed Web, any <a>consumer</a> can also be a <a>producer</a> for some other process or system. Thus, a given consumer might need to pass language and direction metadata from one document format (and using one <a>agreement</a>) to another consumer using a different document format. Lack of consistency in representing language and direction metadata in serialization agreements poses a threat to interoperability and a barrier to consistent implementation.</p>
 
 <section id="baseExample">
 <h3>An Example</h3>
@@ -346,6 +349,8 @@ data in an interchange format is not a good idea. These include:</p>
   <li>Inserting additional characters changes the identity of the string. This may have important consequences in certain contexts.</li>
   <li>Inserting and removing characters from the string is not a common operation for most data serialization libraries. Any processing that adds language or direction controls would need to introspect the string to see if these are already present or might need to do other processing to insert or modify the contents of the string as part of serializing the data.</li>
 </ul>
+
+<p class=note>This last consideration is important to call out: document formats are often built and serialized using several layers of code. Libraries, such as general purpose JSON libraries, are expected to store and retrieve faithfully the data that they are passed. Higher-level implementations also generally concern themselves with faithful serialization and de-serialization of the values that they are passed. Any process that alters the data itself introduces variability that is undesirable. For example, consider an application's unit test that checks if the string returned from the document is identical to the one in the data catalog used to generate the document. If bidi controls, HTML markup, or Unicode language tags have been inserted, removed, or changed, the strings might not compare as equal, even though they would be expected to be the same.</p>
 </section>
 </section>
 
@@ -358,7 +363,7 @@ data in an interchange format is not a good idea. These include:</p>
    <section id="bestPractices">
   <h2>Current Best Practices for Tagging Language and Direction</h2>
   
-  <p class=note>The TAG and I18N WG are currently discussing what the best practice recommendations should be. This subsection represents our understanding currently.</p>
+  <p class=note>The TAG and I18N WG are <a href="https://github.com/w3ctag/design-reviews/issues/178">currently discussing</a> what the best practice recommendations should be. This subsection represents our understanding currently.</p>
   
   <p>Make each natural language string field <dfn>Localizable</dfn>. This uses a "dictionary" or canned pre-built extension that can be used commonly across a number of different document formats using the same base data format, such as JSON. The following example is a model for such a dictionary.</p>
   
@@ -412,23 +417,33 @@ dir</code></dfn> member</dt>
 ]</pre>
 
 
-<p>As shown in <a href="#additionalRequirements">Additional Requirements</a>, the <a>Localizable</a> strings can further be organized into localized arrays with multiple languages for the same value. By using the array format shown below, applications can have fast access to individual languages. The format embeds the <kbd>lang</kbd> field inside the enclosed <kbd>Localizable</kbd> so that the selected or preferred value can easily be extracted as a complete JavaScript or JSON object.</p>
+<p>If an application needs to provide for <a>language negotiation</a> or if the data is available in multiple languages, the <a>Localizable</a> strings can further be organized into arrays with multiple languages for the same value. A simple example might look like this:</p>
 
-<pre>
-	"title": [ en: { "value": "Moby Dick", "lang": "en" },
-	           ar: { "value": "موبي ديك", "lang": "ar"  "dir": "rtl"}, 
-	           ja: { "value": "白鯨", "lang": "ja" },
-	           zh-Hans: { "value": "莫比迪克", "lang": "zh-Hans", "dir": "ltr"} ],
-</pre>
-
-<p>If fast access or language negotiation is not required, the array of <kbd>Localizable</kbd> objects can omit the additional level of indirection:</p>
-
+<aside class=example>
 <pre>
 	"title": [ { "value": "Moby Dick", "lang": "en" },
 	           { "value": "موبي ديك", "lang": "ar"  "dir": "rtl"}, 
 	           { "value": "白鯨", "lang": "ja" },
 	           { "value": "莫比迪克", "lang": "zh-Hans", "dir": "ltr"} ],
 </pre>
+</aside>
+
+<p>A common use for multiple language values is to <a href="#additionalRequirements">runtime selection of the language</a>. Altering the format above slightly allows for fast selection of the appropriate language from the array of available languages:</p>
+
+<aside class=example>
+<pre>
+	"title": [ en: { "value": "Moby Dick", "lang": "en" },
+	           ar: { "value": "موبي ديك", "lang": "ar"  "dir": "rtl"}, 
+	           ja: { "value": "白鯨", "lang": "ja" },
+	           zh-Hans: { "value": "莫比迪克", "lang": "zh-Hans", "dir": "ltr"} ],
+</pre>
+	<p>Notice that this format embeds the <kbd>lang</kbd> field both as a key in the array and inside the enclosed <kbd>Localizable</kbd> so that the selected or preferred value can easily be extracted as a complete JavaScript or JSON object.</p>
+	<p>For example, if the language selected is English (<kbd>en</kbd>), it is easy to extract the object <kbd>{ "value": "Moby Dick", "lang": "en" }</kbd> for inclusion into another data format.</p>
+</aside>
+
+<p>If fast access or language negotiation is not required, the array of <kbd>Localizable</kbd> objects can omit the additional level of indirection:</p>
+
+
 
 </section>
 
