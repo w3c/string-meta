@@ -252,7 +252,7 @@ customer's library of e-books. The e-books exist in a catalog of data
 and consist of the usual data values. A JSON file for a single entry 
 might look something like:</p>
 
-<pre>
+<pre id="example1Data">
 {
     "id": "978-0-1234-5678-X",
     "title": "Moby Dick",
@@ -430,7 +430,7 @@ dir</code></dfn> member</dt>
 </pre>
 </aside>
 
-<p>A common use for multiple language values is to <a href="#additionalRequirements">runtime selection of the language</a>. Altering the format above slightly allows for fast selection of the appropriate language from the array of available languages:</p>
+<p>A common use for multiple language values is to enable <a href="#additionalRequirements">runtime selection of the language</a>. Altering the format above slightly allows for fast selection of the appropriate language from the array of available languages:</p>
 
 <aside class=example>
 <pre>
@@ -443,7 +443,44 @@ dir</code></dfn> member</dt>
 	<p>For example, if the language selected is English (<kbd>en</kbd>), it is easy to extract the object <kbd>{ "value": "Moby Dick", "lang": "en" }</kbd> for inclusion into another data format.</p>
 </aside>
 
-<p>If fast access or language negotiation is not required, the array of <kbd>Localizable</kbd> objects can omit the additional level of indirection:</p>
+<p>Specifications and document formats MAY provide for a default language and default direction for an overall document. This might be helpful when performing <a>language negotiation</a> on several levels and there is a desire to use the same default language. It can also be helpful when a document is known to be in a single language or have a single expected base direction and the additional serialization complexity of using <kbd>Localizable</kbd> can thus be avoided.</p>
+
+<p class=issue>Following text is new and still speculative.</p>
+
+<p>Interoperability is enhanced when specifications all use the same attribute name for the default language and base direction. This document recommends using <kbd>lang</kbd> as the name of the default language value and <kbd>dir</kbd> as the default direction value. These are the same names as used by <kbd>Localizable</kbd> as well as being the names used by common formats such as HTML and CSS.</p>
+
+<aside class=example title="">
+	<p>The following example shows the record used in the <a href="baseExample">example</a> with a default language and direction:</p>
+<pre>
+{
+    "id": "978-0-1234-5678-X",
+    "lang": "en",
+    "dir": "ltr",
+    "title": "Moby Dick",
+    "authors": [ "Herman Melville" ],
+    "language": "en-US",
+    "pubDate": "1851-10-18",
+    "publisher": "Mark Twain Press",
+    "coverImage": "https://example.com/images/mobidick_cover.jpg",
+    // etc.
+},
+</pre>
+
+<p>Here is the same example without using the default:</p>
+<pre>
+{
+    "id": "978-0-1234-5678-X",
+    "title": {"value": "Moby Dick", "lang": "en"},
+    "authors": [ {"value": "Herman Melville", "lang": "en"} ],
+    "language": "en-US",
+    "pubDate": "1851-10-18",
+    "publisher": {"value": "Mark Twain Press", "lang": "en"},
+    "coverImage": "https://example.com/images/mobidick_cover.jpg",
+    // etc.
+},
+</pre>
+	
+</aside>
 
 
 
@@ -701,14 +738,14 @@ myLanguageNeutralString: "978-0-123-4567-X"       // language-neutral string</pr
 
 <aside class=example title="Bidirectional Use Case #3" id="bidiCase3">
   <p style="text-align:center;"><code><bdo dir="ltr">&quot;&lt;span&gt;בינלאומי!&lt;/span&gt;&quot;</bdo></code></p>
-  <p>This test is intended for consuming applications that treat the markup in the string as actual markup. As for test #1, the exclamation mark must appear to the left of the Hebrew letters, regardless of the LTR directionality of the markup surrounding it.</p>
+  <p>This use case illustrates how consuming applications that treat the markup in the string as actual markup might work. As with <a href=bidiCase1>use case #1</a>, the exclamation mark needs to appear to the left of the Hebrew letters, regardless of the LTR directionality of the markup surrounding it.</p>
   <p>This is what the text of the string should look like if displayed correctly by a consumer:&nbsp; <img src="images/test1.png" alt="Test 3"/></p>
 </aside>
 
 <aside class=example title="Bidirectional Use Case #4" id="bidiCase4">
   <p style="text-align:center;"><code>
     <bdo dir="ltr">&quot;&lt;span dir='rtl'&gt;one שתיים three&lt;/span&gt;&quot;</bdo></code></p>
-  <p>If the consuming application is expected to parse the markup as actual markup, the list in the element content above should be displayed to the user in the order &quot;three שתיים one&quot;.<code></code> This requires the UBA to know that the intended base direction of the string is RTL. The key point of this test is that the base direction information is carried in the markup.</p>
+  <p>If the consuming application is expected to parse the markup as actual markup, the text in the <kbd>span</kbd> element above should be displayed to the user in the order <code>&quot;three שתיים one&quot;</code>. This requires the UBA to know that the intended base direction of the string is RTL. The key point of this use case is that the base direction information is carried in the markup.</p>
   <p>This is what the text of the string should look like if displayed correctly by a consumer:&nbsp; <img src="images/test4.png" alt="Test 4"/></p>
 </aside>
 
@@ -719,13 +756,9 @@ myLanguageNeutralString: "978-0-123-4567-X"       // language-neutral string</pr
 </aside>
 </section>
 
-
-
-
 <section id="bidiApproaches">
   <h2>Approaches Considered</h2>
   <p>The fundamental problem is how a <a>consumer</a> of a string will know what base direction should be used for that string when it is eventually displayed to a user. A number of alternatives are considered below. Note that, unlike some of the <a href="otherApproaches">language tagging alternatives</a> considered above, each of these mechansisms for identifying or estimating the base direction have utility in specific applications and are in use in different specifications such as [[HTML5]].</p>
-</section>
 
 <section id="metadata">
   <h2>Metadata</h2>
@@ -747,7 +780,7 @@ myLanguageNeutralString: "978-0-123-4567-X"       // language-neutral string</pr
 </section>
 
 <section id="rlm">
-  <h2>Augmenting <q>first-strong</q> by inserting RLM markers</h2> 
+  <h2>Augmenting <q>first-strong</q> by inserting RLM/LRM markers</h2> 
   
   <p>It is possible for a producer of a string to attach an RLM or LRM 
   character to the beginning of the string when the wrong base 
@@ -767,7 +800,7 @@ myLanguageNeutralString: "978-0-123-4567-X"       // language-neutral string</pr
   example, if a person types information into an HTML form and relies 
   on the form's base direction or use of shortcut keys to make the 
   string look correct in the form field, they would not need to add 
-  RLM/LRM  to make the string 'look correct' for themselves, but 
+  RLM/LRM to make the string 'look correct' for themselves, but 
   outside of that context the string would look incorrect unless an 
   appropriate strong character was added to it. Similarly, strings 
   scraped from a web page that has <code class="kw" 
@@ -798,28 +831,29 @@ myLanguageNeutralString: "978-0-123-4567-X"       // language-neutral string</pr
   is expected to understand the markup.</p> 
   
   <p>The producer of a string should not automatically apply RLM or LRM 
-  to the start of the string, but  should test whether it is needed. 
-  For example, if there's already an RLM there, no need to add another. 
-  If the context is correctly conveyed by first-strong heuristics, no 
+  to the start of the string, but should test whether it is needed. 
+  For example, if there's already an RLM in the text, there is no need to add another. 
+  If the context is correctly conveyed by first-strong heuristics, there is no 
   need to add additional characters either. Note, however, that testing 
   whether supplementary directional information of this kind is needed 
   is only possible if the producer has access, and knows that it has 
-  access, to the original context of the string.</p>
+  access, to the original context of the string. Many document formats are generated from data stored away from the original context. For example, the catalog of books in the <a href="#baseExample">original example</a> above is disconnected from the user inputing the bidirectional text.</p>
 </section>
 
 <section id="paired">
   <h2>Paired formatting characters</h2>
   <p>This approach inserts paired Unicode formatting characters at the start and end of a string to indicate the base direction. </p>
   <p>If paired formatting characters are used, they should be isolating, ie. starting with RLI, LRI, FSI, and not with RLE or LRE.</p>
-  <p>However, It would not be enough to simply apply the UBA first-strong heuristics to such a string, because the Unicode bidi algorithm is unable to ascertain the base direction for a string that starts with RLI/LRI/FSI and ends with PDI. This is because the algorithm skips over isolated sequences and treats them  as a neutral character.  A consumer of the string would have to take special steps, in this case, to uncover the first-strong character. </p>
-  <p>This approach is also only appropriate if it is acceptable to change the value of the string. In addition to possible issues  such as changed string length or pointer positions, this approach runs the risk of  one of the paired characters getting lost, either through handling errors, or through text truncation, etc.</p>
-  <p>A  producer and a consumer of a string would need to recognise and handle a situation where a string begins with a paired formatting character but doesn't end with it  because the formatting characters only describe a part of the string. </p>
+  <p>However, it would not be enough to simply apply the UBA first-strong heuristics to such a string, because the Unicode bidi algorithm is unable to ascertain the base direction for a string that starts with RLI/LRI/FSI and ends with PDI. This is because the algorithm skips over isolated sequences and treats them  as a neutral character. A consumer of the string would have to take special steps, in this case, to uncover the first-strong character.</p>
+  <p>This approach is also only appropriate if it is acceptable to change the value of the string. In addition to possible issues such as changed string length or pointer positions, this approach runs the risk of one of the paired characters getting lost, either through handling errors, or through text truncation, etc.</p>
+  <p>A  producer and a consumer of a string would need to recognise and handle a situation where a string begins with a paired formatting character but doesn't end with it because the formatting characters only describe a part of the string.</p>
   <p>Unicode specifies a limit to the number of embeddings that are effective, and embeddings could build up over time to exceed that limit.</p>
   <p>Consuming applications would need to recognise and appropriately handle the isolating formatting characters. At the moment such support for RLI/LRI/FSI is not pervasive.</p>
+
+
+
+  <p class=issue>Need to describe non-isolating controls here.</p>
 </section>
-
-
-
 </section>
 </section>
 
