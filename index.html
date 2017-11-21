@@ -8,7 +8,7 @@
       var respecConfig = {
           // specification status (e.g. WD, LCWD, WG-NOTE, etc.). If in doubt use ED.
           specStatus:          "ED",
-          publishDate:  		"2017-11-11",
+          publishDate:  		"2017-11-21",
           //previousPublishDate:  "2017-06-24",
           //previousMaturity:  	"WG-NOTE",
 
@@ -155,6 +155,8 @@ cultures.</p>
   <p>A <dfn data-lt="consumer|consumers">consumer</dfn> is any process that receives natural language strings, either for display or processing.</p>
   <p>A <dfn data-lt="agreement|agreements|serialization agreement|serialization agreements|serialization">serialization agreement</dfn> (or "agreement" for short) is the common understanding between a producer and consumer about the serialization of string metadata: how it is to be understood, serialized, read, transmitted, removed, etc.</p>
   <p><dfn data-lt="language negotiation">Language negotiation</dfn> is any process which selects or filters content based on language. Usually this implies selecting content in a single language (or falling back to some meaningful default language that is available) by finding the best matching values when several languages or locales [[LTLI]] are present in the content. Some common language negotiation algorithms include the Lookup algorithm in [[BCP47]] or the BestFitMatcher in [[ECMA-402]].</p>
+  <p><dfn>LTR</dfn> stands for "left-to-right" and refers to the inline base direction of left-to-right [[!UAX9]]. This is the base text direction used by languages whose starting character progression begins on the left side of the page in horizontal text. It's used for scripts such as Latin, Cyrillic, Devanagari, and many others.</p>
+  <p><dfn>RTL</dfn> stands for "right-to-left" and refers to the inline base direction of right-to-left [[!UAX9]]. This is the base text direction used by languages whose starting character progression begins on the right side of the page in horizontal text. It's used for scripts such as Arabic, Hebrew, Syriac, and a few others.</p>
 
  </section>
  
@@ -446,112 +448,8 @@ dir</code></dfn> member</dt>
 
 
 </section>
-
-<section id="otherApproaches">
-	
-	<h2>Other Approaches Considered</h2>
-	
-	<p>Other approaches that were considered are listed below.</p>
-  
-  <section id="langapproach1">
-    <h2>Require HTML or XML for content</h2>
-    
-	<p>One proposal from members of the Annotation WG was to require HTML/XML formats for such annotation bodies, and use the <code 
-	class="kw" translate="no">lang</code> or <code class="kw" translate="no">xml:lang</code> attributes in markup to denote the 
-    language changes. (This approach would also apply to base direction by using HTML's built-in <code>dir</code> attribute; there is no built-in attribute in XML.)</p>
-    
-    <p class=note>This proposal can be useful for <a>agreements</a> that support the interchange of HTML or XML markup data.</p>
-    
-    <p>The benefit for content that already uses markup is clear. The content will already provide complete markup necessary for the display and processing of the text or it can be extracted from the source page context. HTML and XML processors already know how to deal with this markup and provide ready validation.</p>
-    
-    <p>The downside of this approach is that many data values are just strings. As with adding Unicode tags or Unicode bidi controls, the addition of markup to strings alters the original string content. Producers are required to introspect strings and add markup as needed. Consumers must likewise remove any additional markup introduced by the producer.</p>
-    
-    <p>The addition of markup also requires consumers to guard against the usual problems with markup insertion, such as XSS attacks.</p>
-    
-  </section>
-
-  
-  <section id="langapproach2">
-    <h2>Create a new datatype in JSON-LD</h2>
-    <p>If a new datatype were added to JSON to support natural language strings, then specifications could easily specify that type for use in document formats. Since the format is standardized, <a data-lt="producer">producers</a> and <a data-lt="consumer">consumers</a> would not need to guess about direction or language information when it is encoded. Such a serialization might look like the following:</p>
-    
-    <pre class=example>
-myLocalizedString: "Hello World!"@en^ltr          // language and direction
-myLocalizedString_ar: "مرحبا بالعالم!"@ar-EG^rtl  // right-to-left example
-myLocalizedString_fr: "Bonjour monde !"@fr        // language only
-myLocalizedString_und: "שלום עולם!"^rtl           // direction information only
-myLanguageNeutralString: "978-0-123-4567-X"       // language-neutral string</pre>
-
-  <p>The downside of adding a datatype is that JSON is a widely implemented format, including many ad-hoc implementations. Any new serialization form would likely break or cause interoperability problems with these existing implementations. JSON is not designed to be a "versioned" format. Any serialization form used would need to be transparent to existing JSON processors and thus could introduce unwanted data or data corruption to existing fields and formats.</p>
-  </section>
-
-
-<section id="unicodeTags">
-  <h2>Unicode tag characters</h2> 
-  
-  <p>Unicode tag characters are strongly deprecated by the Unicode Consortium. We are unaware of any 
-  implementations that interpret or understand them. These tag characters
-  were intended for use in language tagging within plain text contexts
-  and are often suggested as an alternate means of providing in-band
-  non-markup language tagging.</p>
-
-  <p>Here is how Unicode tags are supposed to work:</p>
-  
-  <p>A [[!BCP47]] language tag is just one of the potential tags that could be applied using this system, so each language tag begins with a tag identification character, in this case <code>U+E0001</code>. The remainder of the Unicode  block for forming tags mirrors the printable ASCII characters. That is, <code>U+E0020</code> is space (mirroring <code>U+0020</code>), <code>U+E0041</code> is capital A (mirroring <code>U+0041</code>), and so forth. Following the tag identification character, you use each tag character to spell out a [[!BCP47]] language tag  using the upper/lowercase letters, digits, and the hyphen character. Normal language tags, which are composed from ASCII letters, digits and hyphens, can be transmogrified into tags by adding <code>0xE0000</code> to each character's code point. Additional structure, such as a language priority list (see [[RFC4647]]) might be constructed using other characters such as comma or semi-colon, although Unicode does not define or even necessarily permit this.</p>
-  
-  <p>The end of a tag's scope is signalled by the end of the string, or 
-  can be signalled explicitly using the cancel tag character U+E007F, 
-  either alone (to cancel all tags) or preceeded by the language tag 
-  identification character <code>U+E0001</code> (i.e. the sequence 
-  <code>&lt;U+E0001,U+E007F&gt;</code> to end only language tags).</p>
-  
-    
-  <p>Tags therefore have a minimum of three characters, and can 
-  easily be 12 or more. Furthermore, these characters are supplementary 
-  characters. That is, they are encoded using 4-bytes per character in 
-  UTF-8 and they are encoded as a surrogate pair (two 16-bit code 
-  units) in UTF-16. Surrogate pairs are needed to encode these characters in string types for languages such as 
-  Java and JavaScript that use UTF-16 internally. The use of surrogates makes the strings somewhat opaque. For example, <code>U+E0020</code> is encoded in UTF-16 as <kbd>0xDB40.DC20</kbd> and in UTF-8 as the byte sequence <kbd>0xF3.A0.80.A0</kbd>.</p>
-  
-  <p>Applications that treat 
-	the characters as unknown Unicode characters will display them as 
-	tofu (hollow box replacement characters) and may count them towards 
-	length limits, etc. So they are only useful when applications or 
-	interchange mechanisms are fully aware of them and can remove them 
-	or disregard them appropriately. Although the characters are not 
-	supposed to be displayed or have any effect on text processing, in 
-	practice they can interfere with normal text processes such as 
-	truncation. line wrapping, hyphenation, spell-checking and so 
-	forth.</p>
-    
-  <p>By design, [[!BCP47]] language tags are intended to be ASCII 
-  case-insensitive. Applications handling Unicode tag characters would 
-  have to apply similar case-insensitivity to ensure correct 
-  identification of the language. (The Unicode data doesn't specify 
-  case conversion pairings for these characters; this complicates the 
-  processing and matching of langauge tag values encoded using the tag 
-  characters.)</p>
-  
-  <p>Moreover, language tags need to be formed from valid subtags to 
-  conform to [[!BCP47]]. Valid subtags are kept in an IANA registry and 
-  new subtags are added regularly, so applications dealing with this 
-  kind of tagging would need to always check each subtag against the 
-  latest version of the registry.</p>
-  
-  <p>Another issue with these tag characters is that they do not allow 
-  nesting of language tags. For example, if a string contains two 
-  languages, such as a quote in French inside an English sentence, 
-  Unicode tag characters can only indicate where one language starts. 
-  To indicate nested languages, tags would need to be embedded into the 
-  text not just prefixed to the front.</p>
-  
-  <p>Finally, although never implemented, other types of tags could be 
-  embedded into a string or document using Unicode tag characters. It 
-  is possible for these tags to overlap sections of text tagged with a 
-  language tag.</p>
-  
 </section>
-</section>
+
 </section>
 
 <section id="useCases">
@@ -560,7 +458,7 @@ myLanguageNeutralString: "978-0-123-4567-X"       // language-neutral string</pr
 	<p>This section of the document describes in depth the need for language and direction metadata and various use cases helpful in understanding the best practices and alternatives listed above.</p>
 	
 <section id="Language Identification">
-  <h2>Language Identification</h2>
+  <h2>Identifying the Language of Content</h2>
 <section id="Definitions">
 <h3>Definitions</h3>
 <p><dfn id="langmeta">Language metadata</dfn> typically indicates the 
@@ -665,92 +563,188 @@ translate="no">ja</code>&quot; (Japanese). The tool he is using knows that he
   </p>
 </section>
 </section>
+<section id="otherApproaches">
+	
+	<h2>Other Approaches Considered</h2>
+	
+	<p>The above <a href="">Best Practices</a> are based on discussion with TAG, implementation in several W3C Specifications, and the recommendations of the Internationalization Working Group. Other approaches to identifying language in document formats have been used occasionally or have been proposed in the past. Each is described below.</p>
+  
+  <section id="langapproach1">
+    <h2>Require HTML or XML for content</h2>
+    
+	<p>One proposal from members of the Annotation WG was to require HTML/XML formats for such annotation bodies, and use the <code 
+	class="kw" translate="no">lang</code> or <code class="kw" translate="no">xml:lang</code> attributes in markup to denote the 
+    language changes. (This approach would also apply to base direction by using HTML's built-in <code>dir</code> attribute; there is no built-in attribute in XML.)</p>
+    
+    <p class=note>This proposal can be useful for <a>agreements</a> that support the interchange of HTML or XML markup data.</p>
+    
+    <p>The benefit for content that already uses markup is clear. The content will already provide complete markup necessary for the display and processing of the text or it can be extracted from the source page context. HTML and XML processors already know how to deal with this markup and provide ready validation.</p>
+    
+    <p>The downside of this approach is that many data values are just strings. As with adding Unicode tags or Unicode bidi controls, the addition of markup to strings alters the original string content. Producers are required to introspect strings and add markup as needed. Consumers must likewise remove any additional markup introduced by the producer.</p>
+    
+    <p>The addition of markup also requires consumers to guard against the usual problems with markup insertion, such as XSS attacks.</p>
+    
+  </section>
 
+  
+  <section id="langapproach2">
+    <h2>Create a new datatype in JSON-LD</h2>
+    <p>If a new datatype were added to JSON to support natural language strings, then specifications could easily specify that type for use in document formats. Since the format is standardized, <a data-lt="producer">producers</a> and <a data-lt="consumer">consumers</a> would not need to guess about direction or language information when it is encoded. Such a serialization might look like the following:</p>
+    
+    <pre class=example>
+myLocalizedString: "Hello World!"@en^ltr          // language and direction
+myLocalizedString_ar: "مرحبا بالعالم!"@ar-EG^rtl  // right-to-left example
+myLocalizedString_fr: "Bonjour monde !"@fr        // language only
+myLocalizedString_und: "שלום עולם!"^rtl           // direction information only
+myLanguageNeutralString: "978-0-123-4567-X"       // language-neutral string</pre>
+
+  <p>The downside of adding a datatype is that JSON is a widely implemented format, including many ad-hoc implementations. Any new serialization form would likely break or cause interoperability problems with these existing implementations. JSON is not designed to be a "versioned" format. Any serialization form used would need to be transparent to existing JSON processors and thus could introduce unwanted data or data corruption to existing fields and formats.</p>
+  </section>
+
+
+<section id="unicodeTags">
+  <h2>Unicode tag characters</h2> 
+  
+  <p>Unicode tag characters are strongly deprecated by the Unicode Consortium. We are unaware of any 
+  implementations that interpret or understand them. These tag characters
+  were intended for use in language tagging within plain text contexts
+  and are often suggested as an alternate means of providing in-band
+  non-markup language tagging.</p>
+
+  <p>Here is how Unicode tags are supposed to work:</p>
+  
+  <p>A [[!BCP47]] language tag is just one of the potential tags that could be applied using this system, so each language tag begins with a tag identification character, in this case <code>U+E0001</code>. The remainder of the Unicode  block for forming tags mirrors the printable ASCII characters. That is, <code>U+E0020</code> is space (mirroring <code>U+0020</code>), <code>U+E0041</code> is capital A (mirroring <code>U+0041</code>), and so forth. Following the tag identification character, you use each tag character to spell out a [[!BCP47]] language tag  using the upper/lowercase letters, digits, and the hyphen character. Normal language tags, which are composed from ASCII letters, digits and hyphens, can be transmogrified into tags by adding <code>0xE0000</code> to each character's code point. Additional structure, such as a language priority list (see [[RFC4647]]) might be constructed using other characters such as comma or semi-colon, although Unicode does not define or even necessarily permit this.</p>
+  
+  <p>The end of a tag's scope is signalled by the end of the string, or 
+  can be signalled explicitly using the cancel tag character U+E007F, 
+  either alone (to cancel all tags) or preceeded by the language tag 
+  identification character <code>U+E0001</code> (i.e. the sequence 
+  <code>&lt;U+E0001,U+E007F&gt;</code> to end only language tags).</p>
+  
+    
+  <p>Tags therefore have a minimum of three characters, and can 
+  easily be 12 or more. Furthermore, these characters are supplementary 
+  characters. That is, they are encoded using 4-bytes per character in 
+  UTF-8 and they are encoded as a surrogate pair (two 16-bit code 
+  units) in UTF-16. Surrogate pairs are needed to encode these characters in string types for languages such as 
+  Java and JavaScript that use UTF-16 internally. The use of surrogates makes the strings somewhat opaque. For example, <code>U+E0020</code> is encoded in UTF-16 as <kbd>0xDB40.DC20</kbd> and in UTF-8 as the byte sequence <kbd>0xF3.A0.80.A0</kbd>.</p>
+  
+  <p>Applications that treat 
+	the characters as unknown Unicode characters will display them as 
+	tofu (hollow box replacement characters) and may count them towards 
+	length limits, etc. So they are only useful when applications or 
+	interchange mechanisms are fully aware of them and can remove them 
+	or disregard them appropriately. Although the characters are not 
+	supposed to be displayed or have any effect on text processing, in 
+	practice they can interfere with normal text processes such as 
+	truncation. line wrapping, hyphenation, spell-checking and so 
+	forth.</p>
+    
+  <p>By design, [[!BCP47]] language tags are intended to be ASCII 
+  case-insensitive. Applications handling Unicode tag characters would 
+  have to apply similar case-insensitivity to ensure correct 
+  identification of the language. (The Unicode data doesn't specify 
+  case conversion pairings for these characters; this complicates the 
+  processing and matching of langauge tag values encoded using the tag 
+  characters.)</p>
+  
+  <p>Moreover, language tags need to be formed from valid subtags to 
+  conform to [[!BCP47]]. Valid subtags are kept in an IANA registry and 
+  new subtags are added regularly, so applications dealing with this 
+  kind of tagging would need to always check each subtag against the 
+  latest version of the registry.</p>
+  
+  <p>Another issue with these tag characters is that they do not allow 
+  nesting of language tags. For example, if a string contains two 
+  languages, such as a quote in French inside an English sentence, 
+  Unicode tag characters can only indicate where one language starts. 
+  To indicate nested languages, tags would need to be embedded into the 
+  text not just prefixed to the front.</p>
+  
+  <p>Finally, although never implemented, other types of tags could be 
+  embedded into a string or document using Unicode tag characters. It 
+  is possible for these tags to overlap sections of text tagged with a 
+  language tag.</p>
+  
+</section>
+</section>
 
 </section>
 
 
 <section id="Bidi">
-<h2>Direction tagging</h2>
+<h2>Identifying the Base Direction of Content</h2>
 
 <section id="Bidirectional Use Cases">
   <h3>Bidirectional Use Cases</h3> 
   
-  <p>If your specification or application provides a way of correctly 
-  displaying the following strings when they reach the point of display 
-  to the user, you will have solved the majority of the problems. For 
-  that to happen, there must be a way to tell  the required base 
-  direction for each string.</p>
+  <p>In order for a <a>consumer</a> to correctly display bidirectional text, such as those in the following use cases, when they reach the point of display 
+  to the user, there must be a way to determine the required base direction for each string.</p>
   
-  <p>All examples show characters from left to right in the order they 
-  are stored in memory. We use Hebrew text so as to avoid issues 
-  related to the display of cursive characters in Arabic. We will also 
-  use these tests as examples for the concepts on this page.</p>
+  <p>Each use case below shows characters from left-to-right in the order they are stored in memory. We use Hebrew text so as to avoid issues related to the display of cursive characters in Arabic. The use cases also serve as examples for the concepts on this page.</p>
   
-  <p>Tests 1-4 need to be displayed using an RTL base direction. Test 5 
+  <p>The first four use cases need to be displayed using an RTL base direction. The last use case
   needs to be displayed as LTR text.</p>
   
-<section id="test1">
-  <h4>Test #1</h4>
+<aside class=example title="Bidirectional Use Case #1" id="bidiCase1">
   <p dir="rtl" style="text-align:center;"><code><bdo dir="ltr">&quot;בינלאומי!&quot;</bdo></code>  </p>
   <p>For presentation to a user, the  characters above should be presented in the reverse order to what you see on this page. The Hebrew characters will be reversed by applying the Unicode Bidirectional Algorithm (UBA). However, the UBA cannot make the exclamation mark appear to the left of the Hebrew text, where it belongs, unless the base direction is set to RTL.</p>
   <p>This is what the text of the string should look like if displayed correctly by a consumer:&nbsp; <img src="images/test1.png" alt="Test 1"/></p>
-</section>
-<section id="test2">
-  <h4>Test #2</h4>
+</aside>
+<aside class=example title="Bidirectional Use Case #2" id="bidiCase2">
   <p style="text-align:center;"><code>
     <bdo dir="ltr">&quot;bidi בינלאומי&quot;</bdo>
   </code></p>
   <p>For presentation to a user, the text &quot;bidi&quot; must appear to the right of the Hebrew letters.<code></code> The UBA cannot do this unless it knows that the overall base direction is RTL.</p>
   <p>This is what the text of the string should look like if displayed correctly by a consumer:&nbsp; <img src="images/test2.png" alt="Test 2"/></p>
-</section>
+</aside>
 
-<section id="test3">
-  <h3>Test #3</h3>
+<aside class=example title="Bidirectional Use Case #3" id="bidiCase3">
   <p style="text-align:center;"><code><bdo dir="ltr">&quot;&lt;span&gt;בינלאומי!&lt;/span&gt;&quot;</bdo></code></p>
   <p>This test is intended for consuming applications that treat the markup in the string as actual markup. As for test #1, the exclamation mark must appear to the left of the Hebrew letters, regardless of the LTR directionality of the markup surrounding it.</p>
   <p>This is what the text of the string should look like if displayed correctly by a consumer:&nbsp; <img src="images/test1.png" alt="Test 3"/></p>
-</section>
+</aside>
 
-<section id="test4"> 
-  <h4>Test #4</h4>
+<aside class=example title="Bidirectional Use Case #4" id="bidiCase4">
   <p style="text-align:center;"><code>
     <bdo dir="ltr">&quot;&lt;span dir='rtl'&gt;one שתיים three&lt;/span&gt;&quot;</bdo></code></p>
   <p>If the consuming application is expected to parse the markup as actual markup, the list in the element content above should be displayed to the user in the order &quot;three שתיים one&quot;.<code></code> This requires the UBA to know that the intended base direction of the string is RTL. The key point of this test is that the base direction information is carried in the markup.</p>
   <p>This is what the text of the string should look like if displayed correctly by a consumer:&nbsp; <img src="images/test4.png" alt="Test 4"/></p>
-</section>
+</aside>
 
-<section id="test5">
-  <h4>Test #5</h4>
+<aside class=example title="Bidirectional Use Case #5" id="bidiCase5">
   <p style="text-align:center;"><code><bdo dir="ltr">&quot;123 456 789&quot;</bdo></code></p>
   <p>When presented to a user, the order of the numbers must remain the same even when the directional context of the surrounding text is RTL. There are no strong directional characters in this string.<code></code></p>
   <p>This is what the text of the string should look like if displayed correctly by a consumer:&nbsp; <img src="images/test5.png" alt="Test 5"/></p>
+</aside>
 </section>
+
+
+
+
+<section id="bidiApproaches">
+  <h2>Approaches Considered</h2>
+  <p>The fundamental problem is how a <a>consumer</a> of a string will know what base direction should be used for that string when it is eventually displayed to a user. A number of alternatives are considered below. Note that, unlike some of the <a href="otherApproaches">language tagging alternatives</a> considered above, each of these mechansisms for identifying or estimating the base direction have utility in specific applications and are in use in different specifications such as [[HTML5]].</p>
 </section>
 
-
-
-
-<section id="mainpoint">
-  <h2>The main issue</h2>
-  <p>The main issue is how  a consumer of a string will know what  base direction should be used for that string when it is eventually displayed to a user. A number of alternatives are considered below.</p>
-
+<section id="metadata">
+  <h2>Metadata</h2>
+  <p>Using metadata external to the string is the RECOMMENDED best practice for indicating the base direction of text. Passing metadata as separate data value from the string provides a simple, effective and efficient method of communicating the intended base direction without affecting the actual content of the string. This requires that the <a>consumer</a> know how to retrieve and process the meaning of that metadata.</p>
+  <p>Metadata not only removes the problem of whether or not, and how, to parse markup in a string to determine the direction, but even in the simplest strings, without markup, it avoids the need to inspect and run heuristics on the string to determine its base direction.</p>
+  <p>There needs to be metadata available for each individual string. Alternatively, metadata can be inherited, but some mechanism must be available to override the inherited direction for a particular string which differs in direction from the inherited value.  </p>
+  <p>Metadata is probably most effective, however (especially for the original creator of the strings), if it is only passed with a string in those cases where first-strong detection is otherwise going to produce a wrong result. This would mean that consumers of strings should not only recognise the metadata, but should also expect to  rely on first-strong heuristics for strings without metadata. It also means that producers of strings need to recognise situations where directional information is needed and set the metadata.</p>
 </section>
+
 <section id="firststrong">
   <h2>First-strong</h2>
   <p> First-strong detection looks for the first character with a strong Unicode directional property in a string, and sets the base direction to match it. Many developers assume that this provides a robust solution, but first-strong detection alone is not always adequate to communicate base direction.</p>
-  <p>Note that, if the producer is relying  on the consumer using first-strong character detection to establish the contextual base direction of a string, the consumer  needs to be aware that it should also use that approach. Although first-strong detection is outlined in the UBA, it is not the only possible higher level protocol mentioned for detecting string direction. For example, Twitter and Facebook currently use different default heuristics for guessing the base direction of text – neither use just simple first-strong detection, and one uses a completely different method.</p>
-  <p>The first-strong detection algorithm needs to skip characters at the start of the string that don't have a strong directional property.</p>
-  <p>It also needs to skip embedded runs of text that are directionally isolated from the text around it, if it is to follow the UBA. Isolation may be achieved by Unicode formatting characters, such as RLI, LRI and FSI, or by markup in the string if that markup is to be interpreted as actual markup by the consumer (eg. &lt;span dir=&quot;rtl&quot;&gt; in HTML5).</p>
-  <p>The principal problem encountered with first-strong detection is that the first strong character is not always representative of the base direction that needs to be applied to that string, such as in test #2 above.</p>
+  <p>Note that, if the <a>producer</a> is relying on the <a>consumer</a> using first-strong character detection to establish the contextual base direction of a string, the consumer needs to be aware that it is supposed to use that approach. Although first-strong detection is outlined in the Unicode Bidirectional Algorithm (UBA) [[!UAX9]], it is not the only possible higher-level protocol mentioned for estimating string direction. For example, Twitter and Facebook currently use different default heuristics for guessing the base direction of text&mdash;neither use just simple first-strong detection, and one uses a completely different method.</p>
+  <p>The first-strong detection algorithm needs to skip characters at the start of the string that don't have a strong directional property. It also needs to skip embedded runs of text that are directionally isolated from the text around it, if it is to follow the UBA. Isolation may be achieved by Unicode formatting characters, such as RLI, LRI and FSI, or by using markup in the string if that markup is to be interpreted as actual markup by the consumer. For example, elements with the <code>dir</code> attribute in [[HTML5]] are isolating. An element such as <code>&lt;span dir=&quot;rtl&quot;&gt;</code> and all of the text it contains should be skipped by first-strong.</p>
+  <p>If no strong directional character is found in the string, the direction should be assumed to be LTR.</p>
+  <p>The principal problem encountered with first-strong detection is that the first strong character is not always representative of the base direction that needs to be applied to that string, such as in <a href="#bidiCase2">use case #2</a> above.</p>
   <p>If a string contains markup that will be parsed by the consumer as markup, there are additional problems. Any such markup at the start of the string must also be skipped when searching for the first strong directional character. If, however, there is angle bracket content that is intended to be an <em>example</em> of markup, rather than actual markup, the markup must not be skipped. It isn't clear how a consumer of the string would know the difference between this case and the previous one.</p>
   <p>If parseable markup in the string contains information about the intended direction of the string, that information should be used rather than relying on first-strong heuristics. This is problematic in a couple of ways: (a) it assumes that the consumer of the string understands the semantics of the markup, which may be ok if there is an agreement between all parties to use, say, HTML markup only, but would be problematic, for example, when dealing with random XML vocabularies, and (b) the consumer must be able to  recognise and handle a situation where only the initial part of the string has markup, ie. the markup applies to an inline span of text rather than the string as a whole.</p>
-  <p>If no strong directional character is found in the string, the direction should be assumed to be LTR.  </p>
-  <p>The remaining sections look at ways that a string may be stored with additional information where text direction cannot be detected accurately by the first-strong method.</p>
 </section>
-
-
-
 
 <section id="rlm">
   <h2>Augmenting <q>first-strong</q> by inserting RLM markers</h2> 
@@ -813,9 +807,6 @@ translate="no">ja</code>&quot; (Japanese). The tool he is using knows that he
   access, to the original context of the string.</p>
 </section>
 
-
-
-
 <section id="paired">
   <h2>Paired formatting characters</h2>
   <p>This approach inserts paired Unicode formatting characters at the start and end of a string to indicate the base direction. </p>
@@ -829,13 +820,6 @@ translate="no">ja</code>&quot; (Japanese). The tool he is using knows that he
 
 
 
-<section id="metadata">
-  <h2>Metadata</h2>
-  <p>If it is possible to pass metadata with the string and the consumer knows how to retrieve the meaning of that metadata, this can provide a simple, effective and efficient method of communicating the intended base direction without affecting the actual content of the string.</p>
-  <p>Metadata not only removes the problem of whether or not, and how, to parse markup in a string to determine the direction, but even in the simplest strings, without markup, it avoids the need to inspect and run heuristics on the string to determine its base direction.</p>
-  <p>There needs to be metadata available for each individual string. Alternatively, metadata can be inherited, but some mechanism must be available to override the inherited direction for a particular string which differs in direction from the inherited value.  </p>
-  <p>Metadata is probably most effective, however (especially for the original creator of the strings), if it is only passed with a string in those cases where first-strong detection is otherwise going to produce a wrong result. This would mean that consumers of strings should not only recognise the metadata, but should also expect to  rely on first-strong heuristics for strings without metadata. It also means that producers of strings need to recognise situations where directional information is needed and set the metadata.</p>
-</section>
 </section>
 </section>
 
