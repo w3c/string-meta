@@ -436,10 +436,10 @@ dir</code></dfn> member</dt>
 
 <aside class=example>
 <pre>
-	"title": [ en: { "value": "Moby Dick", "lang": "en" },
-	           ar: { "value": "موبي ديك", "lang": "ar"  "dir": "rtl"}, 
-	           ja: { "value": "白鯨", "lang": "ja" },
-	           zh-Hans: { "value": "莫比迪克", "lang": "zh-Hans", "dir": "ltr"} ],
+	"title": [ "en": { "value": "Moby Dick", "lang": "en" },
+	           "ar": { "value": "موبي ديك", "lang": "ar"  "dir": "rtl"}, 
+	           "ja": { "value": "白鯨", "lang": "ja" },
+	           "zh-Hans": { "value": "莫比迪克", "lang": "zh-Hans", "dir": "ltr"} ],
 </pre>
 	<p>Notice that this format embeds the <kbd>lang</kbd> field both as a key in the array and inside the enclosed <kbd>Localizable</kbd> so that the selected or preferred value can easily be extracted as a complete JavaScript or JSON object.</p>
 	<p>For example, if the language selected is English (<kbd>en</kbd>), it is easy to extract the object <kbd>{ "value": "Moby Dick", "lang": "en" }</kbd> for inclusion into another data format.</p>
@@ -489,8 +489,8 @@ dir</code></dfn> member</dt>
     "lang": "en",
     "dir": "ltr",
     "id": {"978-0-1234-5678-X"},
-    "title": [ en: {"value": "Moby Dick", "lang": "en"},
-               ar: {"value": "موبي ديك", "lang": "ar"  "dir": "rtl"} ],
+    "title": [ "en": {"value": "Moby Dick", "lang": "en"},
+               "ar": {"value": "موبي ديك", "lang": "ar"  "dir": "rtl"} ],
     "authors": [ {"value": "Herman Melville", "lang": "en"} ],
     "language": "en-US",
     "pubDate": "1851-10-18",
@@ -645,7 +645,7 @@ translate="no">ja</code>&quot; (Japanese). The tool he is using knows that he
 
   
   <section id="langapproach2">
-    <h2>Create a new datatype in JSON-LD</h2>
+    <h2>Create a new datatype</h2>
     <p>If a new datatype were added to JSON to support natural language strings, then specifications could easily specify that type for use in document formats. Since the format is standardized, <a data-lt="producer">producers</a> and <a data-lt="consumer">consumers</a> would not need to guess about direction or language information when it is encoded. Such a serialization might look like the following:</p>
     
     <pre class=example>
@@ -656,6 +656,10 @@ myLocalizedString_und: "שלום עולם!"^rtl           // direction informati
 myLanguageNeutralString: "978-0-123-4567-X"       // language-neutral string</pre>
 
   <p>The downside of adding a datatype is that JSON is a widely implemented format, including many ad-hoc implementations. Any new serialization form would likely break or cause interoperability problems with these existing implementations. JSON is not designed to be a "versioned" format. Any serialization form used would need to be transparent to existing JSON processors and thus could introduce unwanted data or data corruption to existing fields and formats.</p>
+  
+  <p>[[JSON-LD]] includes some data structures that are partially helpful. Notably, it defines <a href="https://json-ld.org/spec/latest/json-ld/#string-internationalization">string internationalization</a> in the form of a context-scoped <kbd>@language</kbd> value which can be associated with blocks of JSON or within individual objects. There is no definition of base direction, so this is incomplete. The <kbd>@context</kbd> concept can be used by specifications as a means of indicating the default language metadata where omitted from individual strings.</p>
+  
+  <p>The concept of <a href="https://json-ld.org/spec/latest/json-ld/#language-indexing">language indexing</a> in JSON-LD is used in the Best Practices in this document as a means for localizing a data value.</p>
   </section>
 
 
