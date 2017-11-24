@@ -139,7 +139,7 @@ technologies for the Web.</p>
 <p>Markup formats, such as HTML and XML, as well as related styling 
 languages, such as CSS and XSL, are reasonably mature and provide 
 support for the interchange and presentation of the world's languages 
-via built-in features. Data formats need similar support in order to 
+via built-in features. Data formats need similar mechanisms in order to 
 ensure a complete and consistent support for the world's languages and 
 cultures.</p>
 
@@ -274,8 +274,8 @@ even language information about the contents of the book
 <p>A well-internationalized catalog would include additional metadata 
 to what is shown above. That is, for each of the fields containing 
 natural language text, such as the <kbd>title</kbd> and 
-<kbd>authors</kbd> fields, there should be a language attribute and base 
-direction stored as metadata. (There may be other values as well, such 
+<kbd>authors</kbd> fields, there should be language  and base 
+direction information stored as metadata. (There may be other values as well, such 
 as pronunciation metadata for sorting East Asian language information.) 
 These metadata values are used by consumers of the data to influence the processing 
 and enable the display of the items in a variety of ways. As the JSON data structure 
@@ -449,15 +449,15 @@ dir</code></dfn> member</dt>
 
 <p class=issue>Following text is new and still speculative.</p>
 
-<p>Interoperability is enhanced when specifications all use the same attribute name for the default language and base direction. This document recommends using <kbd>lang</kbd> as the name of the default language value and <kbd>dir</kbd> as the default direction value. These are the same names as used by <kbd>Localizable</kbd> as well as being the names used by common formats such as HTML and CSS.</p>
+<p>Interoperability is enhanced when specifications all use the same attribute name for the default language and base direction. This document recommends using <kbd>lang</kbd> as the name of the default language value and <kbd>dir</kbd> as the default direction value. These are the same names as used by <kbd>Localizable</kbd> as well as being the names used by common formats such as HTML.</p>
 
 <aside class=example title="">
 	<p>The following example shows the record used in the <a href="baseExample">example</a> with a default language and direction:</p>
 <pre>
 {
-    "id": "978-0-1234-5678-X",
     "lang": "en",
     "dir": "ltr",
+    "id": "978-0-1234-5678-X",
     "title": "Moby Dick",
     "authors": [ "Herman Melville" ],
     "language": "en-US",
@@ -471,8 +471,26 @@ dir</code></dfn> member</dt>
 <p>Here is the same example without using the default:</p>
 <pre>
 {
-    "id": "978-0-1234-5678-X",
+    "id": {"978-0-1234-5678-X", &quot;dir&quot;=&quot;ltr&quot;},
     "title": {"value": "Moby Dick", "lang": "en"},
+    "authors": [ {"value": "Herman Melville", "lang": "en"} ],
+    "language": "en-US",
+    "pubDate": "1851-10-18",
+    "publisher": {"value": "Mark Twain Press", "lang": "en"},
+    "coverImage": "https://example.com/images/mobidick_cover.jpg",
+    // etc.
+},
+</pre>
+	
+<p>Note that a direction value was applied to the ISBN number, so that it isn't rearranged on display in a RTL context. If the consumer is aware of the semantic value of the id, this may not be necessary, however, it is useful when the data is shared in a new context where such private arrangements don't hold.</p>
+<p>And now the same example again,  using the default, but overriding it where needed:</p>
+<pre>
+{
+    "lang": "en",
+    "dir": "ltr",
+    "id": {"978-0-1234-5678-X"},
+    "title": [ en: {"value": "Moby Dick", "lang": "en"},
+               ar: {"value": "موبي ديك", "lang": "ar"  "dir": "rtl"} ],
     "authors": [ {"value": "Herman Melville", "lang": "en"} ],
     "language": "en-US",
     "pubDate": "1851-10-18",
@@ -492,7 +510,7 @@ dir</code></dfn> member</dt>
 </section>
 
 <section id="useCases">
-	<h2>Requirements and Use Cases</h2>
+<h2>Requirements and Use Cases</h2>
 	
 	<p>This section of the document describes in depth the need for language and direction metadata and various use cases helpful in understanding the best practices and alternatives listed above.</p>
 	
