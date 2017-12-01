@@ -1,0 +1,43 @@
+.unicode {
+	font-style: normal
+}
+
+.unicode:link {
+	color: #FF0000;
+	background-color: #FFFFFF;
+}
+
+.unicode:visited {
+	color: #808080;
+	background-color: #FFFFFF;
+}
+
+.unicode:active {
+	color: #0000FF;
+	background-color: #FFFFFF;
+}
+
+em.unicode {
+	font-style: normal;
+}
+
+ins {
+	background-color: #FF6;
+}
+
+p.cjk-demo {
+	font-size: 200%; 
+	text-align: center;
+	font-family: serif;
+}
+
+.mustard {
+    background-color: #FFC;
+    font-style: italic;
+}
+
+.mustard::before {
+    content: "\272A \00A0 ";
+    font-style: normal;
+    color: #63F;;
+}
