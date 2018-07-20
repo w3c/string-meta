@@ -8,7 +8,7 @@
       var respecConfig = {
           // specification status (e.g. WD, LCWD, WG-NOTE, etc.). If in doubt use ED.
           specStatus:          "ED",
-          publishDate:  		"2018-07-19",
+          //publishDate:  		"2018-07-19",
           //previousPublishDate:  "2017-06-24",
           //previousMaturity:  	"WG-NOTE",
 
@@ -875,6 +875,51 @@ myLanguageNeutralString: "978-0-123-4567-X"       // language-neutral string</pr
 
 
   <p class=issue>Need to describe non-isolating controls here.</p>
+</section>
+
+
+
+<section id="script_subtag">
+  <h2>Script subtags</h2>
+<p>This section is currently a first draft and needs review.</p>
+  
+  <div class="summary">
+  <p><b class="leadin">Summary</b></p>
+  <p>Recommended?<br>
+(provisionally, pending deeper investigation) yes, but only when the metadata approach above is not possible</p>
+
+    <p>Pros:</p>
+    <ul>
+    <li>no need to change the string</li>
+    <li>no need to inspect the string</li>
+    <li>reliable</li>
+<li>no complications when dealing with markup in strings</li>
+    </ul>
+
+    <p>Cons:</p>
+    <ul>
+    <li>only works where it is possible to associate separate language metadata with each string</li>
+    <li>some scripts in archaic usage switched between LTR and RTL according to the preference of the author or the context of the content; the language tag is unable to handle non-default approaches for such strings, but this is expected to be an edge-case</li>
+    <li>new script tags may be coined, and these will need to be added to the lists used by consumers</li>
+<li>how to indicate that LTR base direction must be applied to a wrapper around some strings</li>
+    </ul>
+
+    <p>To note:</p>
+    <ul>
+    <li>may be more efficient to assume a default, in the absence of a script subtag, and use first-strong heuristics in non-problematic cases</li>
+    </ul>
+  </div>
+  
+  <p>The W3C Internationalization Working Group recommends that formats and applications should associate dedicated metadata relating to base text direction with strings wherever possible.  In cases where that is not possible due to legacy constraints, but where language metadata <em>can</em> be associated with each string, it may be possible to use the language metadata as a fallback method of identifying the direction for a string (eg. JSON-LD, RDF, etc).</p>
+  <p>Note, however, that this is <em>only</em> appropriate when declaring information about the <em>overall</em> base direction to be associated with a string. We do <em>not</em> recommend generalised use of language data to indicate text direction, especially within strings, since the usage patterns are not interchangeable.</p>
+  <p>Note, secondly, that language information must use BCP 47 subtags, and that the tag that carries the information should be the script subtag, not the language subtag. For example, Azeri may be written LTR (with the Latin or Cyrillic scripts) or RTL (with the Arabic script).  Therefore, the subtag <code class="kw" translate="no">az</code> is insufficient to clarify intended direction. A language tag such as <code class="kw" translate="no">az-Arab</code>, however, can generally be relied upon to indicate that the overall base direction should be RTL. </p>
+<p>There are many strings which are not language-specific but which absolutely need to be wrapped by a mechanism that explicitly associates them with  a particular base direction for correct consumption. For example, Mac addresses inserted into a RTL context need to be displayed with a LTR overall base direction and isolation from the surrounding text. It's not clear how to distinguish these cases from others (in a way that would be feasible when using direction metadata).</p>
+  <p>The expected way in which this information is used is as follows. It may be reasonable to assume a default of LTR for all strings unless marked with a script subtag that indicates RTL.  Any string that needs to have an overall base direction of RTL should be labelled for language by the producer using a script subtag. If a script subtag is associated with a string, the consumer would check the script against a list of script subtags that indicate a RTL base direction, and if found would take appropriate action.</p>
+  <p>The list of script subtags may be added to in future. In that case, any subtags that indicate a default RTL direction need to be added to the lists used by the consumers of the strings.</p>
+  <p>It is perhaps possible to limit the use of script subtag metadata to situations where first-strong heuristics are expected to fail - provided that such cases can be identified, and appropriate action taken by the producer (not always reliable). Consumers would then need to use first-strong heuristics in the absence of a script subtag in order to identify the appropriate base direction. The use of script subtags should not, however, be restricted to strings that need to indicate direction; it is perfectly valid to associate a script subtag with any string.</p>
+  <p>This approach avoids the issues associated with first-strong detection when the first-strong character is not indicative of the necessary base direction for the string, and avoids issues relating to the interpretation of markup.</p>
+<p>Note that a string that begins with markup that sets a language for the string text content (eg. <code translate="no">&lt;cite lang=“en-Latn”&gt;</code>) is not problematic here, since that language declaration is not expected to play into the setting of the base direction.</p>
+<p>There are some rare situations where the base direction can not necessarily be identified from the script subtag, but these are really limited to archaic usage of text.  For example, Japanese and Chinese text prior to World War 2 was often written RTL, rather than LTR. Languages such as those written using Egyptian Hieroglyphs, or the Tifinagh Berber script, could formerly be written either LTR or RTL, however the default for scholastic research tends to LTR.</p>
 </section>
 </section>
 </section>
