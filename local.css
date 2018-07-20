@@ -41,3 +41,9 @@ p.cjk-demo {
     font-style: normal;
     color: #63F;;
 }
+
+
+.summary {
+    padding: 1em;
+    background-color: antiquewhite;
+}
