@@ -784,7 +784,28 @@ myLanguageNeutralString: "978-0-123-4567-X"       // language-neutral string</pr
 
 <section id="metadata">
   <h2>Metadata</h2>
-  <p>Using metadata external to the string is the RECOMMENDED best practice for indicating the base direction of text. Passing metadata as separate data value from the string provides a simple, effective and efficient method of communicating the intended base direction without affecting the actual content of the string. This requires that the <a>consumer</a> know how to retrieve and process the meaning of that metadata.</p>
+  <div class="summary">
+<p><b class="leadin">Summary</b></p>
+<p>Recommended?<br>
+yes </p>
+<p>Pros:</p>
+<ul>
+<li>, effective &amp; efficient </li>
+<li>doesn’t affect the content of the string </li>
+<li>no need to parse the string or know how to interpret it</li>
+</ul>
+<p>Cons:</p>
+<ul>
+<li>out-of-band information needs to be associated with and kept with strings</li>
+</ul>
+<p>To note:</p>
+<ul>
+<li>best used only where necessary, and rely on first-strong heuristics otherwise </li>
+<li>producers need to know when to attach metadata because first-strong doesn’t work </li>
+<li>it must be possible to associate metadata with any string, but it may also be useful to additionally set a default for all strings</li>
+</ul>
+</div>
+<p>Using metadata external to the string is the RECOMMENDED best practice for indicating the base direction of text. Passing metadata as separate data value from the string provides a simple, effective and efficient method of communicating the intended base direction without affecting the actual content of the string. This requires that the <a>consumer</a> know how to retrieve and process the meaning of that metadata.</p>
   <p>Metadata not only removes the problem of whether or not, and how, to parse markup in a string to determine the direction, but even in the simplest strings, without markup, it avoids the need to inspect and run heuristics on the string to determine its base direction.</p>
   <p>There needs to be metadata available for each individual string. Alternatively, metadata can be inherited, but some mechanism must be available to override the inherited direction for a particular string which differs in direction from the inherited value.  </p>
   <p>Metadata is probably most effective, however (especially for the original creator of the strings), if it is only passed with a string in those cases where first-strong detection is otherwise going to produce a wrong result. This would mean that consumers of strings should not only recognise the metadata, but should also expect to  rely on first-strong heuristics for strings without metadata. It also means that producers of strings need to recognise situations where directional information is needed and set the metadata.</p>
@@ -792,7 +813,33 @@ myLanguageNeutralString: "978-0-123-4567-X"       // language-neutral string</pr
 
 <section id="firststrong">
   <h2>First-strong</h2>
-  <p> First-strong detection looks for the first character with a strong Unicode directional property in a string, and sets the base direction to match it. Many developers assume that this provides a robust solution, but first-strong detection alone is not always adequate to communicate base direction.</p>
+  <div class="summary">
+<p><b class="leadin">Summary</b></p>
+<p>Recommended?<br> 
+no
+</p>
+<p>Pros:</p>
+<ul>
+<li>where it is reliable, information about direction can be obtained without any changes to the string</li>
+</ul>
+<p>Cons:</p>
+<ul>
+<li>the base direction applied is unreliable, because the first strong character is not always indicative of the necessary base direction for the string </li>
+<li>any string containing HTML bounded by an element with a dir attribute makes the direction undetectable, since dir isolates </li>
+<li>the same goes for strings that begin with RLI, etc and end with PDI </li>
+<li>it’s not clear how to establish whether markup at the start of a string should be considered when checking for first-strong characters </li>
+<li>consumers need to know the semantics of any markup vocabulary used if embedded markup contains the directional information</li>
+</ul>
+<p>To note:</p>
+<ul>
+<li>the consumer must know to check the string for first-strong heuristics </li>
+<li>needs to skip characters at start of string without strong directional property, and internal isolated sequences </li>
+<li>if no directional character is found in the string, there must be an agreement on the default direction </li>
+<li>if a string is bounded by markup (eg. &lt;cite&gt;…&lt;/cite&gt;) the directionality of the characters in the markup must be ignored when checking for the first-strong character if, and only if, the markup is going to be handled as markup by the consumer; if this is, say, just some example code, then the direction of the markup characters counts; it’s not clear how to tell the difference </li>
+<li>if a string is bounded by markup with directional information (eg. &lt;cite dir=“rtl”&gt;..&lt;cite&gt;) which indicates the base direction to be used, the directional properties of the characters in the string must be ignored</li>
+</ul>
+</div>
+<p> First-strong detection looks for the first character with a strong Unicode directional property in a string, and sets the base direction to match it. Many developers assume that this provides a robust solution, but first-strong detection alone is not always adequate to communicate base direction.</p>
   <p>Note that, if the <a>producer</a> is relying on the <a>consumer</a> using first-strong character detection to establish the contextual base direction of a string, the consumer needs to be aware that it is supposed to use that approach. Although first-strong detection is outlined in the Unicode Bidirectional Algorithm (UBA) [[!UAX9]], it is not the only possible higher-level protocol mentioned for estimating string direction. For example, Twitter and Facebook currently use different default heuristics for guessing the base direction of text&mdash;neither use just simple first-strong detection, and one uses a completely different method.</p>
   <p>The first-strong detection algorithm needs to skip characters at the start of the string that don't have a strong directional property. It also needs to skip embedded runs of text that are directionally isolated from the text around it, if it is to follow the UBA. Isolation may be achieved by Unicode formatting characters, such as RLI, LRI and FSI, or by using markup in the string if that markup is to be interpreted as actual markup by the consumer. For example, elements with the <code>dir</code> attribute in [[HTML5]] are isolating. An element such as <code>&lt;span dir=&quot;rtl&quot;&gt;</code> and all of the text it contains should be skipped by first-strong.</p>
   <p>If no strong directional character is found in the string, the direction should be assumed to be LTR.</p>
@@ -804,7 +851,28 @@ myLanguageNeutralString: "978-0-123-4567-X"       // language-neutral string</pr
 <section id="rlm">
   <h2>Augmenting <q>first-strong</q> by inserting RLM/LRM markers</h2> 
   
-  <p>It is possible for a producer of a string to attach an RLM or LRM 
+  <div class="summary">
+<p><b class="leadin">Summary</b></p>
+<p>Recommended?<br>
+no </p>
+<p>Pros:</p>
+<ul>
+<li>it provides a reliable way of indicating base direction, as long as the producer can reliably apply markers </li>
+<li>in theory, it should be easier to spot the first-strong character in strings that begin with markup, as long as the correct RLM/LRM is prepended to the string</li>
+</ul>
+<p>Cons:</p>
+<ul>
+<li>it is not clear that the producer of a string would always apply RLM/LRM when appropriate; a machine is not able to identify cases where those characters would be needed </li>
+<li>this approach changes the identity and content of the string </li>
+<li>consumers may need to remove the RLM/LRM marker, but may not be able to determine when that is or is not appropriate, since the string may start with an RLM/LRM character intentionally</li>
+</ul>
+<p>To note:</p>
+<ul>
+<li>in theory, it should be easier to spot the first-strong character in strings that begin with markup, as long as the correct RLM/LRM is prepended to the string </li>
+<li>applications must ensure that they do not accumulate markers</li>
+</ul>
+</div>
+<p>It is possible for a producer of a string to attach an RLM or LRM 
   character to the beginning of the string when the wrong base 
   direction would otherwise be assumed by a process using a simple first-strong 
   heuristic. </p> 
@@ -864,7 +932,22 @@ myLanguageNeutralString: "978-0-123-4567-X"       // language-neutral string</pr
 
 <section id="paired">
   <h2>Paired formatting characters</h2>
-  <p>This approach inserts paired Unicode formatting characters at the start and end of a string to indicate the base direction. </p>
+  <div class="summary">
+<p><b class="leadin">Summary</b></p>
+<p>Recommended?<br>
+no </p>
+<p>Pros:</p>
+<ul>
+<li>none</li>
+</ul>
+<p>Cons:</p>
+<ul>
+<li>isolating formatting characters must be used, but they are not yet well supported by consumers </li>
+<li>consumers that use first-strong heuristics, rather than recognising this approach, would fail </li>
+<li>Unicode limits for embedding levels may be exceeded</li>
+</ul>
+</div>
+<p>This approach inserts paired Unicode formatting characters at the start and end of a string to indicate the base direction. </p>
   <p>If paired formatting characters are used, they should be isolating, ie. starting with RLI, LRI, FSI, and not with RLE or LRE.</p>
   <p>However, it would not be enough to simply apply the UBA first-strong heuristics to such a string, because the Unicode bidi algorithm is unable to ascertain the base direction for a string that starts with RLI/LRI/FSI and ends with PDI. This is because the algorithm skips over isolated sequences and treats them  as a neutral character. A consumer of the string would have to take special steps, in this case, to uncover the first-strong character.</p>
   <p>This approach is also only appropriate if it is acceptable to change the value of the string. In addition to possible issues such as changed string length or pointer positions, this approach runs the risk of one of the paired characters getting lost, either through handling errors, or through text truncation, etc.</p>
