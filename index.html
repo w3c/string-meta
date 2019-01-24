@@ -734,50 +734,74 @@ myLanguageNeutralString: "978-0-123-4567-X"       // language-neutral string</pr
 <section id="Bidirectional Use Cases">
   <h3>Bidirectional Use Cases</h3> 
   
-  <p>In order for a <a>consumer</a> to correctly display bidirectional text, such as those in the following use cases, when they reach the point of display to the user, there must be a way to determine the required base direction for each string.</p>
-  
-  <p>Each use case below shows characters from left-to-right in the order they are stored in memory. We use Hebrew text so as to avoid issues related to the display of cursive characters in Arabic. The use cases also serve as examples for the concepts on this page.</p>
-  
-  <p>The first four use cases need to be displayed using an RTL base direction. The last use case
-  needs to be displayed as LTR text.</p>
-  
-<aside class=example title="Bidirectional Use Case #1" id="bidiCase1">
-  <p dir="rtl" style="text-align:center;"><code><bdo dir="ltr">&quot;בינלאומי!&quot;</bdo></code>  </p>
-  <p>For presentation to a user, the  characters above should be presented in the reverse order to what you see on this page. The Hebrew characters will be reversed by applying the Unicode Bidirectional Algorithm (UBA). However, the UBA cannot make the exclamation mark appear to the left of the Hebrew text, where it belongs, unless the base direction is set to RTL.</p>
-  <p>This is what the text of the string should look like if displayed correctly by a consumer:&nbsp; <img src="images/test1.png" alt="Test 1"/></p>
-</aside>
-<aside class=example title="Bidirectional Use Case #2" id="bidiCase2">
-  <p style="text-align:center;"><code>
-    <bdo dir="ltr">&quot;bidi בינלאומי&quot;</bdo>
-  </code></p>
-  <p>For presentation to a user, the text &quot;bidi&quot; must appear to the right of the Hebrew letters.<code></code> The UBA cannot do this unless it knows that the overall base direction is RTL.</p>
-  <p>This is what the text of the string should look like if displayed correctly by a consumer:&nbsp; <img src="images/test2.png" alt="Test 2"/></p>
-  
-  <p>Although Example #1 appears trivial, the "side-shifting" of the exclamation point is also experienced by other left-to-right runs of text. Consider this title:</p>
-  <p dir="rtl" style="text-align:center;"><code><bdo dir=ltr>&quot;&#x0647;&#x0644; &#x062A;&#x0639;&#x0644;&#x0645;&#x062A; C++&#x061F;&quot;</bdo></code></p>
-  <p>This should be presented as:</p>
-  <p dir=rtl style="text-align:center;"><code>&quot;&#x0647;&#x0644; &#x062A;&#x0639;&#x0644;&#x0645;&#x062A; <span dir=ltr>C++</span>&#x061F;&quot;</code></p>
+  <p>In order for a <a>consumer</a> to correctly display bidirectional text, such as those in the following use cases, there must be a way for the consumer to determine the required base direction for each string. It is not enough to rely on the Unicode Bidirectional Algorithm to solve these issues. What is needed is a way to establish the overall directional context in which the string will be displayed (which is what 'base direction' means).</p>
+<p>These use cases illustrate situations where a failure to apply the necessary base direction creates a problem.</p>
+<section>
+<h4 id="bidiCase1">Final punctuation</h4>
+<p>This use case consists of a string containing Hebrew text followed by punctuation – in this case an exclamation mark. The characters in this string are shown here in the order in which they are stored in memory.</p>
+  <p lang="he" dir="rtl" style="text-align:center; font-size: 2em;"><code><bdo dir="ltr">&quot;בינלאומי!&quot;</bdo></code></p>
+  <p>If the string is dropped into a LTR context, it will display like this, which is incorrect – the exclamation mark is on the wrong side:</p>
+  <p lang="he" dir="ltr" style="text-align:center; font-size: 2em;">בינלאומי!</p>
+  <p>Dropped into a RTL context, this will be the result, which is correct:</p>
+  <p lang="he" dir="rtl" style="text-align:center; font-size: 2em;">בינלאומי!</p>
 
-</aside>
+<p>The Hebrew characters are reversed by applying the Unicode Bidirectional Algorithm (UBA). However, in a LTR context the UBA cannot make the exclamation mark appear to the left of the Hebrew text, where it belongs, unless the base direction is set to RTL around it.</p>
+</section>
 
-<aside class=example title="Bidirectional Use Case #3" id="bidiCase3">
-  <p style="text-align:center;"><code><bdo dir="ltr">&quot;&lt;span&gt;בינלאומי!&lt;/span&gt;&quot;</bdo></code></p>
-  <p>This use case illustrates how consuming applications that treat the markup in the string as actual markup might work. As with <a href=bidiCase1>use case #1</a>, the exclamation mark needs to appear to the left of the Hebrew letters, regardless of the LTR directionality of the markup surrounding it.</p>
-  <p>This is what the text of the string should look like if displayed correctly by a consumer:&nbsp; <img src="images/test1.png" alt="Test 3"/></p>
-</aside>
 
-<aside class=example title="Bidirectional Use Case #4" id="bidiCase4">
-  <p style="text-align:center;"><code>
-    <bdo dir="ltr">&quot;&lt;span dir='rtl'&gt;one שתיים three&lt;/span&gt;&quot;</bdo></code></p>
-  <p>If the consuming application is expected to parse the markup as actual markup, the text in the <kbd>span</kbd> element above should be displayed to the user in the order <code>&quot;three שתיים one&quot;</code>. This requires the UBA to know that the intended base direction of the string is RTL. The key point of this use case is that the base direction information is carried in the markup.</p>
-  <p>This is what the text of the string should look like if displayed correctly by a consumer:&nbsp; <img src="images/test4.png" alt="Test 4"/></p>
-</aside>
 
-<aside class=example title="Bidirectional Use Case #5" id="bidiCase5">
-  <p style="text-align:center;"><code><bdo dir="ltr">&quot;123 456 789&quot;</bdo></code></p>
-  <p>When presented to a user, the order of the numbers must remain the same even when the directional context of the surrounding text is RTL. There are no strong directional characters in this string.<code></code></p>
-  <p>This is what the text of the string should look like if displayed correctly by a consumer:&nbsp; <img src="images/test5.png" alt="Test 5"/></p>
-</aside>
+  <section>
+  <h4 id="bidiCase2">Initial Latin</h4>
+<p>In this case the Hebrew word is preceded by some Latin text (here a hashtag). The characters in  the order in which they are stored in memory.</p>
+  <p lang="he" dir="rtl" style="text-align:center; font-size: 2em;"><code>
+<bdo dir="ltr">&quot;bidi בינלאומי&quot;</bdo></code></p>
+  <p>If the string is dropped into a LTR context, it will display like this, which is incorrect – the word 'bidi' should be to the right:</p>
+  <p lang="he" dir="ltr" style="text-align:center; font-size: 2em;">bidi בינלאומי</p>
+  <p>Dropped into a RTL context, this will be the result, which is correct:</p>
+  <p lang="he" dir="rtl" style="text-align:center; font-size: 2em;">bidi בינלאומי</p>
+
+<p>The Hebrew characters are reversed by applying the Unicode Bidirectional Algorithm (UBA). However, in a LTR context the UBA cannot make the 'bidi' word appear to the right of the Hebrew text, where it belongs, unless the base direction is set to RTL around it.</p>
+<p>This has an additional complication. Often, applications will test the first strong character in the string in order to guess the base direction that needs to be applied. In this case, that heuristic will produce the wrong result.</p>
+</section>
+
+
+
+  <section>
+  <h4 id="bidiCase3">Bidirectional text ordering</h4>
+<p>In this case the string contains three words with different directional properties. The characters in the order in which they are stored in memory.</p>
+  <p lang="he" dir="rtl" style="text-align:center; font-size: 2em;"><code><bdo dir="ltr">&quot;one שתיים three&quot;</bdo></code></p>
+  <p>If the string is dropped into a LTR context, it will display like this, which is correct:</p>
+  <p lang="he" dir="ltr" style="text-align:center; font-size: 2em;">one שתיים three</p>
+  <p>Dropped into a RTL context, this will be the result, which is incorrect – the order of the items has changed:</p>
+  <p lang="he" dir="rtl" style="text-align:center; font-size: 2em;">one שתיים three  </p>
+<p>This can be much worse when combined with punctuation, or in this case an example of markup in an educational context (inserted into a RTL context). The sequence 'one two three' should just be wrapped in <code class="kw" translate="no">span</code> markup:</p>
+  <p lang="he" dir="rtl" style="text-align:center; font-size: 2em;">&lt;span&gt;one שתיים three&lt;/span&gt;</p>
+</section>
+
+
+
+  <section>
+  <h4 id="bidiCase3">Interpreted HTML</h4>
+<p>The characters in this string are shown in the order in which they are stored in memory.</p>
+  <p lang="he" dir="rtl" style="text-align:center; font-size: 2em;"><code>
+<bdo dir="ltr">&quot;&lt;span dir='ltr'&gt;one שתיים three&lt;/span&gt;&quot;</bdo></code></p>
+<p>This use case is for applications that will parse the string and convert any HTML markup to the DOM. In this case, the text should be rendered correctly in an HTML context because the <code class="kw" translate="no">dir</code> attribute indicates the base direction to be applied within the markup. (It also applies bidi isolation to the text in browsers that fully support bidi markup, avoiding any spill-over effects.) It relies, however, on a system where the consumer expects to receive HTML, and knows how to handle bidi markup.</p>
+<p>It also requires the producer to take explicit action to identify the appropriate base direction and set up the required markup to indicate that.</p>
+</section>
+
+
+
+  <section>
+  <h4 id="bidiCase1">Neutral LTR text</h4>
+<p>The text in this use case could be a phone number, product catalogue number, mac address, etc.The characters in this string are shown in the order in which they are stored in memory.</p>
+  <p lang="he" dir="rtl" style="text-align:center; font-size: 2em;"><code><bdo dir="ltr">&quot;123 456 789&quot;</bdo></code></p>
+  <p>If the string is dropped into a LTR context, it will display like this, which is correct:</p>
+  <p lang="he" dir="ltr" style="text-align:center; font-size: 2em;">123 456 789</p>
+  <p>Dropped into a RTL context, this will be the result, which is incorrect – the sequencing is wrong, and this may not even be apparent to the reader:</p>
+  <p lang="he" dir="rtl" style="text-align:center; font-size: 2em;">123 456 789</p>
+
+<p>When presented to a user, the order of the numbers must remain the same even when the directional context of the surrounding text is RTL. There are no strong directional characters in this string, and the need to preserve a strong LTR base direction is more to do with the type of information in the string than with the content.</p>
+</section>
 </section>
 
 <section id="bidiApproaches">
