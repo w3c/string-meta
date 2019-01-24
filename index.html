@@ -973,17 +973,16 @@ no </p>
 <li>Unicode limits for embedding levels may be exceeded</li>
 </ul>
 </div>
-<p>This approach inserts paired Unicode formatting characters at the start and end of a string to indicate the base direction. </p>
-  <p>If paired formatting characters are used, they should be isolating, ie. starting with RLI, LRI, FSI, and not with RLE or LRE.</p>
+  <p>This approach inserts paired Unicode formatting characters at the start and end of a string to indicate the base direction. There are two kinds of paired Unicode bidirectional controls: embedding controls and isolating controls.</p>
+  
+  <p>Uniode bidi controls are used to affect how the text in a paragraph is processed by the Unicode Bidirectional Algorithm (UBA). The embedding controls are used to force a new level of bidi "embedding" in the algorithm, effectively signaling that a section of the text should be treated as a bidirectional "run" of characters with a certain base direction. The isolating controls are used to indicate that a given run of characters should not be included in the overall string's processing, but instead should be processed separately, as an isolated segment.</p>
+  <p>If paired formatting characters are inserted by a document format or protocol, they should be the isolating Unicode controls, ie. starting with RLI, LRI, FSI, and not with RLE or LRE.</p>
   <p>However, it would not be enough to simply apply the UBA first-strong heuristics to such a string, because the Unicode bidi algorithm is unable to ascertain the base direction for a string that starts with RLI/LRI/FSI and ends with PDI. This is because the algorithm skips over isolated sequences and treats them  as a neutral character. A consumer of the string would have to take special steps, in this case, to uncover the first-strong character.</p>
   <p>This approach is also only appropriate if it is acceptable to change the value of the string. In addition to possible issues such as changed string length or pointer positions, this approach runs the risk of one of the paired characters getting lost, either through handling errors, or through text truncation, etc.</p>
   <p>A  producer and a consumer of a string would need to recognise and handle a situation where a string begins with a paired formatting character but doesn't end with it because the formatting characters only describe a part of the string.</p>
   <p>Unicode specifies a limit to the number of embeddings that are effective, and embeddings could build up over time to exceed that limit.</p>
   <p>Consuming applications would need to recognise and appropriately handle the isolating formatting characters. At the moment such support for RLI/LRI/FSI is not pervasive.</p>
 
-
-
-  <p class=issue>Need to describe non-isolating controls here.</p>
 </section>
 
 
