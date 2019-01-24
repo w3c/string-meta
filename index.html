@@ -87,8 +87,8 @@
   </div>
 </div>
 
-<section id="Introduction">
-<h2>Introduction</h2>
+<section>
+<h2 id="introduction">Introduction</h2>
 
 <p>This document was developed as a result of observations by the 
 Internationalization Working Group over a series of specification 
@@ -115,7 +115,7 @@ cultures.</p>
 
 
 <section id="terminology">
-	<h2>Terminology</h2>
+	<h3>Terminology</h3>
 	<p>This section defines terminology necessary to understand the contents of this document. The terms defined here are specific to this document.</p>
 	
   
@@ -127,38 +127,45 @@ cultures.</p>
   <p><dfn>RTL</dfn> stands for "right-to-left" and refers to the inline base direction of right-to-left [[!UAX9]]. This is the base text direction used by languages whose starting character progression begins on the right side of the page in horizontal text. It's used for scripts such as Arabic, Hebrew, Syriac, and a few others.</p>
   
   <p class=note>If you are unfamiliar with bidirectional or right-to-left text, there is a basic introduction <a href="https://www.w3.org/International/articles/inline-bidi-markup/uba-basics">here</a>. Additional materials can be found in the Internationalization Working Group's <a href="https://www.w3.org/International/techniques/authoring-html.en?open=direction">Techniques Index</a>.</p>
-
  </section>
  
+ 
+ 
+ 
+ 
  <section id="producers_consumers">
-  <h2>The String Lifecycle</h2>
+  <h3>The String Lifecycle</h3>
   
   <p>It's not possible to consider alternatives for handling string metadata in a vacuum: we need to establish a framework for talking about string handling and data formats.</p>
   
 <section id="producers">  
-  <h3>Producers</h3>  
+  <h4>Producers</h4>  
   <p>A string can be created in a number of ways, including a content author typing strings into a plain text editor, text message, or editing tool; or a script scraping text from web pages; or acquisition of an existing set of strings from another application or repository. In the data formats under consideration in this document, many strings come from back end data repositories or databases of various kinds. Sources of strings often provide an interface, API, or metadata that includes information about the base direction and language of the data. Some also provide a suitable default for when the direction or language is not provided or specified. In this document, the <b class="newterm">producer</b> of a string is the source, be it human or a mechanism, that creates or provides a string for storage or transmission.</p>
   <p>When a  string is created, it's necessary to (a) detect or capture the appropriate language and base direction to be associated with the string, and (b) take steps, where needed, to set the string up in a way that stores and communicates the language and base direction.</p>
   <p>For example, in the case of a string that is extracted from an HTML form, the base direction can be detected from the computed value of the form's field. Such a value could be inherited from an earlier element, such as the <code class="kw" translate="no">html</code> element, or set using markup or styling on the <code class="kw" translate="no">input</code> element itself. The user could also set the direction of the text by <a href="https://www.w3.org/International/questions/qa-html-dir#userexplicit">using  keyboard shortcut keys</a> to change the direction of the form field. The <code class="kw" translate="no">dirname</code> attribute provides a way of automatically communicating that value with a form submission.</p>
   <p>Similarly, language information in an HTML form  would most likely be inherited from the <code class="kw" translate="no">lang</code> attribute on the <code class="kw" translate="no">html</code> tag, or any element in the tree with a <code class="kw" translate="no">lang</code> attribute.</p>
   <p>If the producer of the string is receiving the string from a location where it was stored by another producer, and where the base direction/language has already been established, the producer needs to understand that the language and base direction has already been set and convert or encode that information for its consumers.</p>
 </section>
+
+
 <section id="consumers">
-  <h3>Consumers</h3>
+  <h4>Consumers</h4>
   <p>A <b class="newterm">consumer</b> is an application or process that receives a string for processing and possibly places it into a context where it will be exposed to a user. For display purposes, it must ensure that the base direction and language of the string is correctly applied to the string in that context. For processing purposes, it must at least persist the language and direction and may need to use the language and direction data in order to perform language-specific operations.</p>
   <p>Displaying the string usually involves applying the base direction and language by constructing additional markup, adding control codes, or setting display properties. This indicates to rendering software the base direction or language that should be applied to the string in this display context to get the string to appear correctly. For text direction, it must also isolate embedded strings from the surrounding text to avoid spill-over effects of the bidi algorithm [[UAX9]]. For language, it must make clear the boundaries for the range of text to which the language applies.</p>
   <p>Note that a consumer of one document format might be a <a>producer</a> of another document format.</p>
 </section>
+
+
 <section id="agreements">
-  <h3>Serialization Agreements</h3>
+  <h4>Serialization Agreements</h4>
   <p>Between any <a>producer</a> and <a>consumer</a>, there needs to be an <a>agreement</a> about what the document format contains and what the data in each field or attribute means. Any time a producer of a string takes special steps to collect and communicate information about the base direction or language of that string, it must do so with the expectation that the consumer of the string will understand how the producer encoded this information. If no action is taken by the producer, the consumer must still decide what rules to follow in order to decide on the appropriate base direction and language, even if it is only to provide some form of default value.</p>
   <p>In some systems or document formats, the necessary behaviour of the producers and consumers of a string are fully specified. In others, such agreements are not available; it is up to users to provide an agreement for how to encode, transmit, and later decode the necessary language or direction informat. Low level specifications, such as JSON, do not provide a string metadata structure by default, so any document formats based on these need to provide the "agreement" themselves.</p>
 </section>
 </section>
 
 	
-<section id="problemStatement">
-<h3>Why is this important?</h3>
+<section>
+<h3 id="problem_statement">Why is this important?</h3>
 
 <p>Information about the language of content is important when processing 
 and presenting natural language data for a variety of reasons. When 
@@ -205,8 +212,11 @@ presentation cannot be wholly recovered.</p>
 
 <p>In a distributed Web, any <a>consumer</a> can also be a <a>producer</a> for some other process or system. Thus, a given consumer might need to pass language and direction metadata from one document format (and using one <a>agreement</a>) to another consumer using a different document format. Lack of consistency in representing language and direction metadata in serialization agreements poses a threat to interoperability and a barrier to consistent implementation.</p>
 
-<section id="baseExample">
-<h3>An Example</h3>
+
+
+
+<section>
+<h4 id="base_example">An Example</h4>
 
 <p>Suppose that you are building a Web page to show a 
 customer's library of e-books. The e-books exist in a catalog of data 
@@ -249,22 +259,27 @@ the following:</p>
 </pre>
 
 <p>But JSON is a data interchange format: the content might not end up  with the title field being displayed in an HTML context. The JSON above might very well  be used to populate, say, a local data store which uses native controls  to show the title and these controls will treat the HTML as string contents. Producers and consumers of the data might not expect to introspect the data in order to supply or remove the extra data or to expose it as metadata. Most JSON libraries don't know anything about the structure of the content that they are serializing. Producers want to generate the JSON file directly from a local data store, such as a database. Consumers want to store or retrieve the value for use without additional consideration of the content of each string. In addition, either producers or consumers can have other considerations, such as field length restrictions, that are affected by the insertion of additional controls or markup. Each of these considerations places special burden on implementers to create arbitrary means of serializing, deserializing, managing, and exchanging the necessary metadata, with interoperability as a casualty along the way.</p> 
+</section>
 
-<section id="additionalRequirements">
-<h4>Additional Requirements for Localization</h4>
+
+
+
+<section>
+<h4 id="additional_requirements">Additional Requirements for Localization</h4>
 
 <p>The above example shows a data record available in a single language. Some applications might require the ability to send multiple languages for the same field, such as when localizing an application or when multilingual data is available. This is particularly true when the <a>producer</a> needs to support <a>consumers</a> that perform their own <a>language negotiation</a> or when the consumer cannot know which language or languages will be selected for display.</p>
 
 <p><a>Serialization agreements</a> to support this therefore need to represent several different language variations of the same field. For instance, in the example above the values <kbd>title</kbd> or <kbd>description</kbd> might each have translations available for display to users who speak a language other than English. Or an application might have localized strings that the <a>consumer</a> can select at runtime. In some cases, all language variations might be shown to the user. In other cases, the different language values might be matched to user preferences as part of <a>language negotiation</a> to select the most appropriate language to show.</p>
 
 <p>When multiple language representations are possible, a <a>serialization</a> might provide a means (defined in the specification for that document format) for setting a default value for language or direction for the whole of the document. This allows the serialized document to omit language and direction metadata from individual fields in cases where they match the default.</p>
-
-</section>
 </section>
 </section>
 
-<section id="unicode-enough">
-<h3>Isn't Unicode Enough?</h3>
+
+
+
+<section>
+<h3 id="unicode_enough">Isn't Unicode Enough?</h3>
 
 <p>[[!Unicode]] and its character encodings (such as UTF-8) are key elements 
 of the Web and its formats. They provide the ability to encode and 
@@ -296,8 +311,11 @@ data in an interchange format is not a good idea. These include:</p>
 </section>
 
 
-<section id="languageApproaches">
-<h2>Best Practices for Communicating Language and Direction</h2>
+
+
+
+<section>
+<h2 id="language_approaches">Best Practices for Communicating Language and Direction</h2>
 
 <p>This section contains the Best Practices as identified by the Internationalization Working Group. [[!RFC2119]] keywords have their usual meaning.</p>
 
@@ -305,11 +323,8 @@ data in an interchange format is not a good idea. These include:</p>
 
 <p>The main issue is how a <a>producer</a> of a string knows how to encode and a <a>consumer</a> of a string will know how to find and interpret the language-related features that ought to be used for that string when it is eventually processed or displayed to the user. This section describes the current best practices, as well as several alternatives that were considered (with reasons for why they are not considered the best practice).</p>   
    
-<section id="bestPractices">
-<h2>Current Best Practices</h2>
-
-<section id="BCPmetadata">
-	<h3>Specifying Metadata in Document Formats</h3>
+<section>
+<h4 id="bcp_metadata">Specifying Metadata in Document Formats</h4>
   
   <p class=note>The TAG and I18N WG are <a href="https://github.com/w3ctag/design-reviews/issues/178">currently discussing</a> what the best practice recommendations should be. This subsection represents our understanding currently.</p>
   
@@ -463,12 +478,14 @@ dir</code></dfn> member</dt>
 </pre>
 	
 </aside>
-
 </section>
 
 
-<section id="controlsInStrings">
-<h3>Bidi Isolation and Isolating Controls in Strings</h3>
+
+
+
+<section>
+<h3 id="controls_in_strings">Bidi Isolation and Isolating Controls in Strings</h3>
 
 <p class=mustard>Do not produce or require bidi isolating controls by default.</p> 
 <p>Bidi isolating controls are plain text control characters that can be used to indicate that a span of text should be "isolated" from the surrounding bidirectional context. A frequent question is whether content management systems or document formats should include these characters by default around strings that can appear in multiple contexts. An example of this would be a localizable string table for an application. Since the content author cannot know the bidi context in which the string will be displayed in advance, providing the controls could help insulate the strings from improper display later.</p>
@@ -488,23 +505,27 @@ dir</code></dfn> member</dt>
 <p>The advantages of using isolating controls around a string are that the string can then be inserted into any context (that understands isolating controls) without additional processing.</p>
 
 <p>The disadvantages of using isolating controls around a string are several. For most text the controls are superfluous and contribute to storage and processing overhead. The controls also affect the length of the string. Operations such as string truncation need to keep the controls paired.</p>
-
-
-</section>
 </section>
 </section>
 
-</section>
 
-<section id="useCases">
-<h2>Requirements and Use Cases</h2>
+
+
+
+<section>
+<h2 id="use_cases">Requirements and Use Cases</h2>
 	
 	<p>This section of the document describes in depth the need for language and direction metadata and various use cases helpful in understanding the best practices and alternatives listed above.</p>
 	
-<section id="Language Identification">
-  <h2>Identifying the Language of Content</h2>
-<section id="Definitions">
-<h3>Definitions</h3>
+    
+    
+<section>
+<h3 id="language_identification">Identifying the Language of Content</h3>
+
+
+<section>
+<h4 id="definitions">Definitions</h4>
+
 <p><dfn id="langmeta">Language metadata</dfn> typically indicates the 
 intended linguistic audience or user of the resource as a whole, and 
 it's possible to imagine that this could, for a multilingual resource, 
@@ -522,11 +543,13 @@ other language-sensitive applications know which set of rules or
 resources to apply to a specific range of text. Such applications 
 generally need an unambiguous statement about the language they are 
 working on.</p>
-
 </section>
 
-<section id="Language Tagging Use Cases">
-  <h3>Language Tagging Use Cases</h3>
+
+
+
+<section>
+<h4 id="lang_use_cases">Language Tagging Use Cases</h4>
   <p>Kensuke is reading an old Tibetan manuscript from the Dunhuang 
 	collection. The tool he is using to read the manuscript has access 
 	to annotations created by scholars working in the various languages 
@@ -544,8 +567,10 @@ working on.</p>
 	
   <p>Kensuke speaks Japanese, so he generally wants to be presented with the 
     Japanese commentary.</p>
+    
+    
  <section>
-   <h4 id="language_metadata">Capturing the language of the audience</h4>
+   <h5 id="language_metadata">Capturing the language of the audience</h5>
    <p>The annotations containing the Japanese commentary have a <code class="kw" 
 translate="no">language</code> property set to &quot;<code class="kw" 
 translate="no">ja</code>&quot; (Japanese). The tool he is using knows that he 
@@ -570,8 +595,10 @@ translate="no">ja</code>&quot; (Japanese). The tool he is using knows that he
    Japanese, which are in Chinese, and which are in Tibetan.</p>
  </section>
 
+
+
 <section>
-<h4 id="text_processing">Capturing the text-processing language</h4>  
+<h5 id="text_processing">Capturing the text-processing language</h5>  
   <p>Having identified the relevant annotation text to present to 
     Kensuke, his application has to then display it so that he can read it. 
     It's important to apply the correct font to the text. In the following 
@@ -607,14 +634,114 @@ translate="no">ja</code>&quot; (Japanese). The tool he is using knows that he
   </p>
 </section>
 </section>
-<section id="otherApproaches">
-	
-	<h2>Other Approaches Considered</h2>
+
+</section>
+
+
+<section>
+<h3 id="bidi_use_case">Identifying the Base Direction of Content</h3>
+
+  <p>In order for a <a>consumer</a> to correctly display bidirectional text, such as those in the following use cases, there must be a way for the consumer to determine the required base direction for each string. It is not enough to rely on the Unicode Bidirectional Algorithm to solve these issues. What is needed is a way to establish the overall directional context in which the string will be displayed (which is what 'base direction' means).</p>
+<p>These use cases illustrate situations where a failure to apply the necessary base direction creates a problem.</p>
+
+
+<section>
+<h4 id="bidiCase1">Final punctuation</h4>
+<p>This use case consists of a string containing Hebrew text followed by punctuation – in this case an exclamation mark. The characters in this string are shown here in the order in which they are stored in memory.</p>
+  <p lang="he" dir="rtl" style="text-align:center; font-size: 2em;"><code><bdo dir="ltr">&quot;בינלאומי!&quot;</bdo></code></p>
+  <p>If the string is dropped into a LTR context, it will display like this, which is incorrect – the exclamation mark is on the wrong side:</p>
+  <p lang="he" dir="ltr" style="text-align:center; font-size: 2em;">בינלאומי!</p>
+  <p>Dropped into a RTL context, this will be the result, which is correct:</p>
+  <p lang="he" dir="rtl" style="text-align:center; font-size: 2em;">בינלאומי!</p>
+
+<p>The Hebrew characters are reversed by applying the Unicode Bidirectional Algorithm (UBA). However, in a LTR context the UBA cannot make the exclamation mark appear to the left of the Hebrew text, where it belongs, unless the base direction is set to RTL around it.</p>
+</section>
+
+
+
+  <section>
+  <h4 id="bidiCase2">Initial Latin</h4>
+<p>In this case the Hebrew word is preceded by some Latin text (here a hashtag). The characters in  the order in which they are stored in memory.</p>
+  <p lang="he" dir="rtl" style="text-align:center; font-size: 2em;"><code>
+<bdo dir="ltr">&quot;bidi בינלאומי&quot;</bdo></code></p>
+  <p>If the string is dropped into a LTR context, it will display like this, which is incorrect – the word 'bidi' should be to the right:</p>
+  <p lang="he" dir="ltr" style="text-align:center; font-size: 2em;">bidi בינלאומי</p>
+  <p>Dropped into a RTL context, this will be the result, which is correct:</p>
+  <p lang="he" dir="rtl" style="text-align:center; font-size: 2em;">bidi בינלאומי</p>
+
+<p>The Hebrew characters are reversed by applying the Unicode Bidirectional Algorithm (UBA). However, in a LTR context the UBA cannot make the 'bidi' word appear to the right of the Hebrew text, where it belongs, unless the base direction is set to RTL around it.</p>
+<p>This has an additional complication. Often, applications will test the first strong character in the string in order to guess the base direction that needs to be applied. In this case, that heuristic will produce the wrong result.</p>
+</section>
+
+
+
+  <section>
+  <h4 id="bidiCase3">Bidirectional text ordering</h4>
+<p>In this case the string contains three words with different directional properties. The characters in the order in which they are stored in memory.</p>
+  <p lang="he" dir="rtl" style="text-align:center; font-size: 2em;"><code><bdo dir="ltr">&quot;one שתיים three&quot;</bdo></code></p>
+  <p>If the string is dropped into a LTR context, it will display like this, which is correct:</p>
+  <p lang="he" dir="ltr" style="text-align:center; font-size: 2em;">one שתיים three</p>
+  <p>Dropped into a RTL context, this will be the result, which is incorrect – the order of the items has changed:</p>
+  <p lang="he" dir="rtl" style="text-align:center; font-size: 2em;">one שתיים three  </p>
+<p>This can be much worse when combined with punctuation, or in this case an example of markup in an educational context (inserted into a RTL context). The sequence 'one two three' should just be wrapped in <code class="kw" translate="no">span</code> markup:</p>
+  <p lang="he" dir="rtl" style="text-align:center; font-size: 2em;">&lt;span&gt;one שתיים three&lt;/span&gt;</p>
+</section>
+
+
+
+  <section>
+  <h4 id="bidiCase4">Interpreted HTML</h4>
+<p>The characters in this string are shown in the order in which they are stored in memory.</p>
+  <p lang="he" dir="rtl" style="text-align:center; font-size: 2em;"><code>
+<bdo dir="ltr">&quot;&lt;span dir='ltr'&gt;one שתיים three&lt;/span&gt;&quot;</bdo></code></p>
+<p>This use case is for applications that will parse the string and convert any HTML markup to the DOM. In this case, the text should be rendered correctly in an HTML context because the <code class="kw" translate="no">dir</code> attribute indicates the base direction to be applied within the markup. (It also applies bidi isolation to the text in browsers that fully support bidi markup, avoiding any spill-over effects.) It relies, however, on a system where the consumer expects to receive HTML, and knows how to handle bidi markup.</p>
+<p>It also requires the producer to take explicit action to identify the appropriate base direction and set up the required markup to indicate that.</p>
+</section>
+
+
+
+  <section>
+  <h4 id="bidiCase5">Neutral LTR text</h4>
+<p>The text in this use case could be a phone number, product catalogue number, mac address, etc.The characters in this string are shown in the order in which they are stored in memory.</p>
+  <p lang="he" dir="rtl" style="text-align:center; font-size: 2em;"><code><bdo dir="ltr">&quot;123 456 789&quot;</bdo></code></p>
+  <p>If the string is dropped into a LTR context, it will display like this, which is correct:</p>
+  <p lang="he" dir="ltr" style="text-align:center; font-size: 2em;">123 456 789</p>
+  <p>Dropped into a RTL context, this will be the result, which is incorrect – the sequencing is wrong, and this may not even be apparent to the reader:</p>
+  <p lang="he" dir="rtl" style="text-align:center; font-size: 2em;">123 456 789</p>
+
+<p>When presented to a user, the order of the numbers must remain the same even when the directional context of the surrounding text is RTL. There are no strong directional characters in this string, and the need to preserve a strong LTR base direction is more to do with the type of information in the string than with the content.</p>
+</section>
+</section>
+
+</section>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<section>
+<h2 id="ApproachesConsidered">Approaches Considered</h2>
 	
 	<p>The above <a href="">Best Practices</a> are based on discussion with TAG, implementation in several W3C Specifications, and the recommendations of the Internationalization Working Group. Other approaches to identifying language in document formats have been used occasionally or have been proposed in the past. Each is described below.</p>
   
-  <section id="langapproach1">
-    <h2>Require HTML or XML for content</h2>
+
+
+<section>
+    <h3 id="lang-approach">Identifying the Language of Content</h3>
+
+
+
+
+<section>
+    <h4 id="html_content">Require HTML or XML for content</h4>
     
 	<p>One proposal from members of the Annotation WG was to require HTML/XML formats for such annotation bodies, and use the <code 
 	class="kw" translate="no">lang</code> or <code class="kw" translate="no">xml:lang</code> attributes in markup to denote the 
@@ -632,7 +759,7 @@ translate="no">ja</code>&quot; (Japanese). The tool he is using knows that he
 
   
   <section id="langapproach2">
-    <h2>Create a new datatype</h2>
+    <h4>Create a new datatype</h4>
     <p>If a new datatype were added to JSON to support natural language strings, then specifications could easily specify that type for use in document formats. Since the format is standardized, <a data-lt="producer">producers</a> and <a data-lt="consumer">consumers</a> would not need to guess about direction or language information when it is encoded. Such a serialization might look like the following:</p>
     
     <pre class=example>
@@ -651,9 +778,9 @@ myLanguageNeutralString: "978-0-123-4567-X"       // language-neutral string</pr
 
 
 <section id="unicodeTags">
-  <h2>Unicode tag characters</h2> 
+  <h4>Unicode tag characters</h4> 
   
-  <p>Unicode tag characters are strongly deprecated by the Unicode Consortium. These tag characters were intended for use in language tagging within plain text contexts and are often suggested as an alternate means of providing in-band non-markup language tagging. We are unaware of an implementations that use them as language tags. 
+  <p>Unicode tag characters are strongly deprecated by the Unicode Consortium. These tag characters were intended for use in language tagging within plain text contexts and are often suggested as an alternate means of providing in-band non-markup language tagging. We are unaware of an implementations that use them as language tags.</p>
 
   <p>Here is how Unicode tags are supposed to work:</p>
   
@@ -712,80 +839,36 @@ myLanguageNeutralString: "978-0-123-4567-X"       // language-neutral string</pr
   
   <p>Finally, Unicode has recently "recycled" these characters for use in forming sub-regional flags, such as the flag of Scotland (🏴󠁧), which is made of the sequence:󠁢󠁳󠁣󠁴󠁿   </p>
   <ul>
-  <li><span class="codepoint"><span lang="ang">&#x1F3F4;</span> [<span class="uname">U+1F3F4 WAVING BLACK FLAG</span>]</span><br>
-  <li><span class="codepoint"><span lang="ang">&#xE0067;</span> [<span class="uname">U+E0067 TAG LATIN SMALL LETTER G</span>]</span><br>
-  <li><span class="codepoint"><span lang="ang">&#xE0062;</span> [<span class="uname">U+E0062 TAG LATIN SMALL LETTER B</span>]</span><br>
-  <li><span class="codepoint"><span lang="ang">&#xE0073;</span> [<span class="uname">U+E0073 TAG LATIN SMALL LETTER S</span>]</span><br>
-  <li><span class="codepoint"><span lang="ang">&#xE0063;</span> [<span class="uname">U+E0063 TAG LATIN SMALL LETTER C</span>]</span><br>
-  <li><span class="codepoint"><span lang="ang">&#xE0074;</span> [<span class="uname">U+E0074 TAG LATIN SMALL LETTER T</span>]</span><br>
-  <li><span class="codepoint"><span lang="ang">&#xE007F;</span> [<span class="uname">U+E007F CANCEL TAG</span>]</span>
+  <li><span class="codepoint"><span lang="ang">&#x1F3F4;</span> [<span class="uname">U+1F3F4 WAVING BLACK FLAG</span>]</span></li>
+  <li><span class="codepoint"><span lang="ang">&#xE0067;</span> [<span class="uname">U+E0067 TAG LATIN SMALL LETTER G</span>]</span></li>
+  <li><span class="codepoint"><span lang="ang">&#xE0062;</span> [<span class="uname">U+E0062 TAG LATIN SMALL LETTER B</span>]</span></li>
+  <li><span class="codepoint"><span lang="ang">&#xE0073;</span> [<span class="uname">U+E0073 TAG LATIN SMALL LETTER S</span>]</span></li>
+  <li><span class="codepoint"><span lang="ang">&#xE0063;</span> [<span class="uname">U+E0063 TAG LATIN SMALL LETTER C</span>]</span></li>
+  <li><span class="codepoint"><span lang="ang">&#xE0074;</span> [<span class="uname">U+E0074 TAG LATIN SMALL LETTER T</span>]</span></li>
+  <li><span class="codepoint"><span lang="ang">&#xE007F;</span> [<span class="uname">U+E007F CANCEL TAG</span>]</span></li>
   </ul>
   
-  <p class=ednote>The above is a new feature of emoji added in Unicode 10.0 (version 5.0 of UTR#51) in June 2017. Proper display depends on your system's adoption of this version.</p>
+  <p class="ednote">The above is a new feature of emoji added in Unicode 10.0 (version 5.0 of UTR#51) in June 2017. Proper display depends on your system's adoption of this version.</p>
   
 </section>
 </section>
-</section>
 
 
-<section id="Bidi">
-<h2>Identifying the Base Direction of Content</h2>
 
-<section id="Bidirectional Use Cases">
-  <h3>Bidirectional Use Cases</h3> 
-  
-  <p>In order for a <a>consumer</a> to correctly display bidirectional text, such as those in the following use cases, when they reach the point of display to the user, there must be a way to determine the required base direction for each string.</p>
-  
-  <p>Each use case below shows characters from left-to-right in the order they are stored in memory. We use Hebrew text so as to avoid issues related to the display of cursive characters in Arabic. The use cases also serve as examples for the concepts on this page.</p>
-  
-  <p>The first four use cases need to be displayed using an RTL base direction. The last use case
-  needs to be displayed as LTR text.</p>
-  
-<aside class=example title="Bidirectional Use Case #1" id="bidiCase1">
-  <p dir="rtl" style="text-align:center;"><code><bdo dir="ltr">&quot;בינלאומי!&quot;</bdo></code>  </p>
-  <p>For presentation to a user, the  characters above should be presented in the reverse order to what you see on this page. The Hebrew characters will be reversed by applying the Unicode Bidirectional Algorithm (UBA). However, the UBA cannot make the exclamation mark appear to the left of the Hebrew text, where it belongs, unless the base direction is set to RTL.</p>
-  <p>This is what the text of the string should look like if displayed correctly by a consumer:&nbsp; <img src="images/test1.png" alt="Test 1"/></p>
-</aside>
-<aside class=example title="Bidirectional Use Case #2" id="bidiCase2">
-  <p style="text-align:center;"><code>
-    <bdo dir="ltr">&quot;bidi בינלאומי&quot;</bdo>
-  </code></p>
-  <p>For presentation to a user, the text &quot;bidi&quot; must appear to the right of the Hebrew letters.<code></code> The UBA cannot do this unless it knows that the overall base direction is RTL.</p>
-  <p>This is what the text of the string should look like if displayed correctly by a consumer:&nbsp; <img src="images/test2.png" alt="Test 2"/></p>
-  
-  <p>Although Example #1 appears trivial, the "side-shifting" of the exclamation point is also experienced by other left-to-right runs of text. Consider this title:</p>
-  <p dir="rtl" style="text-align:center;"><code><bdo dir=ltr>&quot;&#x0647;&#x0644; &#x062A;&#x0639;&#x0644;&#x0645;&#x062A; C++&#x061F;&quot;</bdo></code></p>
-  <p>This should be presented as:</p>
-  <p dir=rtl style="text-align:center;"><code>&quot;&#x0647;&#x0644; &#x062A;&#x0639;&#x0644;&#x0645;&#x062A; <span dir=ltr>C++</span>&#x061F;&quot;</code></p>
 
-</aside>
 
-<aside class=example title="Bidirectional Use Case #3" id="bidiCase3">
-  <p style="text-align:center;"><code><bdo dir="ltr">&quot;&lt;span&gt;בינלאומי!&lt;/span&gt;&quot;</bdo></code></p>
-  <p>This use case illustrates how consuming applications that treat the markup in the string as actual markup might work. As with <a href=bidiCase1>use case #1</a>, the exclamation mark needs to appear to the left of the Hebrew letters, regardless of the LTR directionality of the markup surrounding it.</p>
-  <p>This is what the text of the string should look like if displayed correctly by a consumer:&nbsp; <img src="images/test1.png" alt="Test 3"/></p>
-</aside>
 
-<aside class=example title="Bidirectional Use Case #4" id="bidiCase4">
-  <p style="text-align:center;"><code>
-    <bdo dir="ltr">&quot;&lt;span dir='rtl'&gt;one שתיים three&lt;/span&gt;&quot;</bdo></code></p>
-  <p>If the consuming application is expected to parse the markup as actual markup, the text in the <kbd>span</kbd> element above should be displayed to the user in the order <code>&quot;three שתיים one&quot;</code>. This requires the UBA to know that the intended base direction of the string is RTL. The key point of this use case is that the base direction information is carried in the markup.</p>
-  <p>This is what the text of the string should look like if displayed correctly by a consumer:&nbsp; <img src="images/test4.png" alt="Test 4"/></p>
-</aside>
 
-<aside class=example title="Bidirectional Use Case #5" id="bidiCase5">
-  <p style="text-align:center;"><code><bdo dir="ltr">&quot;123 456 789&quot;</bdo></code></p>
-  <p>When presented to a user, the order of the numbers must remain the same even when the directional context of the surrounding text is RTL. There are no strong directional characters in this string.<code></code></p>
-  <p>This is what the text of the string should look like if displayed correctly by a consumer:&nbsp; <img src="images/test5.png" alt="Test 5"/></p>
-</aside>
-</section>
 
-<section id="bidiApproaches">
-  <h2>Approaches Considered</h2>
+
+<section>
+<h3 id="bidi-approaches">Identifying the Base Direction of Content</h3>
   <p>The fundamental problem is how a <a>consumer</a> of a string will know what base direction should be used for that string when it is eventually displayed to a user. A number of alternatives are considered below. Note that, unlike some of the <a href="otherApproaches">language tagging alternatives</a> considered above, each of these mechansisms for identifying or estimating the base direction have utility in specific applications and are in use in different specifications such as [[HTML5]].</p>
 
+
 <section id="metadata">
-  <h2>Metadata</h2>
+  <h4>Metadata</h4>
+  
   <div class="summary">
 <p><b class="leadin">Summary</b></p>
 <p>Recommended?<br>
@@ -813,8 +896,11 @@ yes </p>
   <p>Metadata is probably most effective, however (especially for the original creator of the strings), if it is only passed with a string in those cases where first-strong detection is otherwise going to produce a wrong result. This would mean that consumers of strings should not only recognise the metadata, but should also expect to  rely on first-strong heuristics for strings without metadata. It also means that producers of strings need to recognise situations where directional information is needed and set the metadata.</p>
 </section>
 
+
+
+
 <section id="firststrong">
-  <h2>First-strong</h2>
+  <h4>First-strong</h4>
   <div class="summary">
 <p><b class="leadin">Summary</b></p>
 <p>Recommended?<br> 
@@ -850,8 +936,10 @@ no
   <p>If parseable markup in the string contains information about the intended direction of the string, that information should be used rather than relying on first-strong heuristics. This is problematic in a couple of ways: (a) it assumes that the consumer of the string understands the semantics of the markup, which may be ok if there is an agreement between all parties to use, say, HTML markup only, but would be problematic, for example, when dealing with random XML vocabularies, and (b) the consumer must be able to  recognise and handle a situation where only the initial part of the string has markup, ie. the markup applies to an inline span of text rather than the string as a whole.</p>
 </section>
 
+
+
 <section id="rlm">
-  <h2>Augmenting <q>first-strong</q> by inserting RLM/LRM markers</h2> 
+  <h4>Augmenting <q>first-strong</q> by inserting RLM/LRM markers</h4> 
   
   <div class="summary">
 <p><b class="leadin">Summary</b></p>
@@ -932,8 +1020,12 @@ no </p>
   access, to the original context of the string. Many document formats are generated from data stored away from the original context. For example, the catalog of books in the <a href="#baseExample">original example</a> above is disconnected from the user inputing the bidirectional text.</p>
 </section>
 
+
+
+
+
 <section id="paired">
-  <h2>Paired formatting characters</h2>
+  <h4>Paired formatting characters</h4>
   <div class="summary">
 <p><b class="leadin">Summary</b></p>
 <p>Recommended?<br>
@@ -959,13 +1051,13 @@ no </p>
 
 
 
-  <p class=issue>Need to describe non-isolating controls here.</p>
+  <p class="issue">Need to describe non-isolating controls here.</p>
 </section>
 
 
 
 <section id="script_subtag">
-  <h2>Script subtags</h2>
+  <h4>Script subtags</h4>
 <p>This section is currently a first draft and needs review.</p>
   
   <div class="summary">
@@ -1010,7 +1102,7 @@ no </p>
 </section>
 
 
-<section id="Acknowledgements">
+<section class="appendix" id="Acknowledgements">
 <h2>Acknowledgements</h2>
 
 <!-- Order new entries by family name -->
