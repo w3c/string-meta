@@ -60,6 +60,14 @@
           // Team Contact.
           wgPatentURI:  "https://www.w3.org/2004/01/pp-impl/32113/status",
           // !!!! IMPORTANT !!!! MAKE THE ABOVE BLINK IN YOUR HEAD
+          
+          		  localBiblio: {
+		"LDML": {
+		    title: "Unicode Technical Standard #35: Unicode Locale Data Markup Language (LDML)",
+			href: "https://unicode.org/reports/tr35/",
+			authors: [ "Mark Davis", "CLDR Contributors" ]
+		},
+	}
       };
     </script>
 <link rel="stylesheet" href="local.css" type="text/css" />
@@ -262,7 +270,7 @@ and Unicode bidi controls, so that a data value might look like one of
 the following:</p>
 
 <pre>
-   "title": "&lt;span lang='ar' dir='rtl'&gt;<span dir=rtl>"&#x0627;&#x0644;&#x062A;&#x0639;&#x0644;&#x0645; &#x0639;&#x0644;&#x0649; &#x0634;&#x0628;&#x0643;&#x0629; &#x0627;&#x0644;&#x0625;&#x0646;&#x062A;&#x0631;&#x0646;&#x062A; &#x0627;&#x0644;&#x062A;&#x0635;&#x0645;&#x064A;&#x0645;:  &#x0627;&#x0644;&#x0645;&#x0628;&#x062A;&#x062F;&#x0626; &#x0645;&#x0646; &#x062F;&#x0644;&#x064A;&#x0644; &#x0625;&#x0644;&#x0649; 
+   "title": "&lt;span lang='ar' dir='rtl'&gt;<span dir=rtl>&#x0627;&#x0644;&#x062A;&#x0639;&#x0644;&#x0645; &#x0639;&#x0644;&#x0649; &#x0634;&#x0628;&#x0643;&#x0629; &#x0627;&#x0644;&#x0625;&#x0646;&#x062A;&#x0631;&#x0646;&#x062A; &#x0627;&#x0644;&#x062A;&#x0635;&#x0645;&#x064A;&#x0645;:  &#x0627;&#x0644;&#x0645;&#x0628;&#x062A;&#x062F;&#x0626; &#x0645;&#x0646; &#x062F;&#x0644;&#x064A;&#x0644; &#x0625;&#x0644;&#x0649; 
              <span dir=ltr>&lt;span dir=ltr&gt;HTML &#x060C; CSS &#x060C; JavaScript&lt/span&gt;</span> &#x060C; &#x0648; &#x0631;&#x0633;&#x0648;&#x0645;&#x0627;&#x062A; &#x0639;&#x0644;&#x0649; &#x0634;&#x0628;&#x0643;&#x0629; &#x0627;&#x0644;&#x0625;&#x0646;&#x062A;&#x0631;&#x0646;&#x062A;</span>&lt;/span&gt;"
    "authors": [ "\u200eJennifer Robbins" ], // contains LRM as first character
 </pre>
@@ -274,16 +282,6 @@ the following:</p>
 
 
 
-
-<section>
-<h4 id="additional_requirements">Additional Requirements for Localization</h4>
-
-<p>The above example shows a data record available in a single language. Some applications might require the ability to send multiple languages for the same field, such as when localizing an application or when multilingual data is available. This is particularly true when the <a>producer</a> needs to support <a>consumers</a> that perform their own <a>language negotiation</a> or when the consumer cannot know which language or languages will be selected for display.</p>
-
-<p><a>Serialization agreements</a> to support this therefore need to represent several different language variations of the same field. For instance, in the example above the values <kbd>title</kbd> or <kbd>description</kbd> might each have translations available for display to users who speak a language other than English. Or an application might have localized strings that the <a>consumer</a> can select at runtime. In some cases, all language variations might be shown to the user. In other cases, the different language values might be matched to user preferences as part of <a>language negotiation</a> to select the most appropriate language to show.</p>
-
-<p>When multiple language representations are possible, a <a>serialization</a> might provide a means (defined in the specification for that document format) for setting a default value for language or direction for the whole of the document. This allows the serialized document to omit language and direction metadata from individual fields in cases where they match the default.</p>
-</section>
 </section>
 
 
@@ -326,7 +324,7 @@ data in an interchange format is not a good idea. These include:</p>
 
 
 <section>
-<h2 id="language_approaches">Best Practices for Communicating Language and Direction</h2>
+<h2 id="best-practices">Best Practices for Communicating Language and Direction</h2>
 
 <p>This section contains the Best Practices as identified by the Internationalization Working Group. [[!RFC2119]] keywords have their usual meaning.</p>
 
@@ -337,15 +335,23 @@ data in an interchange format is not a good idea. These include:</p>
 <section>
 <h4 id="bcp_metadata">Specifying Metadata in Document Formats</h4>
   
-  <p class=note>The TAG and I18N WG are <a href="https://github.com/w3ctag/design-reviews/issues/178">currently discussing</a> what the best practice recommendations should be. This subsection represents our understanding currently.</p>
+<p class=note>The TAG and I18N WG are <a href="https://github.com/w3ctag/design-reviews/issues/178">currently discussing</a> what the best practice recommendations should be. This subsection represents our understanding currently.</p>
   
-  <p><span class=mustard>Make each natural language string field <a>Localizable</a></span>. 
+<p class=mustard>Make each natural language string field <a>Localizable</a>.</p>
+
+<p class=mustard><a href="#metadata">Use metadata</a> to indicate the base direction of text fields.</p>
+
+<p>Avoid requiring the consumer to interpolate the direction using methods such as <a href="#firststrong">first strong</a> or which require modification of the data itself (such as the insertion of RLM/LRM markers or bidirectional controls).</p>
+
+<p class=mustard>If metadata is not available and cannot otherwise be provided, a base direction MAY be <a href="#script_subtag">interpolated from available language metadata</a>.</p>
+
+<p>The script subtag of a language tag (or the "likely" script subtag based on [[!BCP47]] and [[!LDML]]) can sometimes be used to provide a base direction when other data is not available. Note that using language information is a "last resort" and specifications SHOULD NOT use it as the primary way of indicating direction: make the effort to provide for metadata.</p>
 
 <p class=mustard>Specifications and document formats MAY provide for a default language and default direction for an overall document.</p>
 
 <p>This might be helpful when performing <a>language negotiation</a> on several levels and there is a desire to use the same default language. It can also be helpful when a document is known to be in a single language or have a single expected base direction and the additional serialization complexity of using <kbd>Localizable</kbd> can thus be avoided.</p>
 
-<p>Interoperability is enhanced when specifications all use the same attribute name for the default language and default base direction. </p>
+<p>Interoperability is enhanced when specifications all use the same attribute name for the default language and default base direction.</p>
 
 <p class=mustard>The name <code>@language</code> is RECOMMENDED as the name of the default language value and <code>@dir</code> as the default direction value.</p>
 
@@ -358,8 +364,8 @@ data in an interchange format is not a good idea. These include:</p>
     "@language": "ar",
     "@dir": "rtl",
     "id": "978-977141881-8",
-    "title": "<span dir=rtl>&#x0627;&#x0644;&#x062A;&#x0639;&#x0644;&#x0645; &#x0639;&#x0644;&#x0649; &#x0634;&#x0628;&#x0643;&#x0629; &#x0627;&#x0644;&#x0625;&#x0646;&#x062A;&#x0631;&#x0646;&#x062A; &#x0627;&#x0644;&#x062A;&#x0635;&#x0645;&#x064A;&#x0645;:  &#x0627;&#x0644;&#x0645;&#x0628;&#x062A;&#x062F;&#x0626; &#x0645;&#x0646; &#x062F;&#x0644;&#x064A;&#x0644; &#x0625;&#x0644;&#x0649; 
-             <span dir=ltr>HTML &#x060C; CSS &#x060C; JavaScript</span> &#x060C; &#x0648; &#x0631;&#x0633;&#x0648;&#x0645;&#x0627;&#x062A; &#x0639;&#x0644;&#x0649; &#x0634;&#x0628;&#x0643;&#x0629; &#x0627;&#x0644;&#x0625;&#x0646;&#x062A;&#x0631;&#x0646;&#x062A;</span>",
+    "title": "<span dir=rtl>&#x0627;&#x0644;&#x062A;&#x0639;&#x0644;&#x0645; &#x0639;&#x0644;&#x0649; &#x0634;&#x0628;&#x0643;&#x0629; &#x0627;&#x0644;&#x0625;&#x0646;&#x062A;&#x0631;&#x0646;&#x062A; &#x0627;&#x0644;&#x062A;&#x0635;&#x0645;&#x064A;&#x0645;:  &#x0627;&#x0644;&#x0645;&#x0628;&#x062A;&#x062F;&#x0626; &#x0645;&#x0646; &#x062F;&#x0644;&#x064A;&#x0644; &#x0625;&#x0644;&#x0649; " +
+             "<span dir=ltr>HTML &#x060C; CSS &#x060C; JavaScript</span> &#x060C; &#x0648; &#x0631;&#x0633;&#x0648;&#x0645;&#x0627;&#x062A; &#x0639;&#x0644;&#x0649; &#x0634;&#x0628;&#x0643;&#x0629; &#x0627;&#x0644;&#x0625;&#x0646;&#x062A;&#x0631;&#x0646;&#x062A;</span>",
     "authors": [ "Jennifer Robbins" ],
     "language": "ar",
     "pubDate": "2008-01-01",
@@ -373,8 +379,8 @@ data in an interchange format is not a good idea. These include:</p>
 <pre>
 {
     "id": {"value": "978-977141881-8", "dir": "ltr"},
-    "title": {"value": "<span dir=rtl>&#x0627;&#x0644;&#x062A;&#x0639;&#x0644;&#x0645; &#x0639;&#x0644;&#x0649; &#x0634;&#x0628;&#x0643;&#x0629; &#x0627;&#x0644;&#x0625;&#x0646;&#x062A;&#x0631;&#x0646;&#x062A; &#x0627;&#x0644;&#x062A;&#x0635;&#x0645;&#x064A;&#x0645;:  &#x0627;&#x0644;&#x0645;&#x0628;&#x062A;&#x062F;&#x0626; &#x0645;&#x0646; &#x062F;&#x0644;&#x064A;&#x0644; &#x0625;&#x0644;&#x0649; 
-             <span dir=ltr>HTML &#x060C; CSS &#x060C; JavaScript</span> &#x060C; &#x0648; &#x0631;&#x0633;&#x0648;&#x0645;&#x0627;&#x062A; &#x0639;&#x0644;&#x0649; &#x0634;&#x0628;&#x0643;&#x0629; &#x0627;&#x0644;&#x0625;&#x0646;&#x062A;&#x0631;&#x0646;&#x062A;</span>", 
+    "title": {"value": "<span dir=rtl>&#x0627;&#x0644;&#x062A;&#x0639;&#x0644;&#x0645; &#x0639;&#x0644;&#x0649; &#x0634;&#x0628;&#x0643;&#x0629; &#x0627;&#x0644;&#x0625;&#x0646;&#x062A;&#x0631;&#x0646;&#x062A; &#x0627;&#x0644;&#x062A;&#x0635;&#x0645;&#x064A;&#x0645;:  &#x0627;&#x0644;&#x0645;&#x0628;&#x062A;&#x062F;&#x0626; &#x0645;&#x0646; &#x062F;&#x0644;&#x064A;&#x0644; &#x0625;&#x0644;&#x0649; " +
+             "<span dir=ltr>HTML &#x060C; CSS &#x060C; JavaScript</span> &#x060C; &#x0648; &#x0631;&#x0633;&#x0648;&#x0645;&#x0627;&#x062A; &#x0639;&#x0644;&#x0649; &#x0634;&#x0628;&#x0643;&#x0629; &#x0627;&#x0644;&#x0625;&#x0646;&#x062A;&#x0631;&#x0646;&#x062A;</span>", 
 		"lang": "ar", "dir": "rtl" },
     "authors": [ {"value": "Jennifer Robbins", "lang": "en"} ],
     "language": "ar",
@@ -497,14 +503,7 @@ working on.</p>
     
  <section>
    <h5 id="language_metadata">Capturing the language of the audience</h5>
-   <p>The annotations containing the Japanese commentary have a <code class="kw" 
-translate="no">language</code> property set to &quot;<code class="kw" 
-translate="no">ja</code>&quot; (Japanese). The tool he is using knows that he 
-     wants to read Japanese commentaries, and it uses this information to 
-     select and present to him the text contained in that body.  This is 
-     language information being used as metadata about the intended audience – it indicates to the 
-     application doing the retrieval that the intended consumer of the 
-    information  wants Japanese.</p>
+   <p>The annotations containing the Japanese commentary have a <code class="kw" translate="no">language</code> property set to &quot;<code class="kw" translate="no">ja</code>&quot; (Japanese). The tool he is using knows that he wants to read the Japanese commentaries, and it uses this information to select and present to him the text contained in that body.  This is language information being used as metadata about the intended audience – it indicates to the application doing the retrieval that the intended consumer of the information  wants Japanese.</p>
     
    <p>Some of the annotations contain text in more than one language. 
    For example, there are several with commentary in  Chinese, Japanese 
@@ -558,6 +557,19 @@ translate="no">ja</code>&quot; (Japanese). The tool he is using knows that he
     appropriate fonts and wrapping algorithms can be applied there. 
   
   </p>
+</section>
+
+
+<section>
+<h5 id="additional_requirements">Additional Requirements for Localization</h5>
+
+<p>Having viewed the commentaries he is interested in, Kensuke realizes that he needs another reference work, but he's not sure of the catalog number. He uses an application for searching out catalog entries. This application is written in JavaScript and can be switched between several languages, according to the user preference. One way to accomplish this would be to reload the application's user interface from the server each time the user selects a new language. Similarly, the catalog search service sends records back in all of the available languages, rather than selecting according to the user's current language preference.</p>
+
+<p>The <a href="#an-example">original example</a> shows a data record available in a single language. But some applications, such as the catalog search tool and its supporting service, might need the ability to send multiple languages for the same field, such as when localizing an application or when multilingual data is available. This is particularly true in cases like this, when the <a>producer</a> needs to support <a>consumers</a> that perform their own <a>language negotiation</a> or when the consumer cannot know which language or languages will be selected for display.</p>
+
+<p><a>Serialization agreements</a> to support this therefore need to represent several different language variations of the same field. For instance, in the example above the values <kbd>title</kbd> or <kbd>description</kbd> might each have translations available for display to users who speak a language other than English. Or an application might have localized strings that the <a>consumer</a> can select at runtime. In some cases, all language variations might be shown to the user. In other cases, the different language values might be matched to user preferences as part of <a>language negotiation</a> to select the most appropriate language to show.</p>
+
+<p>When multiple language representations are possible, a <a>serialization</a> might provide a means (defined in the specification for that document format) for setting a default value for language or direction for the whole of the document. This allows the serialized document to omit language and direction metadata from individual fields in cases where they match the default.</p>
 </section>
 </section>
 
@@ -656,16 +668,14 @@ translate="no">ja</code>&quot; (Japanese). The tool he is using knows that he
 <section>
 <h2 id="ApproachesConsidered">Approaches Considered</h2>
 	
-	<p>The above <a href="">Best Practices</a> are based on discussion with TAG, implementation in several W3C Specifications, and the recommendations of the Internationalization Working Group. Other approaches to identifying language in document formats have been used occasionally or have been proposed in the past. Each is described below.</p>
-  
-
+<p>Various approaches to identifying language and direction in document formats have been used occasionally or have been proposed in the past. Each is described below.</p>
 
 <section>
     <h3 id="lang-approach">Identifying the Language of Content</h3>
 
 
 <section>
-	<h3 id="localizable-dictionary">Use the <code>Localizable</code> data structure</h3>
+	<h3 id="localizable-dictionary" class=mustard>Use the <code>Localizable</code> data structure</h3>
 	
 	For JSON documents, this uses the WebIDL "dictionary" defined below: a pre-built extension that can be used commonly across different document formats using the same base field names and values. </p>
   
@@ -756,6 +766,14 @@ dir</code></dfn> member</dt>
 	<p>For example, if the language requested were U.S. English (<kbd>en-US</kbd>), this format makes it easier to match and extract the best fitting title object <kbd>{"value": "Learning Web Design", "lang": "en"}</kbd>.</p>
 </aside>
 
+  <section>
+	  <h5>Provide default document-level <kbd>@language</kbd> and <kbd>@dir</kbd></h5>
+	  
+	    <p>[[JSON-LD]] includes some data structures that are partially helpful. Notably, it defines <a href="https://json-ld.org/spec/latest/json-ld/#string-internationalization">string internationalization</a> in the form of a context-scoped <kbd>@language</kbd> value which can be associated with blocks of JSON or within individual objects. There is no definition of base direction, so this is incomplete. The <kbd>@context</kbd> concept can be used by specifications as a means of indicating the default language metadata where omitted from individual strings.</p>
+  
+  <p>The concept of <a href="https://json-ld.org/spec/latest/json-ld/#language-indexing">language indexing</a> in JSON-LD is used in the Best Practices in this document as a means for localizing a data value.</p>
+  </section>
+
 </section>
 
 
@@ -775,9 +793,9 @@ dir</code></dfn> member</dt>
     <p>The addition of markup also requires consumers to guard against the usual problems with markup insertion, such as XSS attacks.</p>
     
   </section>
-
   
-  <section id="langapproach2">
+  
+  <section id="lang-approach-new-datatype">
     <h4>Create a new datatype</h4>
     <p>If a new datatype were added to JSON to support natural language strings, then specifications could easily specify that type for use in document formats. Since the format is standardized, <a data-lt="producer">producers</a> and <a data-lt="consumer">consumers</a> would not need to guess about direction or language information when it is encoded. Such a serialization might look like the following:</p>
     
@@ -790,9 +808,6 @@ myLanguageNeutralString: "978-0-123-4567-X"       // language-neutral string</pr
 
   <p>The downside of adding a datatype is that JSON is a widely implemented format, including many ad-hoc implementations. Any new serialization form would likely break or cause interoperability problems with these existing implementations. JSON is not designed to be a "versioned" format. Any serialization form used would need to be transparent to existing JSON processors and thus could introduce unwanted data or data corruption to existing fields and formats.</p>
   
-  <p>[[JSON-LD]] includes some data structures that are partially helpful. Notably, it defines <a href="https://json-ld.org/spec/latest/json-ld/#string-internationalization">string internationalization</a> in the form of a context-scoped <kbd>@language</kbd> value which can be associated with blocks of JSON or within individual objects. There is no definition of base direction, so this is incomplete. The <kbd>@context</kbd> concept can be used by specifications as a means of indicating the default language metadata where omitted from individual strings.</p>
-  
-  <p>The concept of <a href="https://json-ld.org/spec/latest/json-ld/#language-indexing">language indexing</a> in JSON-LD is used in the Best Practices in this document as a means for localizing a data value.</p>
   </section>
 
 
@@ -886,15 +901,14 @@ myLanguageNeutralString: "978-0-123-4567-X"       // language-neutral string</pr
 
 
 <section id="metadata">
-  <h4>Metadata</h4>
+  <h4>Use Metadata</h4>
   
   <div class="summary">
 <p><b class="leadin">Summary</b></p>
-<p>Recommended?<br>
-yes </p>
+<p>Recommended? <strong>Yes</strong></p>
 <p>Pros:</p>
 <ul>
-<li>, effective &amp; efficient </li>
+<li>effective &amp; efficient </li>
 <li>doesn’t affect the content of the string </li>
 <li>no need to parse the string or know how to interpret it</li>
 </ul>
@@ -922,8 +936,7 @@ yes </p>
   <h4>First-strong</h4>
   <div class="summary">
 <p><b class="leadin">Summary</b></p>
-<p>Recommended?<br> 
-no
+<p>Recommended? <strong>no</strong>
 </p>
 <p>Pros:</p>
 <ul>
@@ -962,8 +975,7 @@ no
   
   <div class="summary">
 <p><b class="leadin">Summary</b></p>
-<p>Recommended?<br>
-no </p>
+<p>Recommended? <strong>no</strong></p>
 <p>Pros:</p>
 <ul>
 <li>it provides a reliable way of indicating base direction, as long as the producer can reliably apply markers </li>
@@ -1047,8 +1059,7 @@ no </p>
   <h4>Paired formatting characters</h4>
   <div class="summary">
 <p><b class="leadin">Summary</b></p>
-<p>Recommended?<br>
-no </p>
+<p>Recommended? <strong>no</strong> </p>
 <p>Pros:</p>
 <ul>
 <li>none</li>
@@ -1081,8 +1092,7 @@ no </p>
   
   <div class="summary">
   <p><b class="leadin">Summary</b></p>
-  <p>Recommended?<br>
-(provisionally, pending deeper investigation) yes, but only when the metadata approach above is not possible</p>
+  <p>Recommended? <em>(provisionally, pending deeper investigation)</em> <strong>yes</strong>, but only when the metadata approach above is not possible</p>
 
     <p>Pros:</p>
     <ul>
@@ -1108,8 +1118,11 @@ no </p>
   
   <p>The W3C Internationalization Working Group recommends that formats and applications should associate dedicated metadata relating to base text direction with strings wherever possible.  In cases where that is not possible due to legacy constraints, but where language metadata <em>can</em> be associated with each string, it may be possible to use the language metadata as a fallback method of identifying the direction for a string (eg. JSON-LD, RDF, etc).</p>
   <p>Note, however, that this is <em>only</em> appropriate when declaring information about the <em>overall</em> base direction to be associated with a string. We do <em>not</em> recommend generalised use of language data to indicate text direction, especially within strings, since the usage patterns are not interchangeable.</p>
-  <p>Note, secondly, that language information must use BCP 47 subtags, and that the tag that carries the information should be the script subtag, not the language subtag. For example, Azeri may be written LTR (with the Latin or Cyrillic scripts) or RTL (with the Arabic script).  Therefore, the subtag <code class="kw" translate="no">az</code> is insufficient to clarify intended direction. A language tag such as <code class="kw" translate="no">az-Arab</code>, however, can generally be relied upon to indicate that the overall base direction should be RTL. </p>
-<p>There are many strings which are not language-specific but which absolutely need to be wrapped by a mechanism that explicitly associates them with  a particular base direction for correct consumption. For example, Mac addresses inserted into a RTL context need to be displayed with a LTR overall base direction and isolation from the surrounding text. It's not clear how to distinguish these cases from others (in a way that would be feasible when using direction metadata).</p>
+  <p>Note, secondly, that language information must use [[BCP47]] language tags, and that the portion of the language tag that carries the information is the script subtag, not the primary language subtag. For example, Azeri may be written LTR (with the Latin or Cyrillic scripts) or RTL (with the Arabic script).  Therefore, the subtag <code class="kw" translate="no">az</code> is insufficient to clarify intended direction. A language tag such as <code class="kw" translate="no">az-Arab</code>, however, can generally be relied upon to indicate that the overall base direction should be RTL. </p>
+  
+  <p>Unicode locale identifiers, defined as part of the [[!LDML]] specification, include a "likely subtag" mechanism that can sometimes be used to supply the script subtag when the base language tag does not include it. For example, a language tag such as <kbd>ar</kbd> (Arabic), implies the <kbd>Arab</kbd> (Arabic) script subtag, since nearly all Arabic is written in this script.</p>
+  
+<p>There are many strings which are not language-specific but which absolutely need to be wrapped by a mechanism that explicitly associates them with  a particular base direction for correct consumption. For example, MAC addresses inserted into a RTL context need to be displayed with a LTR overall base direction and isolation from the surrounding text. It's not clear how to distinguish these cases from others (in a way that would be feasible when using direction metadata).</p>
   <p>The expected way in which this information is used is as follows. It may be reasonable to assume a default of LTR for all strings unless marked with a script subtag that indicates RTL.  Any string that needs to have an overall base direction of RTL should be labelled for language by the producer using a script subtag. If a script subtag is associated with a string, the consumer would check the script against a list of script subtags that indicate a RTL base direction, and if found would take appropriate action.</p>
   <p>The list of script subtags may be added to in future. In that case, any subtags that indicate a default RTL direction need to be added to the lists used by the consumers of the strings.</p>
   <p>It is perhaps possible to limit the use of script subtag metadata to situations where first-strong heuristics are expected to fail - provided that such cases can be identified, and appropriate action taken by the producer (not always reliable). Consumers would then need to use first-strong heuristics in the absence of a script subtag in order to identify the appropriate base direction. The use of script subtags should not, however, be restricted to strings that need to indicate direction; it is perfectly valid to associate a script subtag with any string.</p>
