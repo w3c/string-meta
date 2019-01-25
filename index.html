@@ -232,14 +232,14 @@ might look something like:</p>
 
 <pre id="example1Data">
 {
-    "id": "978-977141881-8",
-    "title": <span dir=rtl>"&#x0627;&#x0644;&#x062A;&#x0639;&#x0644;&#x0645; &#x0639;&#x0644;&#x0649; &#x0634;&#x0628;&#x0643;&#x0629; &#x0627;&#x0644;&#x0625;&#x0646;&#x062A;&#x0631;&#x0646;&#x062A; &#x0627;&#x0644;&#x062A;&#x0635;&#x0645;&#x064A;&#x0645;:  &#x0627;&#x0644;&#x0645;&#x0628;&#x062A;&#x062F;&#x0626; &#x0645;&#x0646; &#x062F;&#x0644;&#x064A;&#x0644; &#x0625;&#x0644;&#x0649; 
-             <span dir=ltr>HTML &#x060C; CSS &#x060C; JavaScript</span> &#x060C; &#x0648; &#x0631;&#x0633;&#x0648;&#x0645;&#x0627;&#x062A; &#x0639;&#x0644;&#x0649; &#x0634;&#x0628;&#x0643;&#x0629; &#x0627;&#x0644;&#x0625;&#x0646;&#x062A;&#x0631;&#x0646;&#x062A;"</span>,
+    "id": "978-144931927-4",
+    "title": <span dir=rtl>"&#x0627;&#x0644;&#x062A;&#x0639;&#x0644;&#x0645; &#x0639;&#x0644;&#x0649; &#x0634;&#x0628;&#x0643;&#x0629; &#x0627;&#x0644;&#x0625;&#x0646;&#x062A;&#x0631;&#x0646;&#x062A; &#x0627;&#x0644;&#x062A;&#x0635;&#x0645;&#x064A;&#x0645;:  &#x0627;&#x0644;&#x0645;&#x0628;&#x062A;&#x062F;&#x0626; &#x0645;&#x0646; &#x062F;&#x0644;&#x064A;&#x0644; &#x0625;&#x0644;&#x0649; " +
+             "<span dir=ltr>HTML &#x060C; CSS &#x060C; JavaScript</span> &#x060C; &#x0648; &#x0631;&#x0633;&#x0648;&#x0645;&#x0627;&#x062A; &#x0639;&#x0644;&#x0649; &#x0634;&#x0628;&#x0643;&#x0629; &#x0627;&#x0644;&#x0625;&#x0646;&#x062A;&#x0631;&#x0646;&#x062A;"</span>,
     "authors": [ "Jennifer Robbins" ],
     "language": "ar",
     "pubDate": "2008-01-01",
     "publisher": "&#x0643;&#x062A;&#x0628; &#x062A;&#x0639;&#x0644;&#x064A;&#x0645;&#x064A;&#x0629;",
-    "coverImage": "https://example.com/images/learning-web-dev.jpg",
+    "coverImage": "https://example.com/images/learning_web_design.jpg",
     // etc.
 },
 </pre>
@@ -339,94 +339,7 @@ data in an interchange format is not a good idea. These include:</p>
   
   <p class=note>The TAG and I18N WG are <a href="https://github.com/w3ctag/design-reviews/issues/178">currently discussing</a> what the best practice recommendations should be. This subsection represents our understanding currently.</p>
   
-  <p><span class=mustard>Make each natural language string field <a>Localizable</a></span>. For JSON documents, this uses the WebIDL "dictionary" defined below: a pre-built extension that can be used commonly across different document formats using the same base field names and values. </p>
-  
-<aside class="example">
-<p><code><dfn>Localizable</dfn></code> dictionary</p>
-<pre class="def idl" data-dfn-for="Localizable" data-link-for="Localizable">
-<span class="idlDictionary" data-idl="" data-title="Localizable">dictionary <span class="idlDictionaryID"><code>Localizable</code></a></span> {
-	<span class="idlMember" id="idl-def-localizable-lang" data-idl="" data-title="lang" data-dfn-for="localizable"><span class="idlMemberType"><a href="https://www.w3.org/TR/WebIDL-1/#idl-DOMString">DOMString</a></span> <span class="idlMemberName"><a data-lt="lang" href="#dom-localizable-lang" class="internalDFN" data-link-type="dfn" data-for="Localizable"><code>lang</code></a></span>;</span>
-    <span class="idlMember" id="idl-def-localizable-dir" data-idl="" data-title="dir" data-dfn-for="localizable"><span class="idlMemberType"><a href="#dom-textdirection" class="internalDFN" data-link-type="dfn"><code>TextDirection</code></a></span> <span class="idlMemberName"><a data-lt="dir" href="#dom-localizable-dir" class="internalDFN" data-link-type="dfn" data-for="Localizable"><code>dir</code></a></span> = <span class="idlMemberValue">"auto"</span>;</span>
-};</span>
-</pre><dl><dt><dfn data-dfn-for="localizable" data-dfn-type="dfn" id="dom-localizable-lang" data-idl="" data-title="lang">
-	
-	<code>lang</code></dfn> member</dt>
-	<dd>A [[!BCP47]] language tag that specifies the primary language for the values of the human-readable
-members of the inheriting dictionary.</dd>
-<dt><dfn data-dfn-for="localizable" data-dfn-type="dfn" id="dom-localizable-dir" data-idl="" data-title="dir"><code>
-dir</code></dfn> member</dt>
-<dd>Specifies the base direction for the human-readable members of an inheriting dictionary.</dd></dl>
-<div data-dfn-for="TextDirection" data-link-for="TextDirection" id="textdirection-enum" typeof="bibo:Chapter" resource="#textdirection-enum" property="bibo:hasPart">
-	<p id="h-textdirection-enum" resource="#h-textdirection-enum"><dfn data-dfn-for="" data-dfn-type="dfn" id="dom-textdirection" data-idl="" data-title="TextDirection">
-       <code>TextDirection</code></dfn> enum</p>
-<pre class="def idl">
-	<span class="idlEnum" id="idl-def-textdirection" data-idl="" data-title="TextDirection">enum <span class="idlEnumID"><a data-lt="TextDirection" href="#dom-textdirection" class="internalDFN" data-link-type="dfn" data-for=""><code>TextDirection</code></a></span> {    
-		<a href="#dom-textdirection-auto" class="idlEnumItem">"auto"</a>,
-	    <a href="#dom-textdirection-ltr" class="idlEnumItem">"ltr"</a>,    
-	    <a href="#dom-textdirection-rtl" class="idlEnumItem">"rtl"</a>
-};</span>
-</pre>
-<p>The text-direction values are the following, implying that the value of the human-readable members is by default:</p>
-<dl><dt><dfn data-dfn-for="textdirection" data-dfn-type="dfn" id="dom-textdirection-auto" data-idl="" data-title="auto">
-	<code>auto</code></dfn></dt><dd> Directionality is determined by the Unicode Bidirectional Algorithm [[!UAX9]] algorithm.</dd>
-<dt><dfn data-dfn-for="textdirection" data-dfn-type="dfn" id="dom-textdirection-ltr" data-idl="" data-title="ltr">
-	<code>ltr</code></dfn></dt><dd>Left-to-right text.</dd>
-<dt><dfn data-dfn-for="textdirection" data-dfn-type="dfn" id="dom-textdirection-rtl" data-idl="" data-title="rtl">
-	<code>rtl</code></dfn></dt><dd>Right-to-left text.</dd></dl>
-</div>
-</aside>
-
-<p>By defining the language and direction in a WebIDL dictionary form, specifications can incorporate language and direction metadata for a given String value succinctly. Implementations can recyle the dictionary implementation straightforwardly.</p>
-
-<p>Serialized files utilizing the dictionary and its data values will contain additional fields and can be more difficult to read as a result. Here's an example:</p>
-
-<aside class=example>
-	<p>Before:</p>
-	<pre>
-[
-  displayItems: [{
-    label: "<span dir="rtl">&#x0627;&#x0644;&#x0628;&#x0646;&#x062F; &#x0627;&#x0644;&#x062E;&#x0627;&#x0635; (&#x0644;&#x0644;&#x0628;&#x064A;&#x0639;!)</span>",
-    amount: { },
-  }]
-]</pre>
-	<p>After:</p>
-		<pre>
-[
-  displayItems: [{
-    label: {
-        value: "<span dir="rtl">&#x0627;&#x0644;&#x0628;&#x0646;&#x062F; &#x0627;&#x0644;&#x062E;&#x0627;&#x0635; (&#x0644;&#x0644;&#x0628;&#x064A;&#x0639;!)</span>",
-        lang: "ar-AE",
-        dir: "rtl"
-    },	
-    amount: { },
-  }]
-]</pre>
-</aside>
-
-
-<p>If an application needs to provide for <a>language negotiation</a> or if the data is available in multiple languages, the <a>Localizable</a> strings can further be organized into arrays with multiple languages for the same value. A simple example might look like this:</p>
-
-<aside class=example>
-<pre>
-	"title": [ { "value": "Learning Web Design", "lang": "en" },
-	           { "value": "&#x0627;&#x0644;&#x062A;&#x0639;&#x0644;&#x0645; &#x0639;&#x0644;&#x0649; &#x0634;&#x0628;&#x0643;&#x0629; &#x0627;&#x0644;&#x0625;&#x0646;&#x062A;&#x0631;&#x0646;&#x062A; &#x0627;&#x0644;&#x062A;&#x0635;&#x0645;&#x064A;&#x0645;", lang": "ar",  "dir": "rtl"}, 
-	           { "value": "Web&#x30C7;&#x30B6;&#x30A4;&#x30F3;&#x3092;&#x5B66;&#x3076;", "lang": "ja" },
-	           { "value": "&#x5B66;&#x4E60;&#x7F51;&#x9875;&#x8BBE;&#x8BA1;", "lang": "zh-Hans", "dir": "ltr"} ],
-</pre>
-</aside>
-
-<p>A common use for multiple language values is to enable <a href="#additional-requirements-for-localization">runtime selection of the language</a>. Altering the format above slightly allows for fast selection of the appropriate language from the array of available languages:</p>
-
-<aside class=example>
-<pre>
-	"title": [ "en": { "value": "Learning Web Design", "lang": "en" },
-	           "ar": { "value": "&#x0627;&#x0644;&#x062A;&#x0639;&#x0644;&#x0645; &#x0639;&#x0644;&#x0649; &#x0634;&#x0628;&#x0643;&#x0629; &#x0627;&#x0644;&#x0625;&#x0646;&#x062A;&#x0631;&#x0646;&#x062A; &#x0627;&#x0644;&#x062A;&#x0635;&#x0645;&#x064A;&#x0645;", "lang": "ar",  "dir": "rtl"}, 
-	           "ja": { "value": "Web&#x30C7;&#x30B6;&#x30A4;&#x30F3;&#x3092;&#x5B66;&#x3076;", "lang": "ja" },
-	           "zh-Hans": { "value": "&#x5B66;&#x4E60;&#x7F51;&#x9875;&#x8BBE;&#x8BA1;", "lang": "zh-Hans", "dir": "ltr"} ],
-</pre>
-	<p>Notice that this format embeds the <kbd>lang</kbd> field both as a key in the array and inside the enclosed <kbd>Localizable</kbd> so that the selected or preferred value can easily be extracted as a complete JavaScript or JSON object.</p>
-	<p>For example, if the language requested were U.S. English (<kbd>en-US</kbd>), this format makes it easier to match and extract the best fitting title object <kbd>{"value": "Harry Potter", "lang": "en"}</kbd>.</p>
-</aside>
+  <p><span class=mustard>Make each natural language string field <a>Localizable</a></span>. 
 
 <p class=mustard>Specifications and document formats MAY provide for a default language and default direction for an overall document.</p>
 
@@ -451,7 +364,7 @@ dir</code></dfn> member</dt>
     "language": "ar",
     "pubDate": "2008-01-01",
     "publisher": "مكتبة",
-    "coverImage": "https://example.com/images/learn-web-dev-cover.jpg",
+    "coverImage": "https://example.com/images/learning_web_design_cover.jpg",
     // etc.
 },
 </pre>
@@ -467,7 +380,7 @@ dir</code></dfn> member</dt>
     "language": "ar",
     "pubDate": "2008-01-01",
     "publisher": {"value": "&#x0645;&#x0643;&#x062A;&#x0628;&#x0629;", "lang": "ar", "dir": "rtl"},
-    "coverImage": "https://example.com/images/learn-web-dev-cover.jpg",
+    "coverImage": "https://example.com/images/learning_web_design_cover.jpg",
     // etc.
 },
 </pre>
@@ -485,7 +398,7 @@ dir</code></dfn> member</dt>
     "language": "ar",
     "pubDate": "2008-01-01",
     "publisher": {"value": "&#x0645;&#x0643;&#x062A;&#x0628;&#x0629;", "lang": "en"},
-    "coverImage": "https://example.com/images/learn-web-dev-cover.jpg",
+    "coverImage": "https://example.com/images/learning_web_design_cover.jpg",
     // etc.
 },
 </pre>
@@ -751,6 +664,99 @@ translate="no">ja</code>&quot; (Japanese). The tool he is using knows that he
     <h3 id="lang-approach">Identifying the Language of Content</h3>
 
 
+<section>
+	<h3 id="localizable-dictionary">Use the <code>Localizable</code> data structure</h3>
+	
+	For JSON documents, this uses the WebIDL "dictionary" defined below: a pre-built extension that can be used commonly across different document formats using the same base field names and values. </p>
+  
+<aside class="example">
+<p><code><dfn>Localizable</dfn></code> dictionary</p>
+<pre class="def idl" data-dfn-for="Localizable" data-link-for="Localizable">
+<span class="idlDictionary" data-idl="" data-title="Localizable">dictionary <span class="idlDictionaryID"><code>Localizable</code></a></span> {
+	<span class="idlMember" id="idl-def-localizable-lang" data-idl="" data-title="lang" data-dfn-for="localizable"><span class="idlMemberType"><a href="https://www.w3.org/TR/WebIDL-1/#idl-DOMString">DOMString</a></span> <span class="idlMemberName"><a data-lt="lang" href="#dom-localizable-lang" class="internalDFN" data-link-type="dfn" data-for="Localizable"><code>lang</code></a></span>;</span>
+    <span class="idlMember" id="idl-def-localizable-dir" data-idl="" data-title="dir" data-dfn-for="localizable"><span class="idlMemberType"><a href="#dom-textdirection" class="internalDFN" data-link-type="dfn"><code>TextDirection</code></a></span> <span class="idlMemberName"><a data-lt="dir" href="#dom-localizable-dir" class="internalDFN" data-link-type="dfn" data-for="Localizable"><code>dir</code></a></span> = <span class="idlMemberValue">"auto"</span>;</span>
+};</span>
+</pre><dl><dt><dfn data-dfn-for="localizable" data-dfn-type="dfn" id="dom-localizable-lang" data-idl="" data-title="lang">
+	
+	<code>lang</code></dfn> member</dt>
+	<dd>A [[!BCP47]] language tag that specifies the primary language for the values of the human-readable
+members of the inheriting dictionary.</dd>
+<dt><dfn data-dfn-for="localizable" data-dfn-type="dfn" id="dom-localizable-dir" data-idl="" data-title="dir"><code>
+dir</code></dfn> member</dt>
+<dd>Specifies the base direction for the human-readable members of an inheriting dictionary.</dd></dl>
+<div data-dfn-for="TextDirection" data-link-for="TextDirection" id="textdirection-enum" typeof="bibo:Chapter" resource="#textdirection-enum" property="bibo:hasPart">
+	<p id="h-textdirection-enum" resource="#h-textdirection-enum"><dfn data-dfn-for="" data-dfn-type="dfn" id="dom-textdirection" data-idl="" data-title="TextDirection">
+       <code>TextDirection</code></dfn> enum</p>
+<pre class="def idl">
+	<span class="idlEnum" id="idl-def-textdirection" data-idl="" data-title="TextDirection">enum <span class="idlEnumID"><a data-lt="TextDirection" href="#dom-textdirection" class="internalDFN" data-link-type="dfn" data-for=""><code>TextDirection</code></a></span> {    
+		<a href="#dom-textdirection-auto" class="idlEnumItem">"auto"</a>,
+	    <a href="#dom-textdirection-ltr" class="idlEnumItem">"ltr"</a>,    
+	    <a href="#dom-textdirection-rtl" class="idlEnumItem">"rtl"</a>
+};</span>
+</pre>
+<p>The text-direction values are the following, implying that the value of the human-readable members is by default:</p>
+<dl><dt><dfn data-dfn-for="textdirection" data-dfn-type="dfn" id="dom-textdirection-auto" data-idl="" data-title="auto">
+	<code>auto</code></dfn></dt><dd> Directionality is determined by the Unicode Bidirectional Algorithm [[!UAX9]] algorithm.</dd>
+<dt><dfn data-dfn-for="textdirection" data-dfn-type="dfn" id="dom-textdirection-ltr" data-idl="" data-title="ltr">
+	<code>ltr</code></dfn></dt><dd>Left-to-right text.</dd>
+<dt><dfn data-dfn-for="textdirection" data-dfn-type="dfn" id="dom-textdirection-rtl" data-idl="" data-title="rtl">
+	<code>rtl</code></dfn></dt><dd>Right-to-left text.</dd></dl>
+</div>
+</aside>
+
+<p>By defining the language and direction in a WebIDL dictionary form, specifications can incorporate language and direction metadata for a given String value succinctly. Implementations can recyle the dictionary implementation straightforwardly.</p>
+
+<p>Serialized files utilizing the dictionary and its data values will contain additional fields and can be more difficult to read as a result. Here's an example:</p>
+
+<aside class=example>
+	<p>Before:</p>
+	<pre>
+[
+  displayItems: [{
+    label: "<span dir="rtl">&#x0627;&#x0644;&#x0628;&#x0646;&#x062F; &#x0627;&#x0644;&#x062E;&#x0627;&#x0635; (&#x0644;&#x0644;&#x0628;&#x064A;&#x0639;!)</span>",
+    amount: { },
+  }]
+]</pre>
+	<p>After:</p>
+		<pre>
+[
+  displayItems: [{
+    label: {
+        value: "<span dir="rtl">&#x0627;&#x0644;&#x0628;&#x0646;&#x062F; &#x0627;&#x0644;&#x062E;&#x0627;&#x0635; (&#x0644;&#x0644;&#x0628;&#x064A;&#x0639;!)</span>",
+        lang: "ar-AE",
+        dir: "rtl"
+    },	
+    amount: { },
+  }]
+]</pre>
+</aside>
+
+
+<p>If an application needs to provide for <a>language negotiation</a> or if the data is available in multiple languages, the <a>Localizable</a> strings can further be organized into arrays with multiple languages for the same value. A simple example might look like this:</p>
+
+<aside class=example>
+<pre>
+	"title": [ { "value": "Learning Web Design", "lang": "en" },
+	           { "value": "&#x0627;&#x0644;&#x062A;&#x0639;&#x0644;&#x0645; &#x0639;&#x0644;&#x0649; &#x0634;&#x0628;&#x0643;&#x0629; &#x0627;&#x0644;&#x0625;&#x0646;&#x062A;&#x0631;&#x0646;&#x062A; &#x0627;&#x0644;&#x062A;&#x0635;&#x0645;&#x064A;&#x0645;", "lang": "ar",  "dir": "rtl"}, 
+	           { "value": "Web&#x30C7;&#x30B6;&#x30A4;&#x30F3;&#x3092;&#x5B66;&#x3076;", "lang": "ja" },
+	           { "value": "&#x5B66;&#x4E60;&#x7F51;&#x9875;&#x8BBE;&#x8BA1;", "lang": "zh-Hans", "dir": "ltr"} ],
+</pre>
+</aside>
+
+<p>A common use for multiple language values is to enable <a href="#additional-requirements-for-localization">runtime selection of the language</a>. Altering the format above slightly allows for fast selection of the appropriate language from the array of available languages:</p>
+
+<aside class=example>
+<pre>
+	"title": [ "en": { "value": "Learning Web Design", "lang": "en" },
+	           "ar": { "value": "&#x0627;&#x0644;&#x062A;&#x0639;&#x0644;&#x0645; &#x0639;&#x0644;&#x0649; &#x0634;&#x0628;&#x0643;&#x0629; &#x0627;&#x0644;&#x0625;&#x0646;&#x062A;&#x0631;&#x0646;&#x062A; &#x0627;&#x0644;&#x062A;&#x0635;&#x0645;&#x064A;&#x0645;", "lang": "ar",  "dir": "rtl"}, 
+	           "ja": { "value": "Web&#x30C7;&#x30B6;&#x30A4;&#x30F3;&#x3092;&#x5B66;&#x3076;", "lang": "ja" },
+	           "zh-Hans": { "value": "&#x5B66;&#x4E60;&#x7F51;&#x9875;&#x8BBE;&#x8BA1;", "lang": "zh-Hans", "dir": "ltr"} ],
+</pre>
+	<p>Notice that this format embeds the <kbd>lang</kbd> field both as a key in the array and inside the enclosed <kbd>Localizable</kbd> so that the selected or preferred value can easily be extracted as a complete JavaScript or JSON object.</p>
+	<p>For example, if the language requested were U.S. English (<kbd>en-US</kbd>), this format makes it easier to match and extract the best fitting title object <kbd>{"value": "Learning Web Design", "lang": "en"}</kbd>.</p>
+</aside>
+
+</section>
 
 
 <section>
