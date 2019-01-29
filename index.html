@@ -1071,17 +1071,63 @@ myLanguageNeutralString: "978-0-123-4567-X"       // language-neutral string</pr
 <li>Unicode limits for embedding levels may be exceeded</li>
 </ul>
 </div>
-<p>This approach inserts paired Unicode formatting characters at the start and end of a string to indicate the base direction. </p>
+<p>This approach inserts paired Unicode formatting characters at the start and end of a string to indicate the base direction.
+</p>
+  <p>There are two types of paired formatting characters. The original set of controls provide the ability to add an additional level of bidirectional "embedding" to the Unicode bidirectional Algorithm. More recently, Unicode added a complementary set of "isolating" controls. Isolating controls are used to surround a string. The inside of the string is treated as its own bidirectional sequence. The enclosing string treats the entire surrounded string as a single unit that is ignored for bidi reordering. This issue is described <a href="https://www.w3.org/TR/html-bidi/#bidi-isolation-problem">here</a>.</p>
+  
+  <table>
+	  <tbody>
+		  <tr>
+			  <td>Code Point</td>
+			  <td>Abbreviation</td>
+			  <td>Description</td>
+			  <td>Code Point</td>
+			  <td>Abbreviation</td>
+			  <td>Description</td>
+		  </tr>
+		  <tr>
+			  <td>U+200A</td>
+			  <td>LRE</td>
+			  <td>Left to Right Embedding</td>
+			  <td>U+2066</td>
+			  <td>LRI</td>
+			  <td>Left to Right Isolate</td>
+		  </tr>
+		  <tr>
+			  <td>U+200B</td>
+			  <td>RLE</td>
+			  <td>Left to Right Embedding</td>
+			  <td>U+2067</td>
+			  <td>RLI</td>
+			  <td>Right to Left Isolate</td>
+		  </tr>
+		  <tr>
+			  <td></td>
+			  <td></td>
+			  <td></td>
+			  <td>U+2068</td>
+			  <td>FSI</td>
+			  <td>First String Isolate</td>
+		  </tr>
+		  <tr>
+			  <td>U+200C</td>
+			  <td>PDF</td>
+			  <td>Pop Directional Formatting (ending an embedding)</td>
+			  <td>U+2069</td>
+			  <td>PDI</td>
+			  <td>Pop Directional Isolate (ending an isolate)</td>
+		  </tr>
+	  </tbody>
+  </table>
+  
   <p>If paired formatting characters are used, they should be isolating, ie. starting with RLI, LRI, FSI, and not with RLE or LRE.</p>
+  
   <p>However, it would not be enough to simply apply the UBA first-strong heuristics to such a string, because the Unicode bidi algorithm is unable to ascertain the base direction for a string that starts with RLI/LRI/FSI and ends with PDI. This is because the algorithm skips over isolated sequences and treats them  as a neutral character. A consumer of the string would have to take special steps, in this case, to uncover the first-strong character.</p>
   <p>This approach is also only appropriate if it is acceptable to change the value of the string. In addition to possible issues such as changed string length or pointer positions, this approach runs the risk of one of the paired characters getting lost, either through handling errors, or through text truncation, etc.</p>
   <p>A  producer and a consumer of a string would need to recognise and handle a situation where a string begins with a paired formatting character but doesn't end with it because the formatting characters only describe a part of the string.</p>
   <p>Unicode specifies a limit to the number of embeddings that are effective, and embeddings could build up over time to exceed that limit.</p>
   <p>Consuming applications would need to recognise and appropriately handle the isolating formatting characters. At the moment such support for RLI/LRI/FSI is not pervasive.</p>
 
-
-
-  <p class="issue">Need to describe non-isolating controls here.</p>
 </section>
 
 
