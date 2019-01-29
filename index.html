@@ -355,61 +355,7 @@ data in an interchange format is not a good idea. These include:</p>
 
 <p class=mustard>The name <code>@language</code> is RECOMMENDED as the name of the default language value and <code>@dir</code> as the default direction value.</p>
 
-<p>[[!JSON-LD]] defines a <a href=https://json-ld.org/spec/latest/json-ld/#string-internationalization>mechanism</a> for indicating the default language for a given scope or <code>@context</code> in a JSON document. The name <code>@language</code> was chosen for consistency with JSON-LD.</p>
 
-<aside class=example>
-	<p>The following example shows the record used in the <a href="baseExample">example</a> with a default language and direction:</p>
-<pre>
-{
-    "@language": "ar",
-    "@dir": "rtl",
-    "id": "978-977141881-8",
-    "title": "<span dir=rtl>&#x0627;&#x0644;&#x062A;&#x0639;&#x0644;&#x0645; &#x0639;&#x0644;&#x0649; &#x0634;&#x0628;&#x0643;&#x0629; &#x0627;&#x0644;&#x0625;&#x0646;&#x062A;&#x0631;&#x0646;&#x062A; &#x0627;&#x0644;&#x062A;&#x0635;&#x0645;&#x064A;&#x0645;:  &#x0627;&#x0644;&#x0645;&#x0628;&#x062A;&#x062F;&#x0626; &#x0645;&#x0646; &#x062F;&#x0644;&#x064A;&#x0644; &#x0625;&#x0644;&#x0649; " +
-             "<span dir=ltr>HTML &#x060C; CSS &#x060C; JavaScript</span> &#x060C; &#x0648; &#x0631;&#x0633;&#x0648;&#x0645;&#x0627;&#x062A; &#x0639;&#x0644;&#x0649; &#x0634;&#x0628;&#x0643;&#x0629; &#x0627;&#x0644;&#x0625;&#x0646;&#x062A;&#x0631;&#x0646;&#x062A;</span>",
-    "authors": [ "Jennifer Robbins" ],
-    "language": "ar",
-    "pubDate": "2008-01-01",
-    "publisher": "مكتبة",
-    "coverImage": "https://example.com/images/learning_web_design_cover.jpg",
-    // etc.
-},
-</pre>
-
-<p>Here is the same example without using the default:</p>
-<pre>
-{
-    "id": {"value": "978-977141881-8", "dir": "ltr"},
-    "title": {"value": "<span dir=rtl>&#x0627;&#x0644;&#x062A;&#x0639;&#x0644;&#x0645; &#x0639;&#x0644;&#x0649; &#x0634;&#x0628;&#x0643;&#x0629; &#x0627;&#x0644;&#x0625;&#x0646;&#x062A;&#x0631;&#x0646;&#x062A; &#x0627;&#x0644;&#x062A;&#x0635;&#x0645;&#x064A;&#x0645;:  &#x0627;&#x0644;&#x0645;&#x0628;&#x062A;&#x062F;&#x0626; &#x0645;&#x0646; &#x062F;&#x0644;&#x064A;&#x0644; &#x0625;&#x0644;&#x0649; " +
-             "<span dir=ltr>HTML &#x060C; CSS &#x060C; JavaScript</span> &#x060C; &#x0648; &#x0631;&#x0633;&#x0648;&#x0645;&#x0627;&#x062A; &#x0639;&#x0644;&#x0649; &#x0634;&#x0628;&#x0643;&#x0629; &#x0627;&#x0644;&#x0625;&#x0646;&#x062A;&#x0631;&#x0646;&#x062A;</span>", 
-		"lang": "ar", "dir": "rtl" },
-    "authors": [ {"value": "Jennifer Robbins", "lang": "en"} ],
-    "language": "ar",
-    "pubDate": "2008-01-01",
-    "publisher": {"value": "&#x0645;&#x0643;&#x062A;&#x0628;&#x0629;", "lang": "ar", "dir": "rtl"},
-    "coverImage": "https://example.com/images/learning_web_design_cover.jpg",
-    // etc.
-},
-</pre>
-	
-<p>Note that a direction value was applied to the ISBN number, so that it isn't rearranged on display in a RTL context. If the consumer is aware of the semantic value of the id, this is not necessary, however, it is useful when the data is shared in a new context where such private arrangements don't hold.</p>
-<p>And now the same example again,  using the default, but overriding it where needed:</p>
-<pre>
-{
-    "@language": "en",
-    "@dir": "ltr",
-    "id": {"978-977141881-8"},
-    "title": [ "en": {"value": "Learning Web Design", "lang": "en"},
-               "ar": {"value": "&#x0627;&#x0644;&#x062A;&#x0639;&#x0644;&#x0645; &#x0639;&#x0644;&#x0649; &#x0634;&#x0628;&#x0643;&#x0629; &#x0627;&#x0644;&#x0625;&#x0646;&#x062A;&#x0631;&#x0646;&#x062A; &#x0627;&#x0644;&#x062A;&#x0635;&#x0645;&#x064A;&#x0645;", "lang": "ar",  "dir": "rtl"} ],
-    "authors": [ {"value": "Jennifer Robbins", "lang": "en"} ],
-    "language": "ar",
-    "pubDate": "2008-01-01",
-    "publisher": {"value": "&#x0645;&#x0643;&#x062A;&#x0628;&#x0629;", "lang": "en"},
-    "coverImage": "https://example.com/images/learning_web_design_cover.jpg",
-    // etc.
-},
-</pre>
-	
-</aside>
 </section>
 
 
@@ -769,9 +715,61 @@ dir</code></dfn> member</dt>
   <section>
 	  <h5>Provide default document-level <kbd>@language</kbd> and <kbd>@dir</kbd></h5>
 	  
-	    <p>[[JSON-LD]] includes some data structures that are partially helpful. Notably, it defines <a href="https://json-ld.org/spec/latest/json-ld/#string-internationalization">string internationalization</a> in the form of a context-scoped <kbd>@language</kbd> value which can be associated with blocks of JSON or within individual objects. There is no definition of base direction, so this is incomplete. The <kbd>@context</kbd> concept can be used by specifications as a means of indicating the default language metadata where omitted from individual strings.</p>
-  
-  <p>The concept of <a href="https://json-ld.org/spec/latest/json-ld/#language-indexing">language indexing</a> in JSON-LD is used in the Best Practices in this document as a means for localizing a data value.</p>
+	    <p>[[JSON-LD]] includes some data structures that are partially helpful. Notably, it defines <a href="https://json-ld.org/spec/latest/json-ld/#string-internationalization">string internationalization</a> in the form of a context-scoped <kbd>@language</kbd> value which can be associated with blocks of JSON or within individual objects. There is no definition of base direction, so this is incomplete. The <kbd>@context</kbd> concept can be used by specifications as a means of indicating the default language metadata where omitted from individual strings. The concept of <a href="https://json-ld.org/spec/latest/json-ld/#language-indexing">language indexing</a> in JSON-LD is used in the Best Practices in this document as a means for localizing a data value.</p>
+
+<aside class=example>
+	<p>The following example shows the record used in the <a href="baseExample">example</a> with a default language and direction:</p>
+<pre>
+{
+    "@language": "ar",
+    "@dir": "rtl",
+    "id": "978-977141881-8",
+    "title": "<span dir=rtl>&#x0627;&#x0644;&#x062A;&#x0639;&#x0644;&#x0645; &#x0639;&#x0644;&#x0649; &#x0634;&#x0628;&#x0643;&#x0629; &#x0627;&#x0644;&#x0625;&#x0646;&#x062A;&#x0631;&#x0646;&#x062A; &#x0627;&#x0644;&#x062A;&#x0635;&#x0645;&#x064A;&#x0645;:  &#x0627;&#x0644;&#x0645;&#x0628;&#x062A;&#x062F;&#x0626; &#x0645;&#x0646; &#x062F;&#x0644;&#x064A;&#x0644; &#x0625;&#x0644;&#x0649; " +
+             "<span dir=ltr>HTML &#x060C; CSS &#x060C; JavaScript</span> &#x060C; &#x0648; &#x0631;&#x0633;&#x0648;&#x0645;&#x0627;&#x062A; &#x0639;&#x0644;&#x0649; &#x0634;&#x0628;&#x0643;&#x0629; &#x0627;&#x0644;&#x0625;&#x0646;&#x062A;&#x0631;&#x0646;&#x062A;</span>",
+    "authors": [ "Jennifer Robbins" ],
+    "language": "ar",
+    "pubDate": "2008-01-01",
+    "publisher": "مكتبة",
+    "coverImage": "https://example.com/images/learning_web_design_cover.jpg",
+    // etc.
+},
+</pre>
+
+<p>Here is the same example without using the default:</p>
+<pre>
+{
+    "id": {"value": "978-977141881-8", "dir": "ltr"},
+    "title": {"value": "<span dir=rtl>&#x0627;&#x0644;&#x062A;&#x0639;&#x0644;&#x0645; &#x0639;&#x0644;&#x0649; &#x0634;&#x0628;&#x0643;&#x0629; &#x0627;&#x0644;&#x0625;&#x0646;&#x062A;&#x0631;&#x0646;&#x062A; &#x0627;&#x0644;&#x062A;&#x0635;&#x0645;&#x064A;&#x0645;:  &#x0627;&#x0644;&#x0645;&#x0628;&#x062A;&#x062F;&#x0626; &#x0645;&#x0646; &#x062F;&#x0644;&#x064A;&#x0644; &#x0625;&#x0644;&#x0649; " +
+             "<span dir=ltr>HTML &#x060C; CSS &#x060C; JavaScript</span> &#x060C; &#x0648; &#x0631;&#x0633;&#x0648;&#x0645;&#x0627;&#x062A; &#x0639;&#x0644;&#x0649; &#x0634;&#x0628;&#x0643;&#x0629; &#x0627;&#x0644;&#x0625;&#x0646;&#x062A;&#x0631;&#x0646;&#x062A;</span>", 
+		"lang": "ar", "dir": "rtl" },
+    "authors": [ {"value": "Jennifer Robbins", "lang": "en"} ],
+    "language": "ar",
+    "pubDate": "2008-01-01",
+    "publisher": {"value": "&#x0645;&#x0643;&#x062A;&#x0628;&#x0629;", "lang": "ar", "dir": "rtl"},
+    "coverImage": "https://example.com/images/learning_web_design_cover.jpg",
+    // etc.
+},
+</pre>
+	
+<p>Note that a direction value was applied to the ISBN number, so that it isn't rearranged on display in a RTL context. If the consumer is aware of the semantic value of the id, this is not necessary, however, it is useful when the data is shared in a new context where such private arrangements don't hold.</p>
+<p>And now the same example again,  using the default, but overriding it where needed:</p>
+<pre>
+{
+    "@language": "en",
+    "@dir": "ltr",
+    "id": {"978-977141881-8"},
+    "title": [ "en": {"value": "Learning Web Design", "lang": "en"},
+               "ar": {"value": "&#x0627;&#x0644;&#x062A;&#x0639;&#x0644;&#x0645; &#x0639;&#x0644;&#x0649; &#x0634;&#x0628;&#x0643;&#x0629; &#x0627;&#x0644;&#x0625;&#x0646;&#x062A;&#x0631;&#x0646;&#x062A; &#x0627;&#x0644;&#x062A;&#x0635;&#x0645;&#x064A;&#x0645;", "lang": "ar",  "dir": "rtl"} ],
+    "authors": [ {"value": "Jennifer Robbins", "lang": "en"} ],
+    "language": "ar",
+    "pubDate": "2008-01-01",
+    "publisher": {"value": "&#x0645;&#x0643;&#x062A;&#x0628;&#x0629;", "lang": "en"},
+    "coverImage": "https://example.com/images/learning_web_design_cover.jpg",
+    // etc.
+},
+</pre>
+	
+</aside>
   </section>
 
 </section>
