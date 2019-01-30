@@ -612,16 +612,12 @@ working on.</p>
 
 
 <section>
-<h2 id="ApproachesConsidered">Approaches Considered</h2>
-	
-<p>Various approaches to identifying language and direction in document formats have been used occasionally or have been proposed in the past. Each is described below.</p>
-
-<section>
-    <h3 id="lang-approach">Identifying the Language of Content</h3>
+    <h2 id="lang-approach">Approaches considered for Identifying the Language of Content</h2>
+<p>This section looks at various approaches to identifying language and direction in document formats that have been used occasionally or have been proposed in the past.</p>
 
 
 <section>
-	<h3 id="localizable-dictionary" class=mustard>Use the <code>Localizable</code> data structure</h3>
+<h3 id="localizable-dictionary" class=mustard>Use the <code>Localizable</code> data structure</h3>
 	
 	For JSON documents, this uses the WebIDL "dictionary" defined below: a pre-built extension that can be used commonly across different document formats using the same base field names and values. </p>
   
@@ -776,7 +772,7 @@ dir</code></dfn> member</dt>
 
 
 <section>
-    <h4 id="html_content">Require HTML or XML for content</h4>
+    <h3 id="html_content">Require HTML or XML for content</h3>
     
 	<p>One proposal from members of the Annotation WG was to require HTML/XML formats for such annotation bodies, and use the <code 
 	class="kw" translate="no">lang</code> or <code class="kw" translate="no">xml:lang</code> attributes in markup to denote the 
@@ -794,7 +790,7 @@ dir</code></dfn> member</dt>
   
   
   <section id="lang-approach-new-datatype">
-    <h4>Create a new datatype</h4>
+    <h3>Create a new datatype</h3>
     <p>If a new datatype were added to JSON to support natural language strings, then specifications could easily specify that type for use in document formats. Since the format is standardized, <a data-lt="producer">producers</a> and <a data-lt="consumer">consumers</a> would not need to guess about direction or language information when it is encoded. Such a serialization might look like the following:</p>
     
     <pre class=example>
@@ -810,7 +806,7 @@ myLanguageNeutralString: "978-0-123-4567-X"       // language-neutral string</pr
 
 
 <section id="unicodeTags">
-  <h4>Unicode tag characters</h4> 
+  <h3>Unicode tag characters</h3> 
   
   <p>Unicode tag characters are strongly deprecated by the Unicode Consortium. These tag characters were intended for use in language tagging within plain text contexts and are often suggested as an alternate means of providing in-band non-markup language tagging. We are unaware of an implementations that use them as language tags.</p>
 
@@ -894,12 +890,12 @@ myLanguageNeutralString: "978-0-123-4567-X"       // language-neutral string</pr
 
 
 <section>
-<h3 id="bidi-approaches">Identifying the Base Direction of Content</h3>
+<h2 id="bidi-approaches">Approaches considered for Identifying the Base Direction of Content</h2>
   <p>The fundamental problem is how a <a>consumer</a> of a string will know what base direction should be used for that string when it is eventually displayed to a user. A number of alternatives are considered below. Note that, unlike some of the <a href="otherApproaches">language tagging alternatives</a> considered above, each of these mechansisms for identifying or estimating the base direction have utility in specific applications and are in use in different specifications such as [[HTML5]].</p>
 
 
 <section id="metadata">
-  <h4>Use Metadata</h4>
+  <h3>Use Metadata</h3>
   
   <div class="summary">
 <p><b class="leadin">Summary</b></p>
@@ -921,6 +917,7 @@ myLanguageNeutralString: "978-0-123-4567-X"       // language-neutral string</pr
 <li>it must be possible to associate metadata with any string, but it may also be useful to additionally set a default for all strings</li>
 </ul>
 </div>
+<p><strong>How it works.</strong></p>
 <p>Using metadata external to the string is the RECOMMENDED best practice for indicating the base direction of text. Passing metadata as separate data value from the string provides a simple, effective and efficient method of communicating the intended base direction without affecting the actual content of the string. This requires that the <a>consumer</a> know how to retrieve and process the meaning of that metadata.</p>
   <p>Metadata not only removes the problem of whether or not, and how, to parse markup in a string to determine the direction, but even in the simplest strings, without markup, it avoids the need to inspect and run heuristics on the string to determine its base direction.</p>
   <p>There needs to be metadata available for each individual string. Alternatively, metadata can be inherited, but some mechanism must be available to override the inherited direction for a particular string which differs in direction from the inherited value.  </p>
@@ -931,7 +928,7 @@ myLanguageNeutralString: "978-0-123-4567-X"       // language-neutral string</pr
 
 
 <section id="firststrong">
-  <h4>First-strong</h4>
+  <h3>First-strong</h3>
   <div class="summary">
 <p><b class="leadin">Summary</b></p>
 <p>Recommended? <strong>no</strong>
@@ -969,7 +966,7 @@ myLanguageNeutralString: "978-0-123-4567-X"       // language-neutral string</pr
 
 
 <section id="rlm">
-  <h4>Augmenting <q>first-strong</q> by inserting RLM/LRM markers</h4> 
+  <h3>Augmenting <q>first-strong</q> by inserting RLM/LRM markers</h3> 
   
   <div class="summary">
 <p><b class="leadin">Summary</b></p>
@@ -1054,7 +1051,7 @@ myLanguageNeutralString: "978-0-123-4567-X"       // language-neutral string</pr
 
 
 <section id="paired">
-  <h4>Paired formatting characters</h4>
+  <h3>Paired formatting characters</h3>
   <div class="summary">
 <p><b class="leadin">Summary</b></p>
 <p>Recommended? <strong>no</strong> </p>
@@ -1131,7 +1128,7 @@ myLanguageNeutralString: "978-0-123-4567-X"       // language-neutral string</pr
 
 
 <section id="script_subtag">
-  <h4>Script subtags</h4>
+  <h3>Script subtags</h3>
 <p>This section is currently a first draft and needs review.</p>
   
   <div class="summary">
@@ -1173,7 +1170,6 @@ myLanguageNeutralString: "978-0-123-4567-X"       // language-neutral string</pr
   <p>This approach avoids the issues associated with first-strong detection when the first-strong character is not indicative of the necessary base direction for the string, and avoids issues relating to the interpretation of markup.</p>
 <p>Note that a string that begins with markup that sets a language for the string text content (eg. <code translate="no">&lt;cite lang=“en-Latn”&gt;</code>) is not problematic here, since that language declaration is not expected to play into the setting of the base direction.</p>
 <p>There are some rare situations where the base direction can not necessarily be identified from the script subtag, but these are really limited to archaic usage of text.  For example, Japanese and Chinese text prior to World War 2 was often written RTL, rather than LTR. Languages such as those written using Egyptian Hieroglyphs, or the Tifinagh Berber script, could formerly be written either LTR or RTL, however the default for scholastic research tends to LTR.</p>
-</section>
 </section>
 </section>
 
