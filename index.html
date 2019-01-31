@@ -240,14 +240,13 @@ might look something like:</p>
 
 <pre id="example1Data">
 {
-    "id": "978-144931927-4",
-    "title": <span dir=rtl>"&#x0627;&#x0644;&#x062A;&#x0639;&#x0644;&#x0645; &#x0639;&#x0644;&#x0649; &#x0634;&#x0628;&#x0643;&#x0629; &#x0627;&#x0644;&#x0625;&#x0646;&#x062A;&#x0631;&#x0646;&#x062A; &#x0627;&#x0644;&#x062A;&#x0635;&#x0645;&#x064A;&#x0645;:  &#x0627;&#x0644;&#x0645;&#x0628;&#x062A;&#x062F;&#x0626; &#x0645;&#x0646; &#x062F;&#x0644;&#x064A;&#x0644; &#x0625;&#x0644;&#x0649; " +
-             "<span dir=ltr>HTML &#x060C; CSS &#x060C; JavaScript</span> &#x060C; &#x0648; &#x0631;&#x0633;&#x0648;&#x0645;&#x0627;&#x062A; &#x0639;&#x0644;&#x0649; &#x0634;&#x0628;&#x0643;&#x0629; &#x0627;&#x0644;&#x0625;&#x0646;&#x062A;&#x0631;&#x0646;&#x062A;"</span>,
-    "authors": [ "Jennifer Robbins" ],
+    "id": "1118008189",
+    "title": "<span dir=rtl>HTML &#x0648; CSS: &#x062A;&#x0635;&#x0645;&#x064A;&#x0645; &#x0648; &#x0625;&#x0646;&#x0634;&#x0627;&#x0621; &#x0645;&#x0648;&#x0627;&#x0642;&#x0639; &#x0627;&#x0644;&#x0648;&#x064A;&#x0628;</span>",
+    "authors": [ "Jon Duckett" ],
     "language": "ar",
     "pubDate": "2008-01-01",
-    "publisher": "&#x0643;&#x062A;&#x0628; &#x062A;&#x0639;&#x0644;&#x064A;&#x0645;&#x064A;&#x0629;",
-    "coverImage": "https://example.com/images/learning_web_design.jpg",
+    "publisher": "مكتبة",
+    "coverImage": "https://example.com/images/learning_web_design_cover.jpg",
     // etc.
 },
 </pre>
@@ -270,9 +269,11 @@ and Unicode bidi controls, so that a data value might look like one of
 the following:</p>
 
 <pre>
-   "title": "&lt;span lang='ar' dir='rtl'&gt;<span dir=rtl>&#x0627;&#x0644;&#x062A;&#x0639;&#x0644;&#x0645; &#x0639;&#x0644;&#x0649; &#x0634;&#x0628;&#x0643;&#x0629; &#x0627;&#x0644;&#x0625;&#x0646;&#x062A;&#x0631;&#x0646;&#x062A; &#x0627;&#x0644;&#x062A;&#x0635;&#x0645;&#x064A;&#x0645;:  &#x0627;&#x0644;&#x0645;&#x0628;&#x062A;&#x062F;&#x0626; &#x0645;&#x0646; &#x062F;&#x0644;&#x064A;&#x0644; &#x0625;&#x0644;&#x0649; 
-             <span dir=ltr>&lt;span dir=ltr&gt;HTML &#x060C; CSS &#x060C; JavaScript&lt/span&gt;</span> &#x060C; &#x0648; &#x0631;&#x0633;&#x0648;&#x0645;&#x0627;&#x062A; &#x0639;&#x0644;&#x0649; &#x0634;&#x0628;&#x0643;&#x0629; &#x0627;&#x0644;&#x0625;&#x0646;&#x062A;&#x0631;&#x0646;&#x062A;</span>&lt;/span&gt;"
-   "authors": [ "\u200eJennifer Robbins" ], // contains LRM as first character
+// following examples are NOT recommended
+// contains HTML markup
+"title": "&lt;span lang='ar' dir='rtl'&gt;<span dir=rtl>HTML &#x0648; CSS: &#x062A;&#x0635;&#x0645;&#x064A;&#x0645; &#x0648; &#x0625;&#x0646;&#x0634;&#x0627;&#x0621; &#x0645;&#x0648;&#x0627;&#x0642;&#x0639; &#x0627;&#x0644;&#x0648;&#x064A;&#x0628;</span>&lt;/span&gt;",
+// contains LRM as first character
+"authors": [ "\u200eJon Duckett" ], 
 </pre>
 
 <p>But JSON is a data interchange format: the content might not end up  with the title field being displayed in an HTML context. The JSON above might very well  be used to populate, say, a local data store which uses native controls to show the title and these controls will treat the HTML as string contents. Producers and consumers of the data might not expect to introspect the data in order to supply or remove the extra data or to expose it as metadata. Most JSON libraries don't know anything about the structure of the content that they are serializing. Producers want to generate the JSON file directly from a local data store, such as a database. Consumers want to store or retrieve the value for use without additional consideration of the content of each string. In addition, either producers or consumers can have other considerations, such as field length restrictions, that are affected by the insertion of additional controls or markup. Each of these considerations places special burden on implementers to create arbitrary means of serializing, deserializing, managing, and exchanging the necessary metadata, with interoperability as a casualty along the way.</p> 
@@ -280,12 +281,7 @@ the following:</p>
 <p>(As an aside, note that the markup shown in the above example is actually needed to make the title as well as the inserted markup display correctly in the browser.)</p>
 </section>
 
-
-
 </section>
-
-
-
 
 <section>
 <h3 id="unicode_enough">Isn't Unicode Enough?</h3>
@@ -719,10 +715,9 @@ dir</code></dfn> member</dt>
 {
     "@language": "ar",
     "@dir": "rtl",
-    "id": "978-977141881-8",
-    "title": "<span dir=rtl>&#x0627;&#x0644;&#x062A;&#x0639;&#x0644;&#x0645; &#x0639;&#x0644;&#x0649; &#x0634;&#x0628;&#x0643;&#x0629; &#x0627;&#x0644;&#x0625;&#x0646;&#x062A;&#x0631;&#x0646;&#x062A; &#x0627;&#x0644;&#x062A;&#x0635;&#x0645;&#x064A;&#x0645;:  &#x0627;&#x0644;&#x0645;&#x0628;&#x062A;&#x062F;&#x0626; &#x0645;&#x0646; &#x062F;&#x0644;&#x064A;&#x0644; &#x0625;&#x0644;&#x0649; " +
-             "<span dir=ltr>HTML &#x060C; CSS &#x060C; JavaScript</span> &#x060C; &#x0648; &#x0631;&#x0633;&#x0648;&#x0645;&#x0627;&#x062A; &#x0639;&#x0644;&#x0649; &#x0634;&#x0628;&#x0643;&#x0629; &#x0627;&#x0644;&#x0625;&#x0646;&#x062A;&#x0631;&#x0646;&#x062A;</span>",
-    "authors": [ "Jennifer Robbins" ],
+    "id": "1118008189",
+    "title": "<span dir=rtl>HTML &#x0648; CSS: &#x062A;&#x0635;&#x0645;&#x064A;&#x0645; &#x0648; &#x0625;&#x0646;&#x0634;&#x0627;&#x0621; &#x0645;&#x0648;&#x0627;&#x0642;&#x0639; &#x0627;&#x0644;&#x0648;&#x064A;&#x0628;</span>",
+    "authors": [ "Jon Duckett" ],
     "language": "ar",
     "pubDate": "2008-01-01",
     "publisher": "مكتبة",
@@ -734,11 +729,10 @@ dir</code></dfn> member</dt>
 <p>Here is the same example without using the default:</p>
 <pre>
 {
-    "id": {"value": "978-977141881-8", "dir": "ltr"},
-    "title": {"value": "<span dir=rtl>&#x0627;&#x0644;&#x062A;&#x0639;&#x0644;&#x0645; &#x0639;&#x0644;&#x0649; &#x0634;&#x0628;&#x0643;&#x0629; &#x0627;&#x0644;&#x0625;&#x0646;&#x062A;&#x0631;&#x0646;&#x062A; &#x0627;&#x0644;&#x062A;&#x0635;&#x0645;&#x064A;&#x0645;:  &#x0627;&#x0644;&#x0645;&#x0628;&#x062A;&#x062F;&#x0626; &#x0645;&#x0646; &#x062F;&#x0644;&#x064A;&#x0644; &#x0625;&#x0644;&#x0649; " +
-             "<span dir=ltr>HTML &#x060C; CSS &#x060C; JavaScript</span> &#x060C; &#x0648; &#x0631;&#x0633;&#x0648;&#x0645;&#x0627;&#x062A; &#x0639;&#x0644;&#x0649; &#x0634;&#x0628;&#x0643;&#x0629; &#x0627;&#x0644;&#x0625;&#x0646;&#x062A;&#x0631;&#x0646;&#x062A;</span>", 
+    "id": {"value": "1118008189", "dir": "ltr"},
+    "title": {"value": "<span dir=rtl>HTML &#x0648; CSS: &#x062A;&#x0635;&#x0645;&#x064A;&#x0645; &#x0648; &#x0625;&#x0646;&#x0634;&#x0627;&#x0621; &#x0645;&#x0648;&#x0627;&#x0642;&#x0639; &#x0627;&#x0644;&#x0648;&#x064A;&#x0628;</span>", 
 		"lang": "ar", "dir": "rtl" },
-    "authors": [ {"value": "Jennifer Robbins", "lang": "en"} ],
+    "authors": [ {"value": "Jon Duckett", "lang": "en"} ],
     "language": "ar",
     "pubDate": "2008-01-01",
     "publisher": {"value": "&#x0645;&#x0643;&#x062A;&#x0628;&#x0629;", "lang": "ar", "dir": "rtl"},
