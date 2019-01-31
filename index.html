@@ -986,84 +986,71 @@ myLanguageNeutralString: "978-0-123-4567-X"       // language-neutral string</pr
 
 
 <section id="rlm">
-  <h3>Augmenting <q>first-strong</q> by inserting RLM/LRM markers</h3> 
-  
-  <div class="summary">
-<p><b class="leadin">Summary</b></p>
-<p>Recommended? <strong>no</strong></p>
-<p>Pros:</p>
-<ul>
-<li>it provides a reliable way of indicating base direction, as long as the producer can reliably apply markers </li>
-<li>in theory, it should be easier to spot the first-strong character in strings that begin with markup, as long as the correct RLM/LRM is prepended to the string</li>
-</ul>
-<p>Cons:</p>
-<ul>
-<li>it is not clear that the producer of a string would always apply RLM/LRM when appropriate; a machine is not able to identify cases where those characters would be needed </li>
-<li>this approach changes the identity and content of the string </li>
-<li>consumers may need to remove the RLM/LRM marker, but may not be able to determine when that is or is not appropriate, since the string may start with an RLM/LRM character intentionally</li>
-</ul>
-<p>To note:</p>
-<ul>
-<li>in theory, it should be easier to spot the first-strong character in strings that begin with markup, as long as the correct RLM/LRM is prepended to the string </li>
-<li>applications must ensure that they do not accumulate markers</li>
-</ul>
-</div>
-<p>It is possible for a producer of a string to attach an RLM or LRM 
-  character to the beginning of the string when the wrong base 
-  direction would otherwise be assumed by a process using a simple first-strong 
-  heuristic. </p> 
-  
-  <p>If the producer is a human, they could theoretically apply one of 
+  <h3>Augmenting <q>first-strong</q> by inserting RLM/LRM markers</h3>
+<p><strong>This approach is NOT recommended.</strong></p>
+
+
+<section>
+<h4>How it works</h4>
+<p>A producer ascertains the  base direction of the string and adds an marker character (either <span class="unicode">U+200F RIGHT-TO-LEFT MARK</span> (RLM) or <span class="unicode">U+200E LEFT-TO-RIGHT MARK</span> (LRM)) to the beginning of the string. The marker is not functional, ie. it will not automatically apply a base direction to the string that can be used by the consumer, it is simply a marker.</p>
+<p>There are a number of possible approaches:</p>
+<ol>
+<li>Add a marker to every string.</li>
+<li>Rely on the consumer to do first-strong detection, and add a marker to only those strings which would produce the wrong result (eg. a RLT string that starts with LTR strong characters).</li>
+<li>Assume a default of LTR (no marker), and apply only RLM markers.</li>
+</ol>
+<p>Consumers  apply first-strong heuristics to detect the base direction for the string. The RLM and LRM characters are strongly typed, directionally, and should therefore indicate the appropriate base direction.</p>
+</section>
+
+
+
+<section>
+<h4>Advantages</h4>
+
+<p>It provides a reliable way of indicating base direction, as long as the producer can reliably apply markers.</p>
+<p>In theory, it should be easier to spot the first-strong character in strings that begin with markup, as long as the correct RLM/LRM is prepended to the string.</p>
+</section>
+
+
+
+<section>
+<h4>Issues</h4>
+
+<p>If the producer is a human, they could theoretically apply one of 
   these characters when creating a string in order to signal the 
   directionality. One problem, especially on mobile devices, is the 
-  availability or inconvenience of inputting an RLM/LRM character. In 
-  addition, because the characters are invisible and because Unicode 
+  availability or inconvenience of inputting an RLM/LRM character. Perhaps more important, because the characters are invisible and because Unicode 
   bidi is complicated, it can be difficult for the user to know that a 
-  bidi control will be necessary.</p> 
-  
-  <p>However, humans often do create text that will later become 
-  strings in environments where the bidi algorithm will need help.  For 
-  example, if a person types information into an HTML form and relies 
-  on the form's base direction or use of shortcut keys to make the 
+bidi control will be necessary (or even what it is).</p>
+<p>Furthermore, if a person types information into, say, an HTML form and relies 
+  on the form's base direction (in a RLT page) or use of shortcut keys to make the 
   string look correct in the form field, they would not need to add 
-  RLM/LRM to make the string 'look correct' for themselves, but 
+  RLM/LRM to make the string 'look correct' for themselves. However, 
   outside of that context the string would look incorrect unless an 
   appropriate strong character was added to it. Similarly, strings 
   scraped from a web page that has <code class="kw" 
   translate="no">dir=rtl</code> set in the <code class="kw" 
   translate="no">html</code> element would not normally have or need an 
-  RLM/LRM character at the start of the string in HTML.</p> 
-  
-  <p>This approach is therefore only appropriate for 
-  general use if it is acceptable to change the value of the string. 
-  </p> 
-  
-  <p>Apart from changing the identity of the string, adding 
-  characters to it may have an effect on things such as string length 
-  or pointer positions, which may become problematic.</p> 
-  
-  <p>When inserting an LRM or RLM character, the consumer still depends on 
-  applying a first-strong heuristic to get the proper direction; 
-  consumers that don't apply first-strong can get the direction 
-  wrong.</p> 
-  
-  <p>If directional information is contained in markup that will be 
+RLM/LRM character at the start of the string in HTML.</p>
+<p>Another issue with this approach is that is changes the string value and identity. This may also create problems for working with string length 
+or pointer positions, especially if some producers add markers and others don't.</p>
+<p>If directional information is contained in markup that will be 
   parsed as such by the consumer (for example, <code class="kw" 
   translate="no">dir=rtl</code> in HTML),  the producer  of the string 
   needs to understand that markup in order to set or not set an RLM/LRM 
   character as appropriate. If the producer always adds RLM/LRM to the 
   start of such strings, the consumer is expected to know that. If the 
   producer relies instead on the markup being understood, the consumer 
-  is expected to understand the markup.</p> 
-  
-  <p>The producer of a string should not automatically apply RLM or LRM 
+is expected to understand the markup.</p>
+<p>The producer of a string should not automatically apply RLM or LRM 
   to the start of the string, but should test whether it is needed. 
   For example, if there's already an RLM in the text, there is no need to add another. 
   If the context is correctly conveyed by first-strong heuristics, there is no 
   need to add additional characters either. Note, however, that testing 
   whether supplementary directional information of this kind is needed 
   is only possible if the producer has access, and knows that it has 
-  access, to the original context of the string. Many document formats are generated from data stored away from the original context. For example, the catalog of books in the <a href="#an-example">original example</a> above is disconnected from the user inputing the bidirectional text.</p>
+access, to the original context of the string. Many document formats are generated from data stored away from the original context. For example, the catalog of books in the <a href="#an-example">original example</a> above is disconnected from the user inputing the bidirectional text.</p>
+</section>
 </section>
 
 
@@ -1072,124 +1059,130 @@ myLanguageNeutralString: "978-0-123-4567-X"       // language-neutral string</pr
 
 <section id="paired">
   <h3>Paired formatting characters</h3>
-  <div class="summary">
-<p><b class="leadin">Summary</b></p>
-<p>Recommended? <strong>no</strong> </p>
-<p>Pros:</p>
-<ul>
-<li>none</li>
-</ul>
-<p>Cons:</p>
-<ul>
-<li>isolating formatting characters must be used, but they are not yet well supported by consumers </li>
-<li>consumers that use first-strong heuristics, rather than recognising this approach, would fail </li>
-<li>Unicode limits for embedding levels may be exceeded</li>
-</ul>
-</div>
-<p>This approach inserts paired Unicode formatting characters at the start and end of a string to indicate the base direction.
-</p>
-  <p>There are two types of paired formatting characters. The original set of controls provide the ability to add an additional level of bidirectional "embedding" to the Unicode bidirectional Algorithm. More recently, Unicode added a complementary set of "isolating" controls. Isolating controls are used to surround a string. The inside of the string is treated as its own bidirectional sequence. The enclosing string treats the entire surrounded string as a single unit that is ignored for bidi reordering. This issue is described <a href="https://www.w3.org/TR/html-bidi/#bidi-isolation-problem">here</a>.</p>
-  
-  <table>
-	  <tbody>
-		  <tr>
-			  <td>Code Point</td>
-			  <td>Abbreviation</td>
-			  <td>Description</td>
-			  <td>Code Point</td>
-			  <td>Abbreviation</td>
-			  <td>Description</td>
-		  </tr>
-		  <tr>
-			  <td>U+200A</td>
-			  <td>LRE</td>
-			  <td>Left to Right Embedding</td>
-			  <td>U+2066</td>
-			  <td>LRI</td>
-			  <td>Left to Right Isolate</td>
-		  </tr>
-		  <tr>
-			  <td>U+200B</td>
-			  <td>RLE</td>
-			  <td>Left to Right Embedding</td>
-			  <td>U+2067</td>
-			  <td>RLI</td>
-			  <td>Right to Left Isolate</td>
-		  </tr>
-		  <tr>
-			  <td></td>
-			  <td></td>
-			  <td></td>
-			  <td>U+2068</td>
-			  <td>FSI</td>
-			  <td>First String Isolate</td>
-		  </tr>
-		  <tr>
-			  <td>U+200C</td>
-			  <td>PDF</td>
-			  <td>Pop Directional Formatting (ending an embedding)</td>
-			  <td>U+2069</td>
-			  <td>PDI</td>
-			  <td>Pop Directional Isolate (ending an isolate)</td>
-		  </tr>
-	  </tbody>
-  </table>
-  
-  <p>If paired formatting characters are used, they should be isolating, ie. starting with RLI, LRI, FSI, and not with RLE or LRE.</p>
-  
-  <p>However, it would not be enough to simply apply the UBA first-strong heuristics to such a string, because the Unicode bidi algorithm is unable to ascertain the base direction for a string that starts with RLI/LRI/FSI and ends with PDI. This is because the algorithm skips over isolated sequences and treats them  as a neutral character. A consumer of the string would have to take special steps, in this case, to uncover the first-strong character.</p>
-  <p>This approach is also only appropriate if it is acceptable to change the value of the string. In addition to possible issues such as changed string length or pointer positions, this approach runs the risk of one of the paired characters getting lost, either through handling errors, or through text truncation, etc.</p>
-  <p>A  producer and a consumer of a string would need to recognise and handle a situation where a string begins with a paired formatting character but doesn't end with it because the formatting characters only describe a part of the string.</p>
-  <p>Unicode specifies a limit to the number of embeddings that are effective, and embeddings could build up over time to exceed that limit.</p>
-  <p>Consuming applications would need to recognise and appropriately handle the isolating formatting characters. At the moment such support for RLI/LRI/FSI is not pervasive.</p>
+<p><strong>This approach is NOT recommended.</strong></p>
 
+
+<section>
+<h4>How it works</h4>
+<p>A producer ascertains the  base direction of the string and adds a directional formatting character (one of <span class="unicode">U+2066 LEFT-TO-RIGHT ISOLATE</span> (LRI), <span class="unicode">U+2067 RIGHT-TO-LEFT ISOLATE</span> (RLI),<span class="unicode"> U+2068 FIRST STRONG ISOLATE</span> (FSI),<span class="unicode"> U+202A LEFT-TO-RIGHT EMBEDDING</span> (LRE), or <span class="unicode">U+202B RIGHT-TO-LEFT EMBEDDING</span> (RLE)) to the beginning of the string, and  <span class="unicode">U+2069 POP DIRECTIONAL ISOLATE</span> (PDI) or  <span class="unicode">U+202C POP DIRECTIONAL FORMATTING</span> (PDF) to the end.</p>
+<p>There are a number of possible approaches:</p>
+<ol>
+<li>Add the formatting codes to every string.</li>
+<li>Rely on the consumer to do first-strong detection, and add a marker to only those strings which would produce the wrong result (eg. a RLT string that starts with LTR strong characters).</li>
+</ol>
+<p>Consumers  would theoretically just insert the string in the place it will be displayed, and rely on the formatting codes to apply the base direction. However, things are not quite so simple (see below).</p>
+<p>There are two types of paired formatting characters. The original set of controls provide the ability to add an additional level of bidirectional "embedding" to the Unicode bidirectional Algorithm. More recently, Unicode added a complementary set of "isolating" controls. Isolating controls are used to surround a string. The inside of the string is treated as its own bidirectional sequence, and the string is protected against spill-over effects related to any surrounding text. The enclosing string treats the entire surrounded string as a single unit that is ignored for bidi reordering. This issue is described <a href="https://www.w3.org/TR/html-bidi/#bidi-isolation-problem">here</a>.</p>
+<table>
+<tbody>
+<tr>
+<td>Code Point</td>
+<td>Abbreviation</td>
+<td>Description</td>
+<td>Code Point</td>
+<td>Abbreviation</td>
+<td>Description</td>
+</tr>
+<tr>
+<td>U+200A</td>
+<td>LRE</td>
+<td>Left to Right Embedding</td>
+<td>U+2066</td>
+<td>LRI</td>
+<td>Left to Right Isolate</td>
+</tr>
+<tr>
+<td>U+200B</td>
+<td>RLE</td>
+<td>Left to Right Embedding</td>
+<td>U+2067</td>
+<td>RLI</td>
+<td>Right to Left Isolate</td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+<td></td>
+<td>U+2068</td>
+<td>FSI</td>
+<td>First String Isolate</td>
+</tr>
+<tr>
+<td>U+200C</td>
+<td>PDF</td>
+<td>Pop Directional Formatting (ending an embedding)</td>
+<td>U+2069</td>
+<td>PDI</td>
+<td>Pop Directional Isolate (ending an isolate)</td>
+</tr>
+</tbody>
+</table>
+<p>If paired formatting characters are used, they should be isolating, ie. starting with RLI, LRI, FSI, and not with RLE or LRE.</p>
+</section>
+
+
+
+<section>
+<h4>Advantages</h4>
+
+<p>There are no real advantages to using this approach.</p>
+</section>
+
+
+
+<section>
+<h4>Issues</h4>
+
+<p>This approach is  only appropriate if it is acceptable to change the value of the string. In addition to possible issues such as changed string length or pointer positions, this approach runs a real and serious risk of one of the paired characters getting lost, either through handling errors, or through text truncation, etc.</p>
+<p>A  producer and a consumer of a string would need to recognise and handle a situation where a string begins with a paired formatting character but doesn't end with it because the formatting characters only describe a part of the string.</p>
+<p>Unicode specifies a limit to the number of embeddings that are effective, and embeddings could build up over time to exceed that limit.</p>
+<p>Consuming applications would need to recognise and appropriately handle the isolating formatting characters. At the moment such support for RLI/LRI/FSI is far from pervasive.</p>
+<p>This approach would disqualify the string from being amenable to UBA first-strong heuristics if used by a non-aware consumer, because the Unicode bidi algorithm is unable to ascertain the base direction for a string that starts with RLI/LRI/FSI and ends with PDI. This is because the algorithm skips over isolated sequences and treats them  as a neutral character. A consumer of the string would have to take special steps, in this case, to uncover the first-strong character.</p>
+</section>
 </section>
 
 
 
 <section id="script_subtag">
   <h3>Script subtags</h3>
-<p>This section is currently a first draft and needs review.</p>
-  
-  <div class="summary">
-  <p><b class="leadin">Summary</b></p>
-  <p>Recommended? <em>(provisionally, pending deeper investigation)</em> <strong>yes</strong>, but only when the metadata approach above is not possible</p>
+<p><strong>This approach is only recommended as a workaround for situations that prevent the use of metadata.</strong></p>
 
-    <p>Pros:</p>
-    <ul>
-    <li>no need to change the string</li>
-    <li>no need to inspect the string</li>
-    <li>reliable</li>
-<li>no complications when dealing with markup in strings</li>
-    </ul>
 
-    <p>Cons:</p>
-    <ul>
-    <li>only works where it is possible to associate separate language metadata with each string</li>
-    <li>some scripts in archaic usage switched between LTR and RTL according to the preference of the author or the context of the content; the language tag is unable to handle non-default approaches for such strings, but this is expected to be an edge-case</li>
-    <li>new script tags may be coined, and these will need to be added to the lists used by consumers</li>
-<li>how to indicate that LTR base direction must be applied to a wrapper around some strings</li>
-    </ul>
-
-    <p>To note:</p>
-    <ul>
-    <li>may be more efficient to assume a default, in the absence of a script subtag, and use first-strong heuristics in non-problematic cases</li>
-    </ul>
-  </div>
-  
+<section>
+<h4>How it works</h4>
+<p>A producer applies language tags to strings, specifying, in particular, the script in use.</p>
+<p>There are a number of possible approaches:</p>
+<ol>
+<li>Label every string for language+script.</li>
+<li>It may be reasonable to assume a default of LTR for all strings unless marked with a script subtag that indicates RTL.  Any string that needs to have an overall base direction of RTL should be labelled for language by the producer using a script subtag.</li>
+<li>Set a default language for a set of strings, at a higher level, but provide a mechanism to override that default for a given string where needed.</li>
+</ol>
+<p>Consumers would identify strings associated with languages that are written RTL by default, and apply a RTL base direction to those strings.</p>
   <p>The W3C Internationalization Working Group recommends that formats and applications should associate dedicated metadata relating to base text direction with strings wherever possible.  In cases where that is not possible due to legacy constraints, but where language metadata <em>can</em> be associated with each string, it may be possible to use the language metadata as a fallback method of identifying the direction for a string (eg. JSON-LD, RDF, etc).</p>
-  <p>Note, however, that this is <em>only</em> appropriate when declaring information about the <em>overall</em> base direction to be associated with a string. We do <em>not</em> recommend generalised use of language data to indicate text direction, especially within strings, since the usage patterns are not interchangeable.</p>
+  <p>Note, however, that the approach outlined here is <em>only</em> appropriate when declaring information about the <em>overall</em> base direction to be associated with a string. We do <em>not</em> recommend generalised use of language data to indicate text direction, especially within strings, since the usage patterns are not interchangeable.</p>
   <p>Note, secondly, that language information must use [[BCP47]] language tags, and that the portion of the language tag that carries the information is the script subtag, not the primary language subtag. For example, Azeri may be written LTR (with the Latin or Cyrillic scripts) or RTL (with the Arabic script).  Therefore, the subtag <code class="kw" translate="no">az</code> is insufficient to clarify intended direction. A language tag such as <code class="kw" translate="no">az-Arab</code>, however, can generally be relied upon to indicate that the overall base direction should be RTL. </p>
   
   <p>Unicode locale identifiers, defined as part of the [[!LDML]] specification, include a "likely subtag" mechanism that can sometimes be used to supply the script subtag when the base language tag does not include it. For example, a language tag such as <kbd>ar</kbd> (Arabic), implies the <kbd>Arab</kbd> (Arabic) script subtag, since nearly all Arabic is written in this script.</p>
-  
-<p>There are many strings which are not language-specific but which absolutely need to be wrapped by a mechanism that explicitly associates them with  a particular base direction for correct consumption. For example, MAC addresses inserted into a RTL context need to be displayed with a LTR overall base direction and isolation from the surrounding text. It's not clear how to distinguish these cases from others (in a way that would be feasible when using direction metadata).</p>
-  <p>The expected way in which this information is used is as follows. It may be reasonable to assume a default of LTR for all strings unless marked with a script subtag that indicates RTL.  Any string that needs to have an overall base direction of RTL should be labelled for language by the producer using a script subtag. If a script subtag is associated with a string, the consumer would check the script against a list of script subtags that indicate a RTL base direction, and if found would take appropriate action.</p>
-  <p>The list of script subtags may be added to in future. In that case, any subtags that indicate a default RTL direction need to be added to the lists used by the consumers of the strings.</p>
-  <p>It is perhaps possible to limit the use of script subtag metadata to situations where first-strong heuristics are expected to fail - provided that such cases can be identified, and appropriate action taken by the producer (not always reliable). Consumers would then need to use first-strong heuristics in the absence of a script subtag in order to identify the appropriate base direction. The use of script subtags should not, however, be restricted to strings that need to indicate direction; it is perfectly valid to associate a script subtag with any string.</p>
-  <p>This approach avoids the issues associated with first-strong detection when the first-strong character is not indicative of the necessary base direction for the string, and avoids issues relating to the interpretation of markup.</p>
+</section>
+
+
+
+<section>
+<h4>Advantages</h4>
+
+<p>There is no need to inspect or change the string itself.</p>
+<p>This approach avoids the issues associated with first-strong detection when the first-strong character is not indicative of the necessary base direction for the string, and avoids issues relating to the interpretation of markup.</p>
 <p>Note that a string that begins with markup that sets a language for the string text content (eg. <code translate="no">&lt;cite lang=“en-Latn”&gt;</code>) is not problematic here, since that language declaration is not expected to play into the setting of the base direction.</p>
+</section>
+
+
+
+<section>
+<h4>Issues</h4>
+<p>There are many strings which are not language-specific but which absolutely need to be wrapped by a mechanism that explicitly associates them with  a particular base direction for correct consumption. For example, MAC addresses inserted into a RTL context need to be displayed with a LTR overall base direction and isolation from the surrounding text. It's not clear how to distinguish these cases from others (in a way that would be feasible when using direction metadata).</p>
+<p>The list of script subtags may be added to in future. In that case, any subtags that indicate a default RTL direction need to be added to the lists used by the consumers of the strings.</p>
+<p>It is perhaps possible to limit the use of script subtag metadata to situations where first-strong heuristics are expected to fail - provided that such cases can be identified, and appropriate action taken by the producer (not always reliable). Consumers would then need to use first-strong heuristics in the absence of a script subtag in order to identify the appropriate base direction. The use of script subtags should not, however, be restricted to strings that need to indicate direction; it is perfectly valid to associate a script subtag with any string.</p>
 <p>There are some rare situations where the base direction can not necessarily be identified from the script subtag, but these are really limited to archaic usage of text.  For example, Japanese and Chinese text prior to World War 2 was often written RTL, rather than LTR. Languages such as those written using Egyptian Hieroglyphs, or the Tifinagh Berber script, could formerly be written either LTR or RTL, however the default for scholastic research tends to LTR.</p>
+</section>
 </section>
 </section>
 
