@@ -327,9 +327,6 @@ data in an interchange format is not a good idea. These include:</p>
 <p class=mustard>Best practices appear with a different background color and decoration like this.</p>
 
 <p>The main issue is how a <a>producer</a> of a string knows how to encode and a <a>consumer</a> of a string will know how to find and interpret the language-related features that ought to be used for that string when it is eventually processed or displayed to the user. This section describes the current best practices, as well as several alternatives that were considered (with reasons for why they are not considered the best practice).</p>   
-   
-<section>
-<h4 id="bcp_metadata">Specifying Metadata in Document Formats</h4>
   
 <p class=note>The TAG and I18N WG are <a href="https://github.com/w3ctag/design-reviews/issues/178">currently discussing</a> what the best practice recommendations should be. This subsection represents our understanding currently.</p>
 
@@ -353,27 +350,9 @@ data in an interchange format is not a good idea. These include:</p>
 
 <p>The script subtag of a language tag (or the "likely" script subtag based on [[!BCP47]] and [[!LDML]]) can sometimes be used to provide a base direction when other data is not available. Note that using language information is a "last resort" and specifications SHOULD NOT use it as the primary way of indicating direction: make the effort to provide for metadata.</p>
 
-<p class=mustard>Do not produce or require bidi isolating controls by default.</p> 
-<p>Bidi isolating controls are plain text control characters that can be used to indicate that a span of text should be "isolated" from the surrounding bidirectional context. A frequent question is whether content management systems or document formats should include these characters by default around strings that can appear in multiple contexts. An example of this would be a localizable string table for an application. Since the content author cannot know the bidi context in which the string will be displayed in advance, providing the controls could help insulate the strings from improper display later.</p>
+<p class=mustard>Do not produce or require the production or use of <a href="#paired">paired bidi controls</a> by default.</p> 
 
-<p>HTML5 [[HTML5]] introduced isolation at the element level by default. This allows for text insertion into an HTML context without the need for isolating controls. However, not all strings appear in an HTML context. Use of strings in a plain text or other display context cannot be guaranteed the isolating behavior provided by HTML.</p>
-
-<p>While some strings can certainly benefit from using isolating bidi controls, consistent usage can produce layers of overhead, processing, and validation that are unnecessary. Use of these controls should be reserved for cases in which the assembly and presentation of the text depends on runtime directional determination. For example, isolating controls can be included around a variable name in a string whose contents will be determined at runtime.</p>
-
-<aside class=example>
-	<p>Example of inappropriate use of isolating controls:</p>
-	<pre>&amp;#x2066;This string has an LRI/PDI around it.&amp;#x2069;</pre>
-	
-	<p>Example of appropriate use of isolating controls:</p>
-	<pre>Restaurant &amp;#x2068;$name&amp;#x2069; has &amp;#x2068;$numReviews&amp;#x2069; reviews.</pre>
-</aside>
-
-<p>The advantages of using isolating controls around a string are that the string can then be inserted into any context (that understands isolating controls) without additional processing.</p>
-
-<p>The disadvantages of using isolating controls around a string are several. For most text the controls are superfluous and contribute to storage and processing overhead. The controls also affect the length of the string. Operations such as string truncation need to keep the controls paired.</p>
-
-</section>
-
+<p>Another way to say this is: <strong><em>do not require implementations to modify data passing through them</em></strong>. Unicode bidi control characters might be found in a particular piece of string content, where the producer or data source has used them to make the text display properly. That is, they might already be part of the data. Implementations should not disturb any controls that they find&mdash;but they shouldn't be required to produce additional controls on their own.</p>
 
 <section>
 <h2 id="use_cases">Requirements and Use Cases</h2>
@@ -1126,6 +1105,27 @@ access, to the original context of the string. Many document formats are generat
 <p>Unicode specifies a limit to the number of embeddings that are effective, and embeddings could build up over time to exceed that limit.</p>
 <p>Consuming applications would need to recognise and appropriately handle the isolating formatting characters. At the moment such support for RLI/LRI/FSI is far from pervasive.</p>
 <p>This approach would disqualify the string from being amenable to UBA first-strong heuristics if used by a non-aware consumer, because the Unicode bidi algorithm is unable to ascertain the base direction for a string that starts with RLI/LRI/FSI and ends with PDI. This is because the algorithm skips over isolated sequences and treats them  as a neutral character. A consumer of the string would have to take special steps, in this case, to uncover the first-strong character.</p>
+
+<!-- orphan text -->
+
+<p>Bidi isolating controls are plain text control characters that can be used to indicate that a span of text should be "isolated" from the surrounding bidirectional context. A frequent question is whether content management systems or document formats should include these characters by default around strings that can appear in multiple contexts. An example of this would be a localizable string table for an application. Since the content author cannot know the bidi context in which the string will be displayed in advance, providing the controls could help insulate the strings from improper display later.</p>
+
+<p>HTML5 [[HTML5]] introduced isolation at the element level by default. This allows for text insertion into an HTML context without the need for isolating controls. However, not all strings appear in an HTML context. Use of strings in a plain text or other display context cannot be guaranteed the isolating behavior provided by HTML.</p>
+
+<p>While some strings can certainly benefit from using isolating bidi controls, consistent usage can produce layers of overhead, processing, and validation that are unnecessary. Use of these controls should be reserved for cases in which the assembly and presentation of the text depends on runtime directional determination. For example, isolating controls can be included around a variable name in a string whose contents will be determined at runtime.</p>
+
+<aside class=example>
+	<p>Example of inappropriate use of isolating controls:</p>
+	<pre>&amp;#x2066;This string has an LRI/PDI around it.&amp;#x2069;</pre>
+	
+	<p>Example of appropriate use of isolating controls:</p>
+	<pre>Restaurant &amp;#x2068;$name&amp;#x2069; has &amp;#x2068;$numReviews&amp;#x2069; reviews.</pre>
+</aside>
+
+<p>The advantages of using isolating controls around a string are that the string can then be inserted into any context (that understands isolating controls) without additional processing.</p>
+
+<p>The disadvantages of using isolating controls around a string are several. For most text the controls are superfluous and contribute to storage and processing overhead. The controls also affect the length of the string. Operations such as string truncation need to keep the controls paired.</p>
+
 </section>
 </section>
 
