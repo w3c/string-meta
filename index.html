@@ -332,34 +332,26 @@ data in an interchange format is not a good idea. These include:</p>
 <h4 id="bcp_metadata">Specifying Metadata in Document Formats</h4>
   
 <p class=note>The TAG and I18N WG are <a href="https://github.com/w3ctag/design-reviews/issues/178">currently discussing</a> what the best practice recommendations should be. This subsection represents our understanding currently.</p>
-  
-<p class=mustard>Make each natural language string field <a>Localizable</a>.</p>
 
-<p class=mustard><a href="#metadata">Use metadata</a> to indicate the base direction of text fields.</p>
+<p class=mustard>Use metadata to indicate the language and base direction of each natural language string field.</p>
 
-<p>Avoid requiring the consumer to interpolate the direction using methods such as <a href="#firststrong">first strong</a> or which require modification of the data itself (such as the insertion of RLM/LRM markers or bidirectional controls).</p>
+<p>For consistency between specifications and implementations, the <a>Localizable</a> structure is RECOMMENDED for doing this in JSON based file formats.</p>
 
-<p class=mustard>If metadata is not available and cannot otherwise be provided, a base direction MAY be <a href="#script_subtag">interpolated from available language metadata</a>.</p>
-
-<p>The script subtag of a language tag (or the "likely" script subtag based on [[!BCP47]] and [[!LDML]]) can sometimes be used to provide a base direction when other data is not available. Note that using language information is a "last resort" and specifications SHOULD NOT use it as the primary way of indicating direction: make the effort to provide for metadata.</p>
+<p>The use of <a href="#metadata">metadata</a> for indicating base direction is preferred, as it avoids requiring the consumer to interpolate the direction using methods such as <a href="#firststrong">first strong</a> or which require modification of the data itself (such as the <a href="rlm">insertion of RLM/LRM markers</a> or <a href="#paired">bidirectional controls</a>).</p>
 
 <p class=mustard>Specifications and document formats MAY provide for a default language and default direction for an overall document.</p>
 
 <p>This might be helpful when performing <a>language negotiation</a> on several levels and there is a desire to use the same default language. It can also be helpful when a document is known to be in a single language or have a single expected base direction and the additional serialization complexity of using <kbd>Localizable</kbd> can thus be avoided.</p>
 
-<p>Interoperability is enhanced when specifications all use the same attribute name for the default language and default base direction.</p>
-
 <p class=mustard>The name <code>@language</code> is RECOMMENDED as the name of the default language value and <code>@dir</code> as the default direction value.</p>
 
+<p>Interoperability is enhanced when specifications all use the same attribute name for the default language and default base direction.</p>
 
 </section>
 
+<p class=mustard>If metadata is not available and cannot otherwise be provided, a base direction MAY be <a href="#script_subtag">interpolated from available language metadata</a>.</p>
 
-
-
-
-<section>
-<h3 id="controls_in_strings">Bidi Isolation and Isolating Controls in Strings</h3>
+<p>The script subtag of a language tag (or the "likely" script subtag based on [[!BCP47]] and [[!LDML]]) can sometimes be used to provide a base direction when other data is not available. Note that using language information is a "last resort" and specifications SHOULD NOT use it as the primary way of indicating direction: make the effort to provide for metadata.</p>
 
 <p class=mustard>Do not produce or require bidi isolating controls by default.</p> 
 <p>Bidi isolating controls are plain text control characters that can be used to indicate that a span of text should be "isolated" from the surrounding bidirectional context. A frequent question is whether content management systems or document formats should include these characters by default around strings that can appear in multiple contexts. An example of this would be a localizable string table for an application. Since the content author cannot know the bidi context in which the string will be displayed in advance, providing the controls could help insulate the strings from improper display later.</p>
@@ -379,11 +371,8 @@ data in an interchange format is not a good idea. These include:</p>
 <p>The advantages of using isolating controls around a string are that the string can then be inserted into any context (that understands isolating controls) without additional processing.</p>
 
 <p>The disadvantages of using isolating controls around a string are several. For most text the controls are superfluous and contribute to storage and processing overhead. The controls also affect the length of the string. Operations such as string truncation need to keep the controls paired.</p>
+
 </section>
-</section>
-
-
-
 
 
 <section>
@@ -710,12 +699,12 @@ dir</code></dfn> member</dt>
 	    <p>[[JSON-LD]] includes some data structures that are partially helpful. Notably, it defines <a href="https://json-ld.org/spec/latest/json-ld/#string-internationalization">string internationalization</a> in the form of a context-scoped <kbd>@language</kbd> value which can be associated with blocks of JSON or within individual objects. There is no definition of base direction, so this is incomplete. The <kbd>@context</kbd> concept can be used by specifications as a means of indicating the default language metadata where omitted from individual strings. The concept of <a href="https://json-ld.org/spec/latest/json-ld/#language-indexing">language indexing</a> in JSON-LD is used in the Best Practices in this document as a means for localizing a data value.</p>
 
 <aside class=example>
-	<p>The following example shows the record used in the <a href="baseExample">example</a> with a default language and direction:</p>
+	<p>Here is the record used in the <a href="baseExample">original example</a> with a record-level default language and direction added:</p>
 <pre>
 {
     "@language": "ar",
     "@dir": "rtl",
-    "id": "1118008189",
+    "id": "978-111800818-9",
     "title": "<span dir=rtl>HTML &#x0648; CSS: &#x062A;&#x0635;&#x0645;&#x064A;&#x0645; &#x0648; &#x0625;&#x0646;&#x0634;&#x0627;&#x0621; &#x0645;&#x0648;&#x0627;&#x0642;&#x0639; &#x0627;&#x0644;&#x0648;&#x064A;&#x0628;</span>",
     "authors": [ "Jon Duckett" ],
     "language": "ar",
@@ -726,10 +715,10 @@ dir</code></dfn> member</dt>
 },
 </pre>
 
-<p>Here is the same example without using the default:</p>
+<p>Here is the same record without using the default:</p>
 <pre>
 {
-    "id": {"value": "1118008189", "dir": "ltr"},
+    "id": {"value": "978-111800818-9", "dir": "ltr"},
     "title": {"value": "<span dir=rtl>HTML &#x0648; CSS: &#x062A;&#x0635;&#x0645;&#x064A;&#x0645; &#x0648; &#x0625;&#x0646;&#x0634;&#x0627;&#x0621; &#x0645;&#x0648;&#x0627;&#x0642;&#x0639; &#x0627;&#x0644;&#x0648;&#x064A;&#x0628;</span>", 
 		"lang": "ar", "dir": "rtl" },
     "authors": [ {"value": "Jon Duckett", "lang": "en"} ],
@@ -742,12 +731,12 @@ dir</code></dfn> member</dt>
 </pre>
 	
 <p>Note that a direction value was applied to the ISBN number, so that it isn't rearranged on display in a RTL context. If the consumer is aware of the semantic value of the id, this is not necessary, however, it is useful when the data is shared in a new context where such private arrangements don't hold.</p>
-<p>And now the same example again,  using the default, but overriding it where needed:</p>
+<p>And now the same record again, using the default, but overriding it where needed:</p>
 <pre>
 {
     "@language": "en",
     "@dir": "ltr",
-    "id": {"1118008189"},
+    "id": {"978-111800818-9"},
     "title": [ "en": {"value": "HTML and CSS: Design and Build Websites", "lang": "en"},
                "ar": {"value": "<span dir=rtl>HTML &#x0648; CSS: &#x062A;&#x0635;&#x0645;&#x064A;&#x0645; &#x0648; &#x0625;&#x0646;&#x0634;&#x0627;&#x0621; &#x0645;&#x0648;&#x0627;&#x0642;&#x0639; &#x0627;&#x0644;&#x0648;&#x064A;&#x0628;</span>", "lang": "ar",  "dir": "rtl"} ],
     "authors": [ {"value": "Jon Duckett", "lang": "en"} ],
@@ -955,7 +944,7 @@ myLanguageNeutralString: "978-0-123-4567-X"       // language-neutral string</pr
 <p>There are a number of possible approaches:</p>
 <ol>
 <li>Label every string for base direction.</li>
-<li>Rely on the consumer to do first-strong detection, and label only those strings which would produce the wrong result (ie. a RLT string that starts with LTR strong characters).</li>
+<li>Rely on the consumer to do first-strong detection, and label only those strings which would produce the wrong result (ie. a RTL string that starts with LTR strong characters).</li>
 <li>If storing or transmitting a set of strings at a time, have a resource-level field that sets a global, default base direction which is inherited by all strings except individual strings with a direction field that overrides the default. Note that this means you need both a global field, and fields available, where needed, associated with each string.</li>
 </ol>
 <p>Consumers would need to understand how to read the metadata sent with a string, and would need to apply first-strong heuristics in the absence of metadata.</p>
@@ -996,7 +985,7 @@ myLanguageNeutralString: "978-0-123-4567-X"       // language-neutral string</pr
 <p>There are a number of possible approaches:</p>
 <ol>
 <li>Add a marker to every string.</li>
-<li>Rely on the consumer to do first-strong detection, and add a marker to only those strings which would produce the wrong result (eg. a RLT string that starts with LTR strong characters).</li>
+<li>Rely on the consumer to do first-strong detection, and add a marker to only those strings which would produce the wrong result (eg. a RTL string that starts with LTR strong characters).</li>
 <li>Assume a default of LTR (no marker), and apply only RLM markers.</li>
 </ol>
 <p>Consumers  apply first-strong heuristics to detect the base direction for the string. The RLM and LRM characters are strongly typed, directionally, and should therefore indicate the appropriate base direction.</p>
@@ -1023,7 +1012,7 @@ myLanguageNeutralString: "978-0-123-4567-X"       // language-neutral string</pr
   bidi is complicated, it can be difficult for the user to know that a 
 bidi control will be necessary (or even what it is).</p>
 <p>Furthermore, if a person types information into, say, an HTML form and relies 
-  on the form's base direction (in a RLT page) or use of shortcut keys to make the 
+  on the form's base direction (in a RTL page) or use of shortcut keys to make the 
   string look correct in the form field, they would not need to add 
   RLM/LRM to make the string 'look correct' for themselves. However, 
   outside of that context the string would look incorrect unless an 
@@ -1068,7 +1057,7 @@ access, to the original context of the string. Many document formats are generat
 <p>There are a number of possible approaches:</p>
 <ol>
 <li>Add the formatting codes to every string.</li>
-<li>Rely on the consumer to do first-strong detection, and add a marker to only those strings which would produce the wrong result (eg. a RLT string that starts with LTR strong characters).</li>
+<li>Rely on the consumer to do first-strong detection, and add a marker to only those strings which would produce the wrong result (eg. a RTL string that starts with LTR strong characters).</li>
 </ol>
 <p>Consumers  would theoretically just insert the string in the place it will be displayed, and rely on the formatting codes to apply the base direction. However, things are not quite so simple (see below).</p>
 <p>There are two types of paired formatting characters. The original set of controls provide the ability to add an additional level of bidirectional "embedding" to the Unicode bidirectional Algorithm. More recently, Unicode added a complementary set of "isolating" controls. Isolating controls are used to surround a string. The inside of the string is treated as its own bidirectional sequence, and the string is protected against spill-over effects related to any surrounding text. The enclosing string treats the entire surrounded string as a single unit that is ignored for bidi reordering. This issue is described <a href="https://www.w3.org/TR/html-bidi/#bidi-isolation-problem">here</a>.</p>
