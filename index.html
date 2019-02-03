@@ -519,20 +519,25 @@ working on.</p>
 
 <p>The Hebrew characters are reversed by applying the Unicode Bidirectional Algorithm (UBA). However, in a LTR context the UBA cannot make the 'bidi' word appear to the right of the Hebrew text, where it belongs, unless the base direction is set to RTL around it.</p>
 <p>This has an additional complication. Often, applications will test the first strong character in the string in order to guess the base direction that needs to be applied. In this case, that heuristic will produce the wrong result.</p>
+<p>Notice how <a href="an-example">our original example</a> demonstrates this. The title of the book was displayed in an LTR context like this:</p>
+
+<p lang="ar" dir="ltr" style="text-align:center; font-size: 2em;">HTML و CSS: تصميم و إنشاء مواقع الويب</span>
+
+<p>However, the title is not displayed properly. The first word in the title is "HTML" and it should show on the right side, like this:</p>
+
+<p lang="ar" dir="rtl" style="text-align:center; font-size: 2em;">HTML و CSS: تصميم و إنشاء مواقع الويب</p>
 </section>
-
-
 
   <section>
   <h4 id="bidiCase3">Bidirectional text ordering</h4>
 <p>In this case the string contains three words with different directional properties. The characters in the order in which they are stored in memory.</p>
-  <p lang="he" dir="rtl" style="text-align:center; font-size: 2em;"><code><bdo dir="ltr">&quot;one שתיים three&quot;</bdo></code></p>
-  <p>If the string is dropped into a LTR context, it will display like this, which is correct:</p>
-  <p lang="he" dir="ltr" style="text-align:center; font-size: 2em;">one שתיים three</p>
-  <p>Dropped into a RTL context, this will be the result, which is incorrect – the order of the items has changed:</p>
-  <p lang="he" dir="rtl" style="text-align:center; font-size: 2em;">one שתיים three  </p>
-<p>This can be much worse when combined with punctuation, or in this case an example of markup in an educational context (inserted into a RTL context). The sequence 'one two three' should just be wrapped in <code class="kw" translate="no">span</code> markup:</p>
-  <p lang="he" dir="rtl" style="text-align:center; font-size: 2em;">&lt;span&gt;one שתיים three&lt;/span&gt;</p>
+  <p lang="ar" dir="rtl" style="text-align:center; font-size: 2em;"><code><bdo dir="ltr">&quot;HTML و CSS&quot;</bdo></code></p>
+  <p>If the string is dropped into a LTR context, it will display like this:</p>
+  <p lang="ar" dir="ltr" style="text-align:center; font-size: 2em;">HTML و CSS</p>
+  <p>Dropped into a RTL context, this will be the result – the order of the items has changed:</p>
+  <p lang="ar" dir="rtl" style="text-align:center; font-size: 2em;">HTML و CSS</p>
+<p>While this example isn't harmful, there are many cases where this sort of "order flipping" changes the meaning of the text. This can be much worse when combined with punctuation, or in this case an example of markup in an educational context (inserted into a RTL context). The sequence 'one two three' should just be wrapped in <code class="kw" translate="no">span</code> markup:</p>
+  <p lang="ar" dir="rtl" style="text-align:center; font-size: 2em;">&lt;span&gt;HTML و CSS&lt;/span&gt;</p>
 </section>
 
 
@@ -541,7 +546,7 @@ working on.</p>
   <h4 id="bidiCase4">Interpreted HTML</h4>
 <p>The characters in this string are shown in the order in which they are stored in memory.</p>
   <p lang="he" dir="rtl" style="text-align:center; font-size: 2em;"><code>
-<bdo dir="ltr">&quot;&lt;span dir='ltr'&gt;one שתיים three&lt;/span&gt;&quot;</bdo></code></p>
+<bdo dir="ltr">&quot;&lt;span dir='ltr'&gt;HTML و CSS&lt;/span&gt;&quot;</bdo></code></p>
 <p>This use case is for applications that will parse the string and convert any HTML markup to the DOM. In this case, the text should be rendered correctly in an HTML context because the <code class="kw" translate="no">dir</code> attribute indicates the base direction to be applied within the markup. (It also applies bidi isolation to the text in browsers that fully support bidi markup, avoiding any spill-over effects.) It relies, however, on a system where the consumer expects to receive HTML, and knows how to handle bidi markup.</p>
 <p>It also requires the producer to take explicit action to identify the appropriate base direction and set up the required markup to indicate that.</p>
 </section>
@@ -559,6 +564,26 @@ working on.</p>
 
 <p>When presented to a user, the order of the numbers must remain the same even when the directional context of the surrounding text is RTL. There are no strong directional characters in this string, and the need to preserve a strong LTR base direction is more to do with the type of information in the string than with the content.</p>
 </section>
+
+<section>
+<h4 id="bidiCase6">Concatenation Effects</h4>
+
+<p>A common use for document formats is to provide data to insert into a page or user interface at runtime. Consider this display string that shows the number of reviews for the title:</p>
+<p lang="ar" dir="ltr" style="text-align:center; font-size: 2em;"><code>$title - $numReviews &#x062A;&#x0642;&#x064A;&#x064A;&#x0645;</code></p>
+
+<p>Here we see the  display with our example title, assuming it has 4 reviews:</p>
+
+<p lang="ar" dir="rtl" style="text-align:center; font-size: 2em;">HTML و CSS - 4 &#x062A;&#x0642;&#x064A;&#x064A;&#x0645;</p>
+
+<p>Similarly, an LTR context can cause "position switching":</p>
+
+<p lang="ar" dir="ltr" style="text-align:center; font-size: 2em;">HTML و CSS: تصميم و إنشاء مواقع الويب - 4 &#x062A;&#x0642;&#x064A;&#x064A;&#x0645;</p>
+
+<p>The solution to this problem is called <dfn>bidi isolation</dfn>. HTML5 provides this by default for inline elements, but strings that are assembled at runtime may need the isolation provided, either as the form of additional markup or via the addition of bidi controls.</p> 
+
+</section>
+
+
 </section>
 
 </section>
