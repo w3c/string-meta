@@ -645,34 +645,20 @@ dir</code></dfn> member</dt>
 
 <section>
 	<h5 id="localizable-dictionary-advantages">Advantages</h5>
+	
+	<p>Using a consistent and well-defined data structure makes it more likely that different standards are composable and will work together seamlessly.</p>
+	
+	<p>Metadata can be supplied without affecting the content itself.</p>
+	<p>Where metadata is unavailable, it can be omitted.</p>
+	<p>Consumers and producers do not have to instrospect the data outside of their normal processing.</p>
 </section>
 <section>
 	<h5 id="localizable-dictionary-issues">Issues</h5>
 	
-<p>Serialized files utilizing the dictionary and its data values will contain additional fields and can be more difficult to read as a result. Here's an example:</p>
+<p>Serialized files utilizing the dictionary and its data values will contain additional fields and can be more difficult to read as a result.</p>
 
-<aside class=example>
-	<p>Before:</p>
-	<pre>
-[
-  displayItems: [{
-    label: "<span dir="rtl">&#x0627;&#x0644;&#x0628;&#x0646;&#x062F; &#x0627;&#x0644;&#x062E;&#x0627;&#x0635; (&#x0644;&#x0644;&#x0628;&#x064A;&#x0639;!)</span>",
-    amount: { },
-  }]
-]</pre>
-	<p>After:</p>
-		<pre>
-[
-  displayItems: [{
-    label: {
-        value: "<span dir="rtl">&#x0627;&#x0644;&#x0628;&#x0646;&#x062F; &#x0627;&#x0644;&#x062E;&#x0627;&#x0635; (&#x0644;&#x0644;&#x0628;&#x064A;&#x0639;!)</span>",
-        lang: "ar-AE",
-        dir: "rtl"
-    },	
-    amount: { },
-  }]
-]</pre>
-</aside>
+<p>For existing document formats, it represents a change to the values being exchanged.</p>
+
 </section>
 </section>
 
@@ -683,7 +669,7 @@ dir</code></dfn> member</dt>
 	<section>
 		<h5 id="language-indexing-how">How it works</h5>
 		
-<p>Applications sometimes need to provide for <a>language negotiation</a> or, where data is available in multiple languages, provide all languages of a given data item to the <a>consumer</a>. This is best accomplished by organizing <a>Localizable</a> strings into arrays with multiple languages for the same value. </p>
+<p>Applications sometimes need to provide for <a>language negotiation</a> or, where data is available in multiple languages, provide all languages of a given data item to the <a>consumer</a>. <a href="https://json-ld.org/spec/latest/json-ld/#language-indexing">Language indexing</a> from JSON-LD provides a mechanism for organizing <a>Localizable</a> strings into arrays with multiple languages for the same value. </p>
 
 <p>A language-indexed array uses the language tag as a key within the array like this:</p>
 
@@ -701,7 +687,11 @@ dir</code></dfn> member</dt>
 <p>For example, if the language requested were U.S. English (<kbd>en-US</kbd>), this format makes it easier to match and extract the best fitting title object <kbd>{"value": "Learning Web Design", "lang": "en"}</kbd>.</p>
 
 
-<p>Where language indexing is not used, as in this example, an implementation would have to iterate over a perhaps-substantial list of alternative values:</p>
+</section>
+<section>
+	<h5 id="language-indexing-advantages">Advantages</h5>
+	
+	<p>Where language indexing is not used, as in this example, an implementation would have to iterate over a perhaps-substantial list of alternative values:</p>
 
 <aside class=example>
 <pre>
@@ -713,69 +703,36 @@ dir</code></dfn> member</dt>
 </aside>
 </section>
 <section>
-	<h5 id="language-indexing-advantages">Advantages</h5>
-</section>
-<section>
 	<h5 id="language-indexing-issues">Issues</h5>
 </section>
 
 </section>
 
   <section>
-	  <h4>Provide default document-level <kbd>@language</kbd> and <kbd>@dir</kbd></h4>
+	  <h4 id="default-document-level">Provide default document-level <kbd>@language</kbd> and <kbd>@dir</kbd></h4>
 	  
-	  <p><strong>This approach is recommended.</strong></p>
+	  <p><strong>This approach is recommended when combined with <a href="#use-the-localizable-data-structure">Localizable strings</a>.</strong></p>
 	  
 	  <section>
 		<h4 id="default-document-level-how">How it works</h4>
-	  
-	    <p>[[JSON-LD]] includes some data structures that are partially helpful. Notably, it defines <a href="https://json-ld.org/spec/latest/json-ld/#string-internationalization">string internationalization</a> in the form of a context-scoped <kbd>@language</kbd> value which can be associated with blocks of JSON or within individual objects. There is no definition of base direction, so this is incomplete. The <kbd>@context</kbd> concept can be used by specifications as a means of indicating the default language metadata where omitted from individual strings. The concept of <a href="https://json-ld.org/spec/latest/json-ld/#language-indexing">language indexing</a> in JSON-LD is used in the Best Practices in this document as a means for localizing a data value.</p>
+		
+		<p>When a document contains records that are all in the same language and base direction, specifying the language and direction at the document level is an effective way of passing the necessary metadata.</p>
+		
+	    <p>[[JSON-LD]] includes some data structures that are partially helpful. Notably, it defines <a href="https://json-ld.org/spec/latest/json-ld/#string-internationalization">string internationalization</a> in the form of a context-scoped <kbd>@language</kbd> value which can be associated with blocks of JSON or within individual objects. There is no definition of base direction, so this is incomplete. The <kbd>@context</kbd> concept can be used by specifications as a means of indicating the default language metadata where omitted from individual strings. </p>
 
 <aside class=example>
-	<p>Here is the record used in the <a href="baseExample">original example</a> with a record-level default language and direction added:</p>
+	<p>Here is the record used in the <a href="baseExample">original example</a> with a record-level default language and direction added (and showing the use of a localizable string to override the default for the <kbd>author</kbd> field):</p>
+
 <pre>
 {
     "@language": "ar",
     "@dir": "rtl",
-    "id": "978-111800818-9",
-    "title": "<span dir=rtl>HTML &#x0648; CSS: &#x062A;&#x0635;&#x0645;&#x064A;&#x0645; &#x0648; &#x0625;&#x0646;&#x0634;&#x0627;&#x0621; &#x0645;&#x0648;&#x0627;&#x0642;&#x0639; &#x0627;&#x0644;&#x0648;&#x064A;&#x0628;</span>",
-    "authors": [ "Jon Duckett" ],
-    "language": "ar",
-    "pubDate": "2008-01-01",
-    "publisher": "مكتبة",
-    "coverImage": "https://example.com/images/learning_web_design_cover.jpg",
-    // etc.
-},
-</pre>
-
-<p>Here is the same record without using the default:</p>
-<pre>
-{
-    "id": {"value": "978-111800818-9", "dir": "ltr"},
-    "title": {"value": "<span dir=rtl>HTML &#x0648; CSS: &#x062A;&#x0635;&#x0645;&#x064A;&#x0645; &#x0648; &#x0625;&#x0646;&#x0634;&#x0627;&#x0621; &#x0645;&#x0648;&#x0627;&#x0642;&#x0639; &#x0627;&#x0644;&#x0648;&#x064A;&#x0628;</span>", 
-		"lang": "ar", "dir": "rtl" },
-    "authors": [ {"value": "Jon Duckett", "lang": "en"} ],
-    "language": "ar",
-    "pubDate": "2008-01-01",
-    "publisher": {"value": "&#x0645;&#x0643;&#x062A;&#x0628;&#x0629;", "lang": "ar", "dir": "rtl"},
-    "coverImage": "https://example.com/images/learning_web_design_cover.jpg",
-    // etc.
-},
-</pre>
-	
-<p>Note that a direction value was applied to the ISBN number, so that it isn't rearranged on display in a RTL context. If the consumer is aware of the semantic value of the id, this is not necessary, however, it is useful when the data is shared in a new context where such private arrangements don't hold.</p>
-<p>And now the same record again, using the default, but overriding it where needed:</p>
-<pre>
-{
-    "@language": "en",
-    "@dir": "ltr",
     "id": {"978-111800818-9"},
-    "title": [ "en": {"value": "HTML and CSS: Design and Build Websites", "lang": "en"},
-               "ar": {"value": "<span dir=rtl>HTML &#x0648; CSS: &#x062A;&#x0635;&#x0645;&#x064A;&#x0645; &#x0648; &#x0625;&#x0646;&#x0634;&#x0627;&#x0621; &#x0645;&#x0648;&#x0627;&#x0642;&#x0639; &#x0627;&#x0644;&#x0648;&#x064A;&#x0628;</span>", "lang": "ar",  "dir": "rtl"} ],
-    "authors": [ {"value": "Jon Duckett", "lang": "en"} ],
+    "title": "<span dir=rtl>HTML &#x0648; CSS: &#x062A;&#x0635;&#x0645;&#x064A;&#x0645; &#x0648; &#x0625;&#x0646;&#x0634;&#x0627;&#x0621; &#x0645;&#x0648;&#x0627;&#x0642;&#x0639; &#x0627;&#x0644;&#x0648;&#x064A;&#x0628;</span>",
+    "authors": [ {"value": "Jon Duckett", "lang": "en", "dir": "ltr"} ],
     "language": "ar",
     "pubDate": "2008-01-01",
-    "publisher": {"value": "&#x0645;&#x0643;&#x062A;&#x0628;&#x0629;", "lang": "ar", "dir": "rtl"},
+    "publisher": "&#x0645;&#x0643;&#x062A;&#x0628;&#x0629;"},
     "coverImage": "https://example.com/images/learning_web_design_cover.jpg",
     // etc.
 },
@@ -783,7 +740,21 @@ dir</code></dfn> member</dt>
 	
 </aside>
 </section>
-
+<section>
+	<h4 id="default-document-level-advantages">Advantages</h4>
+	
+	<p>Many documents are actually in the same language or have the same base direction (or both). Using a document-level default makes the documents themselves less verbose.</p>
+	
+	<p>A document-level default make <a>language negotiation</a> between multiple files in different languages slightly easier, since the value is found in a consistent location.</p>
+	
+</section>
+<section>
+	<h4 id="default-document-level-issues">Issues</h4>
+	
+	<p>Document-level defaults by themselves cannot handle mixed language or mixed direction content.</p>
+	
+	<p>JSON-LD defines <kbd>@language</kbd>, but not <kbd>@dir</kbd>.</p>
+</section>
 </section>
 
 
