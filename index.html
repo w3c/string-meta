@@ -475,7 +475,7 @@ working on.</p>
 
 <p>Having viewed the commentaries he is interested in, Kensuke realizes that he needs another reference work, but he's not sure of the catalog number. He uses an application for searching out catalog entries. This application is written in JavaScript and can be switched between several languages, according to the user preference. One way to accomplish this would be to reload the application's user interface from the server each time the user selects a new language. However, because this application is relatively small, the developer has elected to package all of the translations with the JavaScript (there are several open source projects that allow runtime selection of locale). Similarly, the catalog search service sends records back in all of the available languages, rather than pre-selecting according to the user's current language preference.</p>
 
-<p>The <a href="#an-example">original example</a> shows a data record available in a single language. But some applications, such as the catalog search tool and its supporting service, might need the ability to send multiple languages for the same field, such as when localizing an application or when multilingual data is available. This is particularly true in cases like this, when the <a>producer</a> needs to support <a>consumers</a> that perform their own <a>language negotiation</a> or when the consumer cannot know which language or languages will be selected for display.</p>
+<p>The <a href="#base_example">original example</a> shows a data record available in a single language. But some applications, such as the catalog search tool and its supporting service, might need the ability to send multiple languages for the same field, such as when localizing an application or when multilingual data is available. This is particularly true in cases like this, when the <a>producer</a> needs to support <a>consumers</a> that perform their own <a>language negotiation</a> or when the consumer cannot know which language or languages will be selected for display.</p>
 
 <p><a>Serialization agreements</a> to support this therefore need to represent several different language variations of the same field. For instance, in the example above the values <kbd>title</kbd> or <kbd>description</kbd> might each have translations available for display to users who speak a language other than English. Or an application might have localized strings that the <a>consumer</a> can select at runtime. In some cases, all language variations might be shown to the user. In other cases, the different language values might be matched to user preferences as part of <a>language negotiation</a> to select the most appropriate language to show.</p>
 
@@ -519,7 +519,7 @@ working on.</p>
 
 <p>The Hebrew characters are reversed by applying the Unicode Bidirectional Algorithm (UBA). However, in a LTR context the UBA cannot make the 'bidi' word appear to the right of the Hebrew text, where it belongs, unless the base direction is set to RTL around it.</p>
 <p>This has an additional complication. Often, applications will test the first strong character in the string in order to guess the base direction that needs to be applied. In this case, that heuristic will produce the wrong result.</p>
-<p>Notice how <a href="an-example">our original example</a> demonstrates this. The title of the book was displayed in an LTR context like this:</p>
+<p>Notice how <a href="base_example">our original example</a> demonstrates this. The title of the book was displayed in an LTR context like this:</p>
 
 <p lang="ar" dir="ltr" style="text-align:center; font-size: 2em;">HTML و CSS: تصميم و إنشاء مواقع الويب</span>
 
@@ -1042,7 +1042,7 @@ is expected to understand the markup.</p>
   need to add additional characters either. Note, however, that testing 
   whether supplementary directional information of this kind is needed 
   is only possible if the producer has access, and knows that it has 
-access, to the original context of the string. Many document formats are generated from data stored away from the original context. For example, the catalog of books in the <a href="#an-example">original example</a> above is disconnected from the user inputing the bidirectional text.</p>
+access, to the original context of the string. Many document formats are generated from data stored away from the original context. For example, the catalog of books in the <a href="#base_example">original example</a> above is disconnected from the user inputing the bidirectional text.</p>
 </section>
 </section>
 
