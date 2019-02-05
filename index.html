@@ -530,24 +530,22 @@ working on.</p>
 
   <section>
   <h4 id="bidiCase3">Bidirectional text ordering</h4>
-<p>In this case the string contains three words with different directional properties. The characters in the order in which they are stored in memory.</p>
+<p>The first part of the book title in the <a href="#an-example">original example</a> means "HTML and CSS" in Arabic. In this case the string contains three words with different directional properties. Here are the characters in the order in which they are stored in memory.</p>
   <p lang="ar" dir="rtl" style="text-align:center; font-size: 2em;"><code><bdo dir="ltr">&quot;HTML و CSS&quot;</bdo></code></p>
-  <p>If the string is dropped into a LTR context, it will display like this:</p>
+  <p>If the string is dropped into a LTR context, it will display like this, which is not actually correct for an <em>Arabic</em> string:</p>
   <p lang="ar" dir="ltr" style="text-align:center; font-size: 2em;">HTML و CSS</p>
-  <p>Dropped into a RTL context, this will be the result – the order of the items has changed:</p>
+  <p>Dropped into a RTL context, this will be the result &mdash; the order of the items has changed, even though the character sequence of the string itself is exactly the same:</p>
   <p lang="ar" dir="rtl" style="text-align:center; font-size: 2em;">HTML و CSS</p>
-<p>While this example might seem ambiguous and possibly not harmful, there are many cases where this sort of "order flipping" changes the meaning of the text. This can be much worse when combined with punctuation, or in this case an example of markup in an educational context (inserted into a RTL context). The string, which means 'HTML and CSS' in Arabic, should be wrapped in <code class="kw" translate="no">span</code> markup:</p>
+<p>While this example might seem ambiguous and possibly not harmful, there are many cases where this sort of "order flipping" changes the meaning of the text. Things can be much worse when combined with punctuation or different combinations of directional runs appear side by side. For example, here is the string with some surrounding HTML markup, perhaps as a demo for how to mark up RTL content. The string is logically wrapped in <code class="kw" translate="no">span</code> markup, but appears hopelessly broken:</p>
   <p lang="ar" dir="rtl" style="text-align:center; font-size: 2em;">&lt;span&gt;HTML و CSS&lt;/span&gt;</p>
 </section>
-
-
 
   <section>
   <h4 id="bidiCase4">Interpreted HTML</h4>
 <p>The characters in this string are shown in the order in which they are stored in memory.</p>
   <p lang="he" dir="rtl" style="text-align:center; font-size: 2em;"><code>
-<bdo dir="ltr">&quot;&lt;span dir='ltr'&gt;HTML و CSS&lt;/span&gt;&quot;</bdo></code></p>
-<p>This use case is for applications that will parse the string and convert any HTML markup to the DOM. In this case, the text should be rendered correctly in an HTML context because the <code class="kw" translate="no">dir</code> attribute indicates the base direction to be applied within the markup. (It also applies bidi isolation to the text in browsers that fully support bidi markup, avoiding any spill-over effects.) It relies, however, on a system where the consumer expects to receive HTML, and knows how to handle bidi markup.</p>
+<bdo dir="ltr">&quot;&lt;span dir='rtl'&gt;HTML و CSS&lt;/span&gt;&quot;</bdo></code></p>
+<p>This use case is for applications that will parse the string and convert any HTML markup to the DOM. In this case, the text should be rendered correctly in an HTML context because the <code class="kw" translate="no">dir</code> attribute indicates the base direction to be applied within the markup. (The use of an inline element such as <code>span</code> also results in the application of bidi isolation to the text in browsers that fully support bidi markup, avoiding any spill-over effects.) It relies, however, on a system where the consumer expects to receive HTML, and knows how to handle bidi markup.</p>
 <p>It also requires the producer to take explicit action to identify the appropriate base direction and set up the required markup to indicate that.</p>
 </section>
 
@@ -568,18 +566,26 @@ working on.</p>
 <section>
 <h4 id="bidiCase6">Concatenation Effects</h4>
 
-<p>A common use for document formats is to provide data to insert into a page or user interface at runtime. Consider this display string that shows the number of reviews for the title:</p>
+<p>A common use for document formats is to provide data to insert into a page or user interface at runtime. Consider this display string that shows the number of reviews (the Arabic word is <kbd dir=rtl>&#x062A;&#x0642;&#x064A;&#x064A;&#x0645;</kbd>) for the title:</p>
 <p lang="ar" dir="ltr" style="text-align:center; font-size: 2em;"><code>$title - $numReviews &#x062A;&#x0642;&#x064A;&#x064A;&#x0645;</code></p>
 
-<p>Here we see the  display with our example title, assuming it has 4 reviews:</p>
+<p>Here we see the the composed string with our example title, assuming it has 4 reviews, in an RTL context:</p>
 
 <p lang="ar" dir="rtl" style="text-align:center; font-size: 2em;">HTML و CSS - 4 &#x062A;&#x0642;&#x064A;&#x064A;&#x0645;</p>
 
 <p>Similarly, an LTR context can cause "position switching":</p>
 
-<p lang="ar" dir="ltr" style="text-align:center; font-size: 2em;">HTML و CSS: تصميم و إنشاء مواقع الويب - 4 &#x062A;&#x0642;&#x064A;&#x064A;&#x0645;</p>
+<p lang="ar" dir="ltr" style="text-align:center; font-size: 2em;">HTML &#x0648; CSS: &#x062A;&#x0635;&#x0645;&#x064A;&#x0645; &#x0648; &#x0625;&#x0646;&#x0634;&#x0627;&#x0621; &#x0645;&#x0648;&#x0627;&#x0642;&#x0639; &#x0627;&#x0644;&#x0648;&#x064A;&#x0628; - 4 &#x062A;&#x0642;&#x064A;&#x064A;&#x0645;</p>
 
 <p>The solution to this problem is called <dfn>bidi isolation</dfn>. HTML5 provides this by default for inline elements, but strings that are assembled at runtime may need the isolation provided, either as the form of additional markup or via the addition of bidi controls.</p> 
+
+<p>Here is the same example, with <code>span</code> tags isolating the two substrings (this may not display correctly in all browsers):</p>
+
+<p dir=ltr style="text-align:center; font-size: 2em;"><span lang=ar dir=rtl>HTML &#x0648; CSS: &#x062A;&#x0635;&#x0645;&#x064A;&#x0645; &#x0648; &#x0625;&#x0646;&#x0634;&#x0627;&#x0621; &#x0645;&#x0648;&#x0627;&#x0642;&#x0639; &#x0627;&#x0644;&#x0648;&#x064A;&#x0628;</span> - <span lang=ar dir=rtl>4 &#x062A;&#x0642;&#x064A;&#x064A;&#x0645;</span></p>
+
+<p>Of course, this Arabic language example probably should be displayed in an RTL context. Here is what that looks like:</p>
+
+<p dir=rtl style="text-align:center; font-size: 2em;"><span lang=ar dir=rtl>HTML &#x0648; CSS: &#x062A;&#x0635;&#x0645;&#x064A;&#x0645; &#x0648; &#x0625;&#x0646;&#x0634;&#x0627;&#x0621; &#x0645;&#x0648;&#x0627;&#x0642;&#x0639; &#x0627;&#x0644;&#x0648;&#x064A;&#x0628;</span> - <span lang=ar dir=rtl>4 &#x062A;&#x0642;&#x064A;&#x064A;&#x0645;</span></p>
 
 </section>
 
