@@ -29,7 +29,8 @@
 		  //	     ],
           editors:  [
               { name: "Addison Phillips", mailto: "addison@amazon.com",
-                company: "Amazon.com" },
+                company: "Amazon.com",
+				w3cid: 33573 },
               { name: "Richard Ishida", mailto: "ishida@w3.org",
                 company: "W3C" },
 			     ],
@@ -186,7 +187,7 @@ include:</p>
 	<li>Selection of fonts and configuration of rendering options to enable the proper display of different languages. This includes 
 	prevention of problems such as: <ul>
 		<li>"ransom noting" (showing text using multiple different fonts)</li>
-		<li>language specific glyph selection,especially the selection of the correct Chinese/Japanese/Korean font due to important presentational variations for the same characters in these languages
+		<li>language specific glyph selection, especially the selection of the correct Chinese/Japanese/Korean font due to important presentational variations for the same characters in these languages
 		<li>displaying blanks, spaces, question marks, or other disappearance of characters due to the lack of glyphs in the selected font</li> 
 	</ul></li>
 	<li>Spell checking and other content processing (such as abuse detection, hyphenation, etc.) </li> 
@@ -594,315 +595,12 @@ working on.</p>
 
 </section>
 
-
 <section>
-<h2 id="other-approaches">Approaches considered for Identifying the Language and Base Direction of Content</h2>
-<p>This section looks at various approaches to identifying language and direction in document formats that have been used occasionally or have been proposed in the past. This section starts with shared approaches that address both language and direction, then cover a couple of language-specific approaches, concluding with direction-specific approaches.</p>  
-
-<section>
-<h3 id="localizable-dictionary">Use the <code>Localizable</code> data structure</h3>
-
-<p><strong>This approach is recommended.</strong></p>
-
-<section>
-<h4 id="localizable-dictionary-how">How it works</h4>
+	<h3 id="bidi-approaches">Approaches Considered for Identifying the Base Direction</h3>
 	
-<p>Specification authors define each natural language or text-bearing string data field in JSON-based document formats using the "Localizable" WebIDL "dictionary" defined below. Producers that generate these document formats providing language and direction metadata on a per-field basis. </p>
-  
-<aside class="example">
-<p><code><dfn id="Localizable">Localizable</dfn></code> dictionary</p>
-<pre class="def idl" data-dfn-for="Localizable" data-link-for="Localizable">
-<span class="idlDictionary" data-idl="" data-title="Localizable">dictionary <span class="idlDictionaryID"><code>Localizable</code></span> {
-	<span class="idlMember" id="idl-def-localizable-lang" data-idl="" data-title="lang" data-dfn-for="localizable"><span class="idlMemberType"><a href="https://www.w3.org/TR/WebIDL-1/#idl-DOMString">DOMString</a></span> <span class="idlMemberName"><a data-lt="lang" href="#dom-localizable-lang" class="internalDFN" data-link-type="dfn" data-for="Localizable"><code>lang</code></a></span>;</span>
-    <span class="idlMember" id="idl-def-localizable-dir" data-idl="" data-title="dir" data-dfn-for="localizable"><span class="idlMemberType"><a href="#dom-textdirection" class="internalDFN" data-link-type="dfn"><code>TextDirection</code></a></span> <span class="idlMemberName"><a data-lt="dir" href="#dom-localizable-dir" class="internalDFN" data-link-type="dfn" data-for="Localizable"><code>dir</code></a></span> = <span class="idlMemberValue">"auto"</span>;</span>
-};</span>
-</pre><dl><dt><dfn data-dfn-for="localizable" data-dfn-type="dfn" id="dom-localizable-lang" data-idl="" data-title="lang">
-	
-	<code>lang</code></dfn> member</dt>
-	<dd>A [[!BCP47]] language tag that specifies the primary language for the values of the human-readable
-members of the inheriting dictionary.</dd>
-<dt><dfn data-dfn-for="localizable" data-dfn-type="dfn" id="dom-localizable-dir" data-idl="" data-title="dir"><code>
-dir</code></dfn> member</dt>
-<dd>Specifies the base direction for the human-readable members of an inheriting dictionary.</dd></dl>
-<div data-dfn-for="TextDirection" data-link-for="TextDirection" id="textdirection-enum" typeof="bibo:Chapter" resource="#textdirection-enum" property="bibo:hasPart">
-	<p id="h-textdirection-enum" resource="#h-textdirection-enum"><dfn data-dfn-for="" data-dfn-type="dfn" id="dom-textdirection" data-idl="" data-title="TextDirection">
-       <code>TextDirection</code></dfn> enum</p>
-<pre class="def idl">
-	<span class="idlEnum" id="idl-def-textdirection" data-idl="" data-title="TextDirection">enum <span class="idlEnumID"><a data-lt="TextDirection" href="#dom-textdirection" class="internalDFN" data-link-type="dfn" data-for=""><code>TextDirection</code></a></span> {    
-		<a href="#dom-textdirection-auto" class="idlEnumItem">"auto"</a>,
-	    <a href="#dom-textdirection-ltr" class="idlEnumItem">"ltr"</a>,    
-	    <a href="#dom-textdirection-rtl" class="idlEnumItem">"rtl"</a>
-};</span>
-</pre>
-<p>The text-direction values are the following, implying that the value of the human-readable members is by default:</p>
-<dl><dt><dfn data-dfn-for="textdirection" data-dfn-type="dfn" id="dom-textdirection-auto" data-idl="" data-title="auto">
-	<code>auto</code></dfn></dt><dd> Directionality is determined by the Unicode Bidirectional Algorithm [[!UAX9]] algorithm.</dd>
-<dt><dfn data-dfn-for="textdirection" data-dfn-type="dfn" id="dom-textdirection-ltr" data-idl="" data-title="ltr">
-	<code>ltr</code></dfn></dt><dd>Left-to-right text.</dd>
-<dt><dfn data-dfn-for="textdirection" data-dfn-type="dfn" id="dom-textdirection-rtl" data-idl="" data-title="rtl">
-	<code>rtl</code></dfn></dt><dd>Right-to-left text.</dd></dl>
-</div>
-</aside>
-
-</section>
-
-<p>By defining the language and direction in a WebIDL dictionary form, specifications can incorporate language and direction metadata for a given String value succinctly. Implementations can recyle the dictionary implementation straightforwardly.</p>
-
-
-<section>
-	<h5 id="localizable-dictionary-advantages">Advantages</h5>
-	
-	<p>Using a consistent and well-defined data structure makes it more likely that different standards are composable and will work together seamlessly.</p>
-	
-	<p>Metadata can be supplied without affecting the content itself.</p>
-	<p>Where metadata is unavailable, it can be omitted.</p>
-	<p>Consumers and producers do not have to instrospect the data outside of their normal processing.</p>
-</section>
-<section>
-	<h5 id="localizable-dictionary-issues">Issues</h5>
-	
-<p>Serialized files utilizing the dictionary and its data values will contain additional fields and can be more difficult to read as a result.</p>
-
-<p>For existing document formats, it represents a change to the values being exchanged.</p>
-
-</section>
-</section>
-
-<section>
-	<h4 id="language-indexing">Use Language Indexing for language negotiation</h4>
-    <p><strong>This approach is recommended.</strong></p>
-    
-	<section>
-		<h5 id="language-indexing-how">How it works</h5>
-		
-<p>Applications sometimes need to provide for <a>language negotiation</a> or, where data is available in multiple languages, provide all languages of a given data item to the <a>consumer</a>. <a href="https://json-ld.org/spec/latest/json-ld/#language-indexing">Language indexing</a> from JSON-LD provides a mechanism for organizing <a>Localizable</a> strings into arrays with multiple languages for the same value. </p>
-
-<p>A language-indexed array uses the language tag as a key within the array like this:</p>
-
-<aside class=example>
-<pre>
-	"title": [ "en": { "value": "Learning Web Design", "lang": "en" },
-	           "ar": { "value": "&#x0627;&#x0644;&#x062A;&#x0639;&#x0644;&#x0645; &#x0639;&#x0644;&#x0649; &#x0634;&#x0628;&#x0643;&#x0629; &#x0627;&#x0644;&#x0625;&#x0646;&#x062A;&#x0631;&#x0646;&#x062A; &#x0627;&#x0644;&#x062A;&#x0635;&#x0645;&#x064A;&#x0645;", "lang": "ar",  "dir": "rtl"}, 
-	           "ja": { "value": "Web&#x30C7;&#x30B6;&#x30A4;&#x30F3;&#x3092;&#x5B66;&#x3076;", "lang": "ja" },
-	           "zh-Hans": { "value": "&#x5B66;&#x4E60;&#x7F51;&#x9875;&#x8BBE;&#x8BA1;", "lang": "zh-Hans", "dir": "ltr"} ],
-</pre>
-</aside>
-	
-<p>Notice that this format embeds the <kbd>lang</kbd> field both as a key in the array and inside the enclosed <kbd>Localizable</kbd> so that the selected or preferred value can easily be extracted as a complete JavaScript or JSON object.</p>
-
-<p>For example, if the language requested were U.S. English (<kbd>en-US</kbd>), this format makes it easier to match and extract the best fitting title object <kbd>{"value": "Learning Web Design", "lang": "en"}</kbd>.</p>
-
-
-</section>
-<section>
-	<h5 id="language-indexing-advantages">Advantages</h5>
-	
-	<p>Where language indexing is not used, as in this example, an implementation would have to iterate over a perhaps-substantial list of alternative values:</p>
-
-<aside class=example>
-<pre>
-	"title": [ { "value": "Learning Web Design", "lang": "en" },
-	           { "value": "&#x0627;&#x0644;&#x062A;&#x0639;&#x0644;&#x0645; &#x0639;&#x0644;&#x0649; &#x0634;&#x0628;&#x0643;&#x0629; &#x0627;&#x0644;&#x0625;&#x0646;&#x062A;&#x0631;&#x0646;&#x062A; &#x0627;&#x0644;&#x062A;&#x0635;&#x0645;&#x064A;&#x0645;", "lang": "ar",  "dir": "rtl"}, 
-	           { "value": "Web&#x30C7;&#x30B6;&#x30A4;&#x30F3;&#x3092;&#x5B66;&#x3076;", "lang": "ja" },
-	           { "value": "&#x5B66;&#x4E60;&#x7F51;&#x9875;&#x8BBE;&#x8BA1;", "lang": "zh-Hans", "dir": "ltr"} ],
-</pre>
-</aside>
-</section>
-<section>
-	<h5 id="language-indexing-issues">Issues</h5>
-</section>
-
-</section>
-
-  <section>
-	  <h4 id="default-document-level">Provide default document-level <kbd>@language</kbd> and <kbd>@dir</kbd></h4>
-	  
-	  <p><strong>This approach is recommended when combined with <a href="#use-the-localizable-data-structure">Localizable strings</a>.</strong></p>
-	  
-	  <section>
-		<h4 id="default-document-level-how">How it works</h4>
-		
-		<p>When a document contains records that are all in the same language and base direction, specifying the language and direction at the document level is an effective way of passing the necessary metadata.</p>
-		
-	    <p>[[JSON-LD]] includes some data structures that are partially helpful. Notably, it defines <a href="https://json-ld.org/spec/latest/json-ld/#string-internationalization">string internationalization</a> in the form of a context-scoped <kbd>@language</kbd> value which can be associated with blocks of JSON or within individual objects. There is no definition of base direction, so this is incomplete. The <kbd>@context</kbd> concept can be used by specifications as a means of indicating the default language metadata where omitted from individual strings. </p>
-
-<aside class=example>
-	<p>Here is the record used in the <a href="baseExample">original example</a> with a record-level default language and direction added (and showing the use of a localizable string to override the default for the <kbd>author</kbd> field):</p>
-
-<pre>
-{
-    "@language": "ar",
-    "@dir": "rtl",
-    "id": {"978-111800818-9"},
-    "title": "<span dir=rtl>HTML &#x0648; CSS: &#x062A;&#x0635;&#x0645;&#x064A;&#x0645; &#x0648; &#x0625;&#x0646;&#x0634;&#x0627;&#x0621; &#x0645;&#x0648;&#x0627;&#x0642;&#x0639; &#x0627;&#x0644;&#x0648;&#x064A;&#x0628;</span>",
-    "authors": [ {"value": "Jon Duckett", "lang": "en", "dir": "ltr"} ],
-    "language": "ar",
-    "pubDate": "2008-01-01",
-    "publisher": "&#x0645;&#x0643;&#x062A;&#x0628;&#x0629;"},
-    "coverImage": "https://example.com/images/learning_web_design_cover.jpg",
-    // etc.
-},
-</pre>
-	
-</aside>
-</section>
-<section>
-	<h4 id="default-document-level-advantages">Advantages</h4>
-	
-	<p>Many documents are actually in the same language or have the same base direction (or both). Using a document-level default makes the documents themselves less verbose.</p>
-	
-	<p>A document-level default make <a>language negotiation</a> between multiple files in different languages slightly easier, since the value is found in a consistent location.</p>
-	
-</section>
-<section>
-	<h4 id="default-document-level-issues">Issues</h4>
-	
-	<p>Document-level defaults by themselves cannot handle mixed language or mixed direction content.</p>
-	
-	<p>JSON-LD defines <kbd>@language</kbd>, but not <kbd>@dir</kbd>.</p>
-</section>
-</section>
-
-
-<section>
-    <h3 id="html_content">Require HTML or XML for content</h3>
-    
-    <p><strong>This approach is NOT recommended.</strong></p>
-    
-    <section>
-    <h4 id="html-content-how">How it works</h4>
-    
-	<p>One proposal from members of the Annotation WG was to require HTML/XML formats for such annotation bodies, and use the <code 
-	class="kw" translate="no">lang</code> or <code class="kw" translate="no">xml:lang</code> attributes in markup to denote the 
-    language changes. (This approach would also apply to base direction by using HTML's built-in <code>dir</code> attribute; there is no built-in attribute in XML.)</p>
-    
-<aside class=example>
-	<p>Here is an example:</p>
-	
-<pre>
-{
-    "id": {"978-111800818-9"},
-    "title": "&ltspan dir='rtl' lang='ar'&gt;<span dir=rtl>HTML &#x0648; CSS: &#x062A;&#x0635;&#x0645;&#x064A;&#x0645; &#x0648; &#x0625;&#x0646;&#x0634;&#x0627;&#x0621; &#x0645;&#x0648;&#x0627;&#x0642;&#x0639; &#x0627;&#x0644;&#x0648;&#x064A;&#x0628;</span>&lt;/span&gt;",
-    "authors": [ "&lt;span dir='ltr' lang='en'&gt;Jon Duckett&lt;/span&gt;" ],
-    "language": "ar",
-    "pubDate": "2008-01-01",
-    "publisher": "&lt;span dir='rtl' lang='ar'&gt;&#x0645;&#x0643;&#x062A;&#x0628;&#x0629;&lt;/span&gt;",
-    "coverImage": "https://example.com/images/learning_web_design_cover.jpg",
-    // etc.
-},
-</pre>
-</aside>
-    
-    </section>
-    
-    <section>
-		<h4 id="html-content-advantages">Advantages</h4>
-		
-		<p>This proposal is potentially useful for <a>agreements</a> that expect to interchange HTML or XML markup data.</p>
-		
-		<p>The benefit for content that already uses markup is clear. The content will already provide complete markup necessary for the display and processing of the text or it can be extracted from the source page context. HTML and XML processors already know how to deal with this markup and provide ready validation.</p>
-    </section>
-    <section>
-		<h4 id="html-content-issues">Issues</h4>
-    </section>
-    
-    <p>The downside of this approach is that many data values are just strings. As with adding Unicode tags or Unicode bidi controls, the addition of markup to strings alters the original string content. Producers are required to introspect strings and add markup as needed. Consumers must likewise remove any additional markup introduced by the producer. Altering the length of the content can cause problems with processes that enforce arbitrary limits or with processes that "sanitize" content by escaping HTML/XML unsafe characters such as angle brackets. Effectively, all levels of the implementation stack have to participate in understanding the markup (or ensure that they do no harm).</p>
-    
-    <p>The addition of markup also requires consumers to guard against the usual problems with markup insertion, such as XSS attacks.</p>
-   
-</section>
-  
-  
-  <section id="lang-approach-new-datatype">
-    <h3>Create a new datatype</h3>
-    
-    <p><strong>This approach is NOT recommended.</strong></p>
-    
-    <section>
-	
-	<h4 id="lang-approach-new-datatype-how">How it works</h4>
-    <p>Define a new datatype that document formats could use to serialize natural language strings that includes both language and direction metadata. Such a serialization might look like the following:</p>
-    
-    <pre class=example>
-myLocalizedString: "Hello World!"@en^ltr          // language and direction
-myLocalizedString_ar: "مرحبا بالعالم!"@ar-EG^rtl  // right-to-left example
-myLocalizedString_fr: "Bonjour monde !"@fr        // language only
-myLocalizedString_und: "שלום עולם!"^rtl           // direction information only
-myLanguageNeutralString: "978-0-123-4567-X"       // language-neutral string</pre>
-
-  </section>
-  <section>
-	  <h4>Advantages</h4>
-	  <p>If a new datatype were added to JSON to support natural language strings, then specifications could easily specify that type for use in document formats. Since the format is standardized, <a data-lt="producer">producers</a> and <a data-lt="consumer">consumers</a> would not need to guess about direction or language information when it is encoded.</p>
-  </section>
-  <section>
-      <h4>Issues</h4>
-  <p>The downside of adding a datatype is that JSON is a widely implemented format, including many ad-hoc implementations. Any new serialization form would likely break or cause interoperability problems with these existing implementations. JSON is not designed to be a "versioned" format. Any serialization form used would need to be transparent to existing JSON processors and thus could introduce unwanted data or data corruption to existing fields and formats.</p>
-  </section>
-  </section>
-
-
-<section id="unicodeTags">
-  <h3>Unicode language tag characters</h3> 
-  <p><strong>This approach is NOT recommended.</strong></p>
-  
-  <section>
-  <h4 id="unicode-tags-how">How it works</h4>
-
-  <p>Unicode defines special characters that can be used as language tags. These characters are "default ignorable" and should have no visual appearance. Here is how Unicode tags are supposed to work:</p>
-  
-  <p>A [[!BCP47]] language tag is just one of the potential tags that could be applied using this system, so each language tag begins with a tag identification character, in this case <code>U+E0001</code>. The remainder of the Unicode block for forming tags mirrors the printable ASCII characters. That is, <code>U+E0020</code> is space (mirroring <code>U+0020</code>), <code>U+E0041</code> is capital A (mirroring <code>U+0041</code>), and so forth. Following the tag identification character, you use each tag character to spell out a [[!BCP47]] language tag  using the upper/lowercase letters, digits, and the hyphen character. Normal language tags, which are composed from ASCII letters, digits and hyphens, can be transmogrified into tags by adding <code>0xE0000</code> to each character's code point. Additional structure, such as a language priority list (see [[RFC4647]]) might be constructed using other characters such as comma or semi-colon, although Unicode does not define or even necessarily permit this.</p>
-  
-  <p>The end of a tag's scope is signalled by the end of the string, or can be signalled explicitly using the cancel tag character U+E007F, either alone (to cancel all tags) or preceeded by the language tag identification character <code>U+E0001</code> (i.e. the sequence <code>&lt;U+E0001,U+E007F&gt;</code> to end only language tags).</p>
-  
-    
-  <p>Tags therefore have a minimum of three characters, and can easily be 12 or more. Furthermore, these characters are supplementary characters. That is, they are encoded using 4-bytes per character in UTF-8 and they are encoded as a surrogate pair (two 16-bit code units) in UTF-16. Surrogate pairs are needed to encode these characters in string types for languages such as Java and JavaScript that use UTF-16 internally. The use of surrogates makes the strings somewhat opaque. For example, <code>U+E0020</code> is encoded in UTF-16 as <kbd>0xDB40.DC20</kbd> and in UTF-8 as the byte sequence <kbd>0xF3.A0.80.A0</kbd>.</p>
-  
-
-  </section>
-  <section>
-	  <h4 id="unicode-tag-advantages">Advantages</h4>
-	  <p>These language tag characters could be used as part of normal Unicode text without modification to the structure of the document format.</p>
-  </section>
-  <section>
-	  <h4 id="unicode-tag-issues">Issues</h4>
-	  
-<p>Unicode tag characters are strongly deprecated by the Unicode Consortium. These tag characters were intended for use in language tagging within plain text contexts and are often suggested as an alternate means of providing in-band non-markup language tagging. We are unaware of any implementations that use them as language tags.</p>
-	  
-<p>Applications that treat the characters as unknown Unicode characters will display them as tofu (hollow box replacement characters) and may count them towards length limits, etc. So they are only useful when applications or interchange mechanisms are fully aware of them and can remove them or disregard them appropriately. Although the characters are not supposed to be displayed or have any effect on text processing, in practice they can interfere with normal text processes such as truncation. line wrapping, hyphenation, spell-checking and so forth.</p>
-    
-<p>By design, [[!BCP47]] language tags are intended to be ASCII case-insensitive. Applications handling Unicode tag characters would have to apply similar case-insensitivity to ensure correct identification of the language. (The Unicode data doesn't specify case conversion pairings for these characters; this complicates the processing and matching of langauge tag values encoded using the tag characters.)</p>
-  
-<p>Moreover, language tags need to be formed from valid subtags to conform to [[!BCP47]]. Valid subtags are kept in an IANA registry and new subtags are added regularly, so applications dealing with this kind of tagging would need to always check each subtag against the latest version of the registry.</p>
-  
-<p>The language tag characters do not allow nesting of language tags. For example, if a string contains two languages, such as a quote in French inside an English sentence, Unicode tag characters can only indicate where one language starts. To indicate nested languages, tags would need to be embedded into the text not just prefixed to the front.</p>
-  
-<p>Although never implemented, other types of tags could be embedded into a string or document using Unicode tag characters. It is possible for these tags to overlap sections of text tagged with a language tag.</p>
-
-<p>Finally, Unicode has recently "recycled" these characters for use in forming sub-regional flags, such as the flag of Scotland (🏴󠁧), which is made of the sequence:󠁢󠁳󠁣󠁴󠁿   </p>
-  <ul>
-  <li><span class="codepoint"><span lang="ang">&#x1F3F4;</span> [<span class="uname">U+1F3F4 WAVING BLACK FLAG</span>]</span></li>
-  <li><span class="codepoint"><span lang="ang">&#xE0067;</span> [<span class="uname">U+E0067 TAG LATIN SMALL LETTER G</span>]</span></li>
-  <li><span class="codepoint"><span lang="ang">&#xE0062;</span> [<span class="uname">U+E0062 TAG LATIN SMALL LETTER B</span>]</span></li>
-  <li><span class="codepoint"><span lang="ang">&#xE0073;</span> [<span class="uname">U+E0073 TAG LATIN SMALL LETTER S</span>]</span></li>
-  <li><span class="codepoint"><span lang="ang">&#xE0063;</span> [<span class="uname">U+E0063 TAG LATIN SMALL LETTER C</span>]</span></li>
-  <li><span class="codepoint"><span lang="ang">&#xE0074;</span> [<span class="uname">U+E0074 TAG LATIN SMALL LETTER T</span>]</span></li>
-  <li><span class="codepoint"><span lang="ang">&#xE007F;</span> [<span class="uname">U+E007F CANCEL TAG</span>]</span></li>
-  </ul>
-  
-  <p class="ednote">The above is a new feature of emoji added in Unicode 10.0 (version 5.0 of UTR#51) in June 2017. Proper display depends on your system's adoption of this version.</p>
-  
-  </section>
-  
-</section>
-
-<section>
-	<h3 id="bidi-approaches">About Direction-specific Approaches</h3>
-	
-	<p class="note">The approaches following this sub-section deal with different means of determining or estimating the base direction for string data. These have been grouped together to make it easier to understand and because, unlike many of the approaches above, each has some utility.</p>
+	<p>This section deals with different means of determining or estimating the base direction for string data.</p>
 	
 	<p>The fundamental problem for bidirectional text values is how a <a>consumer</a> of a string will know what base direction should be used for that string when it is eventually displayed to a user. Note that each of these mechansisms for identifying or estimating the base direction have utility in specific applications and are in use in different specifications such as [[HTML5]]. The issue here is which are appropriate to adopt generally and specify for use as a best practice in document formats.</p>
-</section>
 
 <section id="firststrong">
   <h3>First-strong property detection (alone)</h3>
@@ -919,15 +617,11 @@ myLanguageNeutralString: "978-0-123-4567-X"       // language-neutral string</pr
 </ol>
 </section>
 
-
-
 <section>
 <h4>Advantages</h4>
 
 <p>Where it is reliable, information about direction can be obtained without any changes to the string, and without the agreements and structures that would be needed to support out-of-band metadata.</p>
 </section>
-
-
 
 <section>
 <h4>Issues</h4>
@@ -1219,8 +913,431 @@ access, to the original context of the string. Many document formats are generat
 <p>There are some rare situations where the base direction can not necessarily be identified from the script subtag, but these are really limited to archaic usage of text.  For example, Japanese and Chinese text prior to World War 2 was often written RTL, rather than LTR. Languages such as those written using Egyptian Hieroglyphs, or the Tifinagh Berber script, could formerly be written either LTR or RTL, however the default for scholastic research tends to LTR.</p>
 </section>
 </section>
+
+  <section>
+	  <h4 id="default-document-level">Provide document-level default direction</h4>
+	  
+	  <p><strong>This approach is recommended when combined with <a href="#use-the-localizable-data-structure">Localizable strings</a>.</strong></p>
+	  
+	  <section>
+		<h4 id="default-document-level-how">How it works</h4>
+		
+		<p>When a document contains records that all have the same base direction, providing a document level field to indicate the direction to use.</p>
+		
+		<p>[[JSON-LD]] includes some data structures that are partially helpful. Notably, it defines string internationalization in the form of a context-scoped <code>@language</code> value which can be associated with blocks of JSON or within individual objects. There is no definition for base direction, so the <code>@context</code> mechanism currently doesn't provide a way to accomplish this and specifications would have to define their own.</p>
+		
+<aside class=example>
+	<p>Here is the record used in the <a href="baseExample">original example</a> with a document-level default direction added (and showing the use of a <a>localizable</a> string to override the default for the <kbd>author</kbd> field):</p>
+
+<pre>
+{
+    "@dir": "rtl",
+    "id": {"978-111800818-9"},
+    "title": "<span dir=rtl>HTML &#x0648; CSS: &#x062A;&#x0635;&#x0645;&#x064A;&#x0645; &#x0648; &#x0625;&#x0646;&#x0634;&#x0627;&#x0621; &#x0645;&#x0648;&#x0627;&#x0642;&#x0639; &#x0627;&#x0644;&#x0648;&#x064A;&#x0628;</span>",
+    "authors": [ {"value": "Jon Duckett", "lang": "en", "dir": "ltr"} ],
+    "pubDate": "2008-01-01",
+    "publisher": "&#x0645;&#x0643;&#x062A;&#x0628;&#x0629;"},
+    "coverImage": "https://example.com/images/learning_web_design_cover.jpg",
+    // etc.
+},
+</pre>
+	
+</aside>
+</section>
+<section>
+	<h4 id="default-document-level-advantages">Advantages</h4>
+	
+	<p class=issue>Richard suggests using the term "resource" instead of "document", but our document is heavily infected with the term "document". Making the change will require a careful search/replace/edit.</p>
+	
+	<p>Many documents contain string values that all have the same base direction. Using a document-level default makes the documents themselves less verbose.</p>
+
+	
+</section>
+<section>
+	<h4 id="default-document-level-issues">Issues</h4>
+	
+	<p>Document-level defaults by themselves cannot handle mixed language or mixed direction content.</p>
+	
+	<p>JSON-LD defines <kbd>@language</kbd>, but not <kbd>@dir</kbd>.</p>
+</section>
 </section>
 
+<section>
+    <h3 id="html-content">Require markup for content</h3>
+    
+    <p><strong>This approach is NOT recommended</strong> except in special cases where the content being exchanged is expected to consist of and is restricted to literal values in a given markup language.</p>
+    
+    <section>
+    <h4 id="html-content-how">How it works</h4>
+    
+	<p>When a document is expected to consist of HTML or XML fragments and will be processed and displayed strictly in a markup context, the <a>producer</a> can use markup to convey the direction of the content by wrapping strings with elements that have the <code class="kw" translate="no">dir</code> or <code class="kw" translate="no">its:direction</code> [[!ITS20]] attributes.</p>
+    
+<aside class=example>
+	<p>Here is an example using HTML markup:</p>
+	
+<pre>
+{
+    "id": {"978-111800818-9"},
+    "title": "&ltspan dir='rtl' lang='ar'&gt;<span dir=rtl>HTML &#x0648; CSS: &#x062A;&#x0635;&#x0645;&#x064A;&#x0645; &#x0648; &#x0625;&#x0646;&#x0634;&#x0627;&#x0621; &#x0645;&#x0648;&#x0627;&#x0642;&#x0639; &#x0627;&#x0644;&#x0648;&#x064A;&#x0628;</span>&lt;/span&gt;",
+    "authors": [ "&lt;span dir='ltr' lang='en'&gt;Jon Duckett&lt;/span&gt;" ],
+    "pubDate": "2008-01-01",
+    "publisher": "&lt;span dir='rtl' lang='ar'&gt;&#x0645;&#x0643;&#x062A;&#x0628;&#x0629;&lt;/span&gt;",
+    "coverImage": "https://example.com/images/learning_web_design_cover.jpg",
+    // etc.
+},
+</pre>
+</aside>
+    
+    </section>
+    
+    <section>
+		<h4 id="html-content-advantages">Advantages</h4>
+		
+		<p>This proposal is potentially useful for <a>agreements</a> that expect to interchange HTML or XML markup data.</p>
+		
+		<p>The benefit for content that already uses markup is clear. The content will already provide complete markup necessary for the display and processing of the text or it can be extracted from the source page context. HTML and XML processors already know how to deal with this markup and provide ready validation.</p>
+		
+		<p>Markup also provides for nesting of directional information, something base direction on its own cannot solve.</p>
+    </section>
+    <section>
+		<h4 id="html-content-issues">Issues</h4>
+    </section>
+    
+    <p>The downside of this approach is that many data values are just strings. As with adding Unicode tags or Unicode bidi controls, the addition of markup to strings alters the original string content. Producers are required to introspect strings and add markup as needed. Consumers must likewise remove any additional markup introduced by the producer. Altering the length of the content can cause problems with processes that enforce arbitrary limits or with processes that "sanitize" content by escaping HTML/XML unsafe characters such as angle brackets. Effectively, all levels of the implementation stack have to participate in understanding the markup (or ensure that they do no harm).</p>
+    
+    <p>The addition of markup also requires consumers to guard against the usual problems with markup insertion, such as XSS attacks.</p>
+   
+</section>
+
+
+  <section id="dir-approach-new-datatype">
+    <h3>Create a new datatype</h3>
+    
+    <p><strong>This approach is NOT recommended.</strong></p>
+    
+    <section>
+	
+	<h4 id="dir-approach-new-datatype-how">How it works</h4>
+    <p>Some datatypes, such as [[RDF-PLAIN-LITERAL]], already exist that allow for language metadata to be serialized as part of a string value. However, these do not include a consideration for base direction. This might be addressed by defining a new datatype (or extending an existing one) that document formats could then use to serialize natural language strings that includes both language and direction metadata.</p>
+  
+<aside class=example>  
+	<p>Using RDF plain string literals as a model, here is what a serialization might look like:</p>
+<pre>
+myLocalizedString:     "Hello World!@en^ltr"          // language and direction
+myLocalizedString_ar:  "مرحبا بالعالم!@ar-EG^rtl"     // right-to-left example
+myLocalizedString_fr:  "Bonjour monde !@fr"           // language only
+myLocalizedString_und: "שלום עולם!^rtl"               // direction information only
+myDataString:          "978-0-123-4567-X"             // language-neutral string</pre>
+
+<p>Note that the last string does not include language or direction information because it is an internal data value</p>
+</aside>
+
+  </section>
+  <section>
+	  <h4>Advantages</h4>
+	  <p>If a new datatype were added to JSON to support natural language strings, then specifications could easily specify that type for use in document formats. Since the format is standardized, <a data-lt="producer">producers</a> and <a data-lt="consumer">consumers</a> would not need to guess about direction or language information when it is encoded.</p>
+  </section>
+  <section>
+      <h4>Issues</h4>
+  <p>The downside of adding a datatype is that JSON is a widely implemented format, including many ad-hoc implementations. Any new serialization form would likely break or cause interoperability problems with these existing implementations. JSON is not designed to be a "versioned" format. Any serialization form used would need to be transparent to existing JSON processors and thus could introduce unwanted data or data corruption to existing fields and formats.</p>
+  </section>
+  </section>
+
+
+</section>
+
+<section>
+<h2 id="language-approaches">Approaches Considered for Identifying the Language of Content</h2>
+
+<p>This section deals with different means of determining or conveying the language of string values.</p>
+
+<section id="localizable-dictionary">
+	<h3 id="language-metadata">Metadata</h3>
+
+<p><strong>This approach is recommended.</strong></p>
+
+<section>
+<h4 id="localizable-dictionary-how">How it works</h4>
+
+<p><a>Producers</a> include additional fields or use data structures that include language metadata for each natural language text value in a document.</p>
+
+<p><a>Consumers</a> can then extract and process this data for their own needs, or forward it as necessary.</p>
+
+<p>We RECOMMEND the use of the <a href="#use-the-localizable-data-structure">Localizable</a> dictionary structure.</p>
+	
+</section>
+
+<section>
+	<h5 id="localizable-dictionary-advantages">Advantages</h5>
+	
+	<p>Using a consistent and well-defined data structure makes it more likely that different standards are composable and will work together seamlessly.</p>
+	
+	<p>Metadata can be supplied without affecting the content itself.</p>
+	<p>Where metadata is unavailable, it can be omitted.</p>
+	<p>Consumers and producers do not have to instrospect the data outside of their normal processing.</p>
+</section>
+<section>
+	<h5 id="localizable-dictionary-issues">Issues</h5>
+	
+<p>Serialized files utilizing the dictionary and its data values will contain additional fields and can be more difficult to read as a result.</p>
+
+<p>For existing document formats, it represents a change to the values being exchanged.</p>
+
+</section>
+</section>
+
+  <section>
+	  <h4 id="default-document-level-lang">Provide document-level default language</h4>
+	  
+	  <p><strong>This approach is recommended when combined with <a href="#use-the-localizable-data-structure">Localizable strings</a>.</strong> It is the same concept as found in the section on <a href="#default-document-level">providing a default direction</a>.</p>
+	  
+	  <section>
+		<h4 id="default-document-level-lang-how">How it works</h4>
+		
+		<p>When a document contains a series of values that are all in the same language, specifying the language at the document level is an effective way of passing the necessary metadata.</p>
+		
+	    <p>[[JSON-LD]] includes some data structures that are partially helpful. Notably, it defines <a href="https://json-ld.org/spec/latest/json-ld/#string-internationalization">string internationalization</a> in the form of a context-scoped <kbd>@language</kbd> value which can be associated with blocks of JSON or within individual objects. The <kbd>@context</kbd> concept can be used by specifications as a means of indicating the default language metadata where omitted from individual strings.</p>
+
+<aside class=example>
+	<p>Here is the record used in the <a href="baseExample">original example</a> with a record-level default language and direction added (and showing the use of a localizable string to override the default for the <kbd>author</kbd> field):</p>
+
+<pre>
+{
+    "@language": "ar",
+    "id": {"978-111800818-9"},
+    "title": "<span dir=rtl>HTML &#x0648; CSS: &#x062A;&#x0635;&#x0645;&#x064A;&#x0645; &#x0648; &#x0625;&#x0646;&#x0634;&#x0627;&#x0621; &#x0645;&#x0648;&#x0627;&#x0642;&#x0639; &#x0627;&#x0644;&#x0648;&#x064A;&#x0628;</span>",
+    "authors": [ {"value": "Jon Duckett", "lang": "en", "dir": "ltr"} ],
+    "pubDate": "2008-01-01",
+    "publisher": "&#x0645;&#x0643;&#x062A;&#x0628;&#x0629;"},
+    "coverImage": "https://example.com/images/learning_web_design_cover.jpg",
+    // etc.
+},
+</pre>
+	
+</aside>
+</section>
+<section>
+	<h4 id="default-document-level-lang-advantages">Advantages</h4>
+	
+	<p>Many documents consist of a series of records or values that are all in the same language. Using a document-level default makes the documents themselves less verbose.</p>
+	
+	<p>A document-level default make <a>language negotiation</a> between multiple files in different languages slightly easier, since the value is found in a consistent location.</p>
+	
+</section>
+<section>
+	<h4 id="default-document-level-lang-issues">Issues</h4>
+	
+	<p>Document-level defaults by themselves cannot handle mixed language content.</p>
+
+</section>
+</section>
+
+
+<section>
+    <h3 id="html-content-lang">Require markup for content</h3>
+    
+    <p><strong>This approach is NOT recommended</strong> except in special cases where the content being exchanged is expected to consist of and is restricted to literal values in a given markup language.</p>
+    
+    <section>
+    <h4 id="html-content-lang-how">How it works</h4>
+    
+	<p>When a document is expected to consist of HTML or XML fragments and will be processed and displayed strictly in a markup context, the <a>producer</a> can use markup to convey the language of the content by wrapping strings with elements that have the <code class="kw" translate="no">lang</code> or <code class="kw" translate="no">xml:lang</code> attributes. </p>
+    
+  
+    </section>
+    
+    <section>
+		<h4 id="html-content-lang-advantages">Advantages</h4>
+		
+		<p>This approach, and thus the advantages, are effectively the same as in <a href="#html-content">this section</a>.</p>
+    </section>
+    <section>
+		<h4 id="html-content-lang-issues">Issues</h4>
+    </section>
+    
+    <p>See <a href="#html-content-issues">above</a>.</p>
+   
+</section>
+  
+  
+
+
+<section id="unicodeTags">
+  <h3>Use Unicode language tag characters</h3> 
+  <p><strong>This approach is NOT recommended.</strong></p>
+  
+  <section>
+  <h4 id="unicode-tags-how">How it works</h4>
+
+  <p>Unicode defines special characters that can be used as language tags. These characters are "default ignorable" and should have no visual appearance. Here is how Unicode tags are supposed to work:</p>
+  
+  <p>A [[!BCP47]] language tag is just one of the potential tags that could be applied using this system, so each language tag begins with a tag identification character, in this case <code>U+E0001</code>. The remainder of the Unicode block for forming tags mirrors the printable ASCII characters. That is, <code>U+E0020</code> is space (mirroring <code>U+0020</code>), <code>U+E0041</code> is capital A (mirroring <code>U+0041</code>), and so forth. Following the tag identification character, you use each tag character to spell out a [[!BCP47]] language tag  using the upper/lowercase letters, digits, and the hyphen character. Normal language tags, which are composed from ASCII letters, digits and hyphens, can be transmogrified into tags by adding <code>0xE0000</code> to each character's code point. Additional structure, such as a language priority list (see [[RFC4647]]) might be constructed using other characters such as comma or semi-colon, although Unicode does not define or even necessarily permit this.</p>
+  
+  <p>The end of a tag's scope is signalled by the end of the string, or can be signalled explicitly using the cancel tag character U+E007F, either alone (to cancel all tags) or preceeded by the language tag identification character <code>U+E0001</code> (i.e. the sequence <code>&lt;U+E0001,U+E007F&gt;</code> to end only language tags).</p>
+  
+    
+  <p>Tags therefore have a minimum of three characters, and can easily be 12 or more. Furthermore, these characters are supplementary characters. That is, they are encoded using 4-bytes per character in UTF-8 and they are encoded as a surrogate pair (two 16-bit code units) in UTF-16. Surrogate pairs are needed to encode these characters in string types for languages such as Java and JavaScript that use UTF-16 internally. The use of surrogates makes the strings somewhat opaque. For example, <code>U+E0020</code> is encoded in UTF-16 as <kbd>0xDB40.DC20</kbd> and in UTF-8 as the byte sequence <kbd>0xF3.A0.80.A0</kbd>.</p>
+  
+
+  </section>
+  <section>
+	  <h4 id="unicode-tag-advantages">Advantages</h4>
+	  <p>These language tag characters could be used as part of normal Unicode text without modification to the structure of the document format.</p>
+  </section>
+  <section>
+	  <h4 id="unicode-tag-issues">Issues</h4>
+	  
+<p>Unicode tag characters are strongly deprecated by the Unicode Consortium. These tag characters were intended for use in language tagging within plain text contexts and are often suggested as an alternate means of providing in-band non-markup language tagging. We are unaware of any implementations that use them as language tags.</p>
+	  
+<p>Applications that treat the characters as unknown Unicode characters will display them as tofu (hollow box replacement characters) and may count them towards length limits, etc. So they are only useful when applications or interchange mechanisms are fully aware of them and can remove them or disregard them appropriately. Although the characters are not supposed to be displayed or have any effect on text processing, in practice they can interfere with normal text processes such as truncation. line wrapping, hyphenation, spell-checking and so forth.</p>
+    
+<p>By design, [[!BCP47]] language tags are intended to be ASCII case-insensitive. Applications handling Unicode tag characters would have to apply similar case-insensitivity to ensure correct identification of the language. (The Unicode data doesn't specify case conversion pairings for these characters; this complicates the processing and matching of langauge tag values encoded using the tag characters.)</p>
+  
+<p>Moreover, language tags need to be formed from valid subtags to conform to [[!BCP47]]. Valid subtags are kept in an IANA registry and new subtags are added regularly, so applications dealing with this kind of tagging would need to always check each subtag against the latest version of the registry.</p>
+  
+<p>The language tag characters do not allow nesting of language tags. For example, if a string contains two languages, such as a quote in French inside an English sentence, Unicode tag characters can only indicate where one language starts. To indicate nested languages, tags would need to be embedded into the text not just prefixed to the front.</p>
+  
+<p>Although never implemented, other types of tags could be embedded into a string or document using Unicode tag characters. It is possible for these tags to overlap sections of text tagged with a language tag.</p>
+
+<p>Finally, Unicode has recently "recycled" these characters for use in forming sub-regional flags, such as the flag of Scotland (🏴󠁧), which is made of the sequence:󠁢󠁳󠁣󠁴󠁿   </p>
+  <ul>
+  <li><span class="codepoint"><span lang="ang">&#x1F3F4;</span> [<span class="uname">U+1F3F4 WAVING BLACK FLAG</span>]</span></li>
+  <li><span class="codepoint"><span lang="ang">&#xE0067;</span> [<span class="uname">U+E0067 TAG LATIN SMALL LETTER G</span>]</span></li>
+  <li><span class="codepoint"><span lang="ang">&#xE0062;</span> [<span class="uname">U+E0062 TAG LATIN SMALL LETTER B</span>]</span></li>
+  <li><span class="codepoint"><span lang="ang">&#xE0073;</span> [<span class="uname">U+E0073 TAG LATIN SMALL LETTER S</span>]</span></li>
+  <li><span class="codepoint"><span lang="ang">&#xE0063;</span> [<span class="uname">U+E0063 TAG LATIN SMALL LETTER C</span>]</span></li>
+  <li><span class="codepoint"><span lang="ang">&#xE0074;</span> [<span class="uname">U+E0074 TAG LATIN SMALL LETTER T</span>]</span></li>
+  <li><span class="codepoint"><span lang="ang">&#xE007F;</span> [<span class="uname">U+E007F CANCEL TAG</span>]</span></li>
+  </ul>
+  
+  <p class="ednote">The above is a new feature of emoji added in Unicode 10.0 (version 5.0 of UTR#51) in June 2017. Proper display depends on your system's adoption of this version.</p>
+  
+  </section>
+  
+</section>
+
+<section>
+	<h3 id="language-detection">Use a language detection heuristic</h3>
+	<p><strong>This approach is NOT recommended.</strong></p>
+	<section>
+		<h4 id="language-detection-how">How it works</h4>
+		
+		<p><a>Producers</a> do nothing.</p>
+		<p><a>Consumers</a> run a language detection algorithm to determine the language of the text. These are usually statistically based heuristics, such as using n-gram frequency in a language, possibly coupled with other data.</p>
+	</section>
+	<section>
+		<h4 id="language-detection-advantages">Advantages</h4>
+		<p>There are no fundamental advantages to this approach.</p>
+	</section>
+	<section>
+		<h4 id="language-detection-issues">Issues</h4>
+		<p>Heuristics are more accurate the longer and more representative the text being scanned is. Short strings may not detect well.</p>
+		<p>Language detection is limited to the languages for which one has a detector.</p>
+		<p>Inclusions, such as personal or brand names in another language or script, can throw off the detection.</p>
+		<p>Language detection tends to be slow and can be memory intensive. Simple consumers probably can't afford the complexity needed to determine the language.</p>
+	</section>
+</section>
+</section>
+
+<section id="other-approaches">
+	<h3>Implementation Considerations</h3>
+	
+	<p>This section contains additional recommendations or considerations for implementers.</p>
+	
+<section>
+	<h4 id="language-indexing">Use Language Indexing for language negotiation</h4>
+    <p><strong>This approach is recommended.</strong></p>
+    
+	<section>
+		<h5 id="language-indexing-how">How it works</h5>
+		
+<p>Applications sometimes need to provide for <a>language negotiation</a> or, where data is available in multiple languages, provide all languages of a given data item to the <a>consumer</a>. <a href="https://json-ld.org/spec/latest/json-ld/#language-indexing">Language indexing</a> from JSON-LD provides a mechanism for organizing <a>Localizable</a> strings into arrays with multiple languages for the same value. </p>
+
+<p>A language-indexed array uses the language tag as a key within the array like this:</p>
+
+<aside class=example>
+<pre>
+	"title": [ "en": { "value": "Learning Web Design", "lang": "en" },
+	           "ar": { "value": "&#x0627;&#x0644;&#x062A;&#x0639;&#x0644;&#x0645; &#x0639;&#x0644;&#x0649; &#x0634;&#x0628;&#x0643;&#x0629; &#x0627;&#x0644;&#x0625;&#x0646;&#x062A;&#x0631;&#x0646;&#x062A; &#x0627;&#x0644;&#x062A;&#x0635;&#x0645;&#x064A;&#x0645;", "lang": "ar",  "dir": "rtl"}, 
+	           "ja": { "value": "Web&#x30C7;&#x30B6;&#x30A4;&#x30F3;&#x3092;&#x5B66;&#x3076;", "lang": "ja" },
+	           "zh-Hans": { "value": "&#x5B66;&#x4E60;&#x7F51;&#x9875;&#x8BBE;&#x8BA1;", "lang": "zh-Hans", "dir": "ltr"} ],
+</pre>
+</aside>
+	
+<p>Notice that this format embeds the <kbd>lang</kbd> field both as a key in the array and inside the enclosed <kbd>Localizable</kbd> so that the selected or preferred value can easily be extracted as a complete JavaScript or JSON object.</p>
+
+<p>For example, if the language requested were U.S. English (<kbd>en-US</kbd>), this format makes it easier to match and extract the best fitting title object <kbd>{"value": "Learning Web Design", "lang": "en"}</kbd>.</p>
+
+
+</section>
+<section>
+	<h5 id="language-indexing-advantages">Advantages</h5>
+	
+	<p>Where language indexing is not used, as in this example, an implementation would have to iterate over a perhaps-substantial list of alternative values:</p>
+
+<aside class=example>
+<pre>
+	"title": [ { "value": "Learning Web Design", "lang": "en" },
+	           { "value": "&#x0627;&#x0644;&#x062A;&#x0639;&#x0644;&#x0645; &#x0639;&#x0644;&#x0649; &#x0634;&#x0628;&#x0643;&#x0629; &#x0627;&#x0644;&#x0625;&#x0646;&#x062A;&#x0631;&#x0646;&#x062A; &#x0627;&#x0644;&#x062A;&#x0635;&#x0645;&#x064A;&#x0645;", "lang": "ar",  "dir": "rtl"}, 
+	           { "value": "Web&#x30C7;&#x30B6;&#x30A4;&#x30F3;&#x3092;&#x5B66;&#x3076;", "lang": "ja" },
+	           { "value": "&#x5B66;&#x4E60;&#x7F51;&#x9875;&#x8BBE;&#x8BA1;", "lang": "zh-Hans", "dir": "ltr"} ],
+</pre>
+</aside>
+</section>
+<section>
+	<h5 id="language-indexing-issues">Issues</h5>
+</section>
+
+</section>
+</section>
+
+<section class="appendix" id="Localizable-String-Dictionary">
+	
+	<h2 id="use-the-localizable-data-structure">Localizable</h2>
+	
+	<p>This section contains a WebIDL definition for a <code>Localizable</code> dictionary.</p>
+	
+	<p>To be effective, specification authors should consistently use the same formats and data structures so that the majority of data formats are interoperable (in other words, so that data can be copied between many formats without having to apply additional processing). We recommend adoption of the Localizable WebIDL "dictionary" as the best available format for JSON-derived formats to do that.</p>
+
+<p>By defining the language and direction in a WebIDL dictionary form, specifications can incorporate language and direction metadata for a given String value succinctly. Implementations can recyle the dictionary implementation straightforwardly.</p>
+	
+	<aside class="example">
+<p><code><dfn id="Localizable">Localizable</dfn></code> dictionary</p>
+<pre class="def idl" data-dfn-for="Localizable" data-link-for="Localizable">
+<span class="idlDictionary" data-idl="" data-title="Localizable">dictionary <span class="idlDictionaryID"><code>Localizable</code></span> {
+	<span class="idlMember" id="idl-def-localizable-lang" data-idl="" data-title="lang" data-dfn-for="localizable"><span class="idlMemberType"><a href="https://www.w3.org/TR/WebIDL-1/#idl-DOMString">DOMString</a></span> <span class="idlMemberName"><a data-lt="lang" href="#dom-localizable-lang" class="internalDFN" data-link-type="dfn" data-for="Localizable"><code>lang</code></a></span>;</span>
+    <span class="idlMember" id="idl-def-localizable-dir" data-idl="" data-title="dir" data-dfn-for="localizable"><span class="idlMemberType"><a href="#dom-textdirection" class="internalDFN" data-link-type="dfn"><code>TextDirection</code></a></span> <span class="idlMemberName"><a data-lt="dir" href="#dom-localizable-dir" class="internalDFN" data-link-type="dfn" data-for="Localizable"><code>dir</code></a></span> = <span class="idlMemberValue">"auto"</span>;</span>
+};</span>
+</pre><dl><dt><dfn data-dfn-for="localizable" data-dfn-type="dfn" id="dom-localizable-lang" data-idl="" data-title="lang">
+	
+	<code>lang</code></dfn> member</dt>
+	<dd>A [[!BCP47]] language tag that specifies the primary language for the values of the human-readable
+members of the inheriting dictionary.</dd>
+<dt><dfn data-dfn-for="localizable" data-dfn-type="dfn" id="dom-localizable-dir" data-idl="" data-title="dir"><code>
+dir</code></dfn> member</dt>
+<dd>Specifies the base direction for the human-readable members of an inheriting dictionary.</dd></dl>
+<div data-dfn-for="TextDirection" data-link-for="TextDirection" id="textdirection-enum" typeof="bibo:Chapter" resource="#textdirection-enum" property="bibo:hasPart">
+	<p id="h-textdirection-enum" resource="#h-textdirection-enum"><dfn data-dfn-for="" data-dfn-type="dfn" id="dom-textdirection" data-idl="" data-title="TextDirection">
+       <code>TextDirection</code></dfn> enum</p>
+<pre class="def idl">
+	<span class="idlEnum" id="idl-def-textdirection" data-idl="" data-title="TextDirection">enum <span class="idlEnumID"><a data-lt="TextDirection" href="#dom-textdirection" class="internalDFN" data-link-type="dfn" data-for=""><code>TextDirection</code></a></span> {    
+		<a href="#dom-textdirection-auto" class="idlEnumItem">"auto"</a>,
+	    <a href="#dom-textdirection-ltr" class="idlEnumItem">"ltr"</a>,    
+	    <a href="#dom-textdirection-rtl" class="idlEnumItem">"rtl"</a>
+};</span>
+</pre>
+<p>The text-direction values are the following, implying that the value of the human-readable members is by default:</p>
+<dl><dt><dfn data-dfn-for="textdirection" data-dfn-type="dfn" id="dom-textdirection-auto" data-idl="" data-title="auto">
+	<code>auto</code></dfn></dt><dd> Directionality is determined by the Unicode Bidirectional Algorithm [[!UAX9]] algorithm.</dd>
+<dt><dfn data-dfn-for="textdirection" data-dfn-type="dfn" id="dom-textdirection-ltr" data-idl="" data-title="ltr">
+	<code>ltr</code></dfn></dt><dd>Left-to-right text.</dd>
+<dt><dfn data-dfn-for="textdirection" data-dfn-type="dfn" id="dom-textdirection-rtl" data-idl="" data-title="rtl">
+	<code>rtl</code></dfn></dt><dd>Right-to-left text.</dd></dl>
+</div>
+</aside>
+
+</section>
+</section>
 
 <section class="appendix" id="Acknowledgements">
 <h2>Acknowledgements</h2>
@@ -1230,6 +1347,7 @@ access, to the original context of the string. Many document formats are generat
 the following contributors to this document: 
     Mati Allouche, 
     David Baron,
+    Ivan Herman,
     Tobie Langel,
     Sangwhan Moon,
     Felix Sasaki, 
