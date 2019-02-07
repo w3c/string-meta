@@ -1183,9 +1183,12 @@ myDataString:          "978-0-123-4567-X"             // language-neutral string
   <section>
   <h4 id="unicode-tags-how">How it works</h4>
 
+  <p><a>Producers</a> insert Unicode tag characters into the data to tag strings with a language.</p>
+  <p><a>Consumers</a> process the Unicode tag characters and use them to assign the language.</p>
+
   <p>Unicode defines special characters that can be used as language tags. These characters are "default ignorable" and should have no visual appearance. Here is how Unicode tags are supposed to work:</p>
   
-  <p>A [[!BCP47]] language tag is just one of the potential tags that could be applied using this system, so each language tag begins with a tag identification character, in this case <code>U+E0001</code>. The remainder of the Unicode block for forming tags mirrors the printable ASCII characters. That is, <code>U+E0020</code> is space (mirroring <code>U+0020</code>), <code>U+E0041</code> is capital A (mirroring <code>U+0041</code>), and so forth. Following the tag identification character, you use each tag character to spell out a [[!BCP47]] language tag  using the upper/lowercase letters, digits, and the hyphen character. Normal language tags, which are composed from ASCII letters, digits and hyphens, can be transmogrified into tags by adding <code>0xE0000</code> to each character's code point. Additional structure, such as a language priority list (see [[RFC4647]]) might be constructed using other characters such as comma or semi-colon, although Unicode does not define or even necessarily permit this.</p>
+  <p>Each tag is a character sequence. The sequence begins with a tag identification character. The only one currently defined is <code>U+E0001</code>, which identifies [[!BCP47]] language tags. Other types of tags are possible, via private agreement. The remainder of the Unicode block for forming tags mirrors the printable ASCII characters. That is, <code>U+E0020</code> is space (mirroring <code>U+0020</code>), <code>U+E0041</code> is capital A (mirroring <code>U+0041</code>), and so forth. Following the tag identification character, producers use each tag character to spell out a [[!BCP47]] language tag  using the upper/lowercase letters, digits, and the hyphen character. A given source language tag, which is composed from ASCII letters, digits and hyphens, can be transmogrified into tags by adding <code>0xE0000</code> to each character's code point. Additional structure, such as a language priority list (see [[RFC4647]]) might be constructed using other characters such as comma or semi-colon, although Unicode does not define or even necessarily permit this.</p>
   
   <p>The end of a tag's scope is signalled by the end of the string, or can be signalled explicitly using the cancel tag character U+E007F, either alone (to cancel all tags) or preceeded by the language tag identification character <code>U+E0001</code> (i.e. the sequence <code>&lt;U+E0001,U+E007F&gt;</code> to end only language tags).</p>
   
@@ -1213,7 +1216,7 @@ myDataString:          "978-0-123-4567-X"             // language-neutral string
   
 <p>Although never implemented, other types of tags could be embedded into a string or document using Unicode tag characters. It is possible for these tags to overlap sections of text tagged with a language tag.</p>
 
-<p>Finally, Unicode has recently "recycled" these characters for use in forming sub-regional flags, such as the flag of Scotland (🏴󠁧), which is made of the sequence:󠁢󠁳󠁣󠁴󠁿   </p>
+<p>Finally, Unicode has recently "recycled" these characters for use in forming sub-regional flags, such as the flag of Scotland (&#x1f3f4;&#xe0067;&#xe0062;&#xe0073;&#xe0074;&#xe007f;󠁧), which is made of the sequence:󠁢󠁳󠁣󠁴󠁿   </p>
   <ul>
   <li><span class="codepoint"><span lang="ang">&#x1F3F4;</span> [<span class="uname">U+1F3F4 WAVING BLACK FLAG</span>]</span></li>
   <li><span class="codepoint"><span lang="ang">&#xE0067;</span> [<span class="uname">U+E0067 TAG LATIN SMALL LETTER G</span>]</span></li>
@@ -1259,13 +1262,13 @@ myDataString:          "978-0-123-4567-X"             // language-neutral string
 	<p>This section contains additional recommendations or considerations for implementers.</p>
 	
 <section>
-	<h4 id="language-indexing">Use Language Indexing for language negotiation</h4>
+	<h4 id="language-indexing">Use <q>Language Indexing</q> for language negotiation</h4>
     <p><strong>This approach is recommended.</strong></p>
     
 	<section>
 		<h5 id="language-indexing-how">How it works</h5>
 		
-<p>Applications sometimes need to provide for <a>language negotiation</a> or, where data is available in multiple languages, provide all languages of a given data item to the <a>consumer</a>. <a href="https://json-ld.org/spec/latest/json-ld/#language-indexing">Language indexing</a> from JSON-LD provides a mechanism for organizing <a>Localizable</a> strings into arrays with multiple languages for the same value. </p>
+<p><a>Producers</a> sometimes need to supply multiple language values for the same content item or data record. One use for this <a>language negotiation</a> by the <a>consumer</a>. <a href="https://json-ld.org/spec/latest/json-ld/#language-indexing">Language indexing</a> from JSON-LD provides a mechanism for organizing <a>Localizable</a> strings into arrays with multiple languages for the same value.</p>
 
 <p>A language-indexed array uses the language tag as a key within the array like this:</p>
 
@@ -1307,7 +1310,7 @@ myDataString:          "978-0-123-4567-X"             // language-neutral string
 
 <section class="appendix" id="Localizable-String-Dictionary">
 	
-	<h2 id="use-the-localizable-data-structure">Localizable</h2>
+	<h2 id="use-the-localizable-data-structure">The Localizable WebIDL Dictionary</h2>
 	
 	<p>This section contains a WebIDL definition for a <code>Localizable</code> dictionary.</p>
 	
