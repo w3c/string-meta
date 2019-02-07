@@ -542,22 +542,25 @@ working on.</p>
 
   <section>
   <h4 id="bidiCase3">Bidirectional text ordering</h4>
-<p>The first part of the book title in the <a href="#an-example">original example</a> means "HTML and CSS" in Arabic. In this case the string contains three words with different directional properties. Here are the characters in the order in which they are stored in memory.</p>
-  <p lang="ar" dir="rtl" style="text-align:center; font-size: 2em;"><code><bdo dir="ltr">&quot;HTML و CSS&quot;</bdo></code></p>
-  <p>If the string is dropped into a LTR context, it will display like this, which is not actually correct for an <em>Arabic</em> string:</p>
-  <p lang="ar" dir="ltr" style="text-align:center; font-size: 2em;">HTML و CSS</p>
-  <p>Dropped into a RTL context, this will be the result &mdash; the order of the items has changed, even though the character sequence of the string itself is exactly the same:</p>
-  <p lang="ar" dir="rtl" style="text-align:center; font-size: 2em;">HTML و CSS</p>
-<p>While this example might seem ambiguous and possibly not harmful, there are many cases where this sort of "order flipping" changes the meaning of the text. Things can be much worse when combined with punctuation or different combinations of directional runs appear side by side. For example, here is the string with some surrounding HTML markup, perhaps as a demo for how to mark up RTL content. The string is logically wrapped in <code class="kw" translate="no">span</code> markup, but appears hopelessly broken:</p>
-  <p lang="ar" dir="rtl" style="text-align:center; font-size: 2em;">&lt;span&gt;HTML و CSS&lt;/span&gt;</p>
+<p>In this case the string contains three words with different directional properties. Here are the characters in the order in which they are stored in memory.</p>
+<p lang="he" dir="rtl" style="text-align:center; font-size: 2em;"><code>
+<bdo dir="ltr">&quot;one שתיים three&quot;</bdo>
+</code></p>
+<p>If the string is dropped into a LTR context, it will display like this, which is correct:</p>
+<p lang="he" dir="ltr" style="text-align:center; font-size: 2em;">one שתיים three</p>
+<p>Dropped into a RTL context, this will be the result, which is incorrect – the order of the items has changed:</p>
+<p lang="he" dir="rtl" style="text-align:center; font-size: 2em;">one שתיים three </p>
+<p>This can be much worse when combined with punctuation, or in this case an example of markup in an educational context (inserted into a RTL context). The sequence 'one two three' should just be wrapped in <code class="kw" translate="no">span</code> markup:</p>
+<p lang="he" dir="rtl" style="text-align:center; font-size: 2em;">&lt;span&gt;one שתיים three&lt;/span&gt;</p>
 </section>
 
   <section>
   <h4 id="bidiCase4">Interpreted HTML</h4>
 <p>The characters in this string are shown in the order in which they are stored in memory.</p>
-  <p lang="he" dir="rtl" style="text-align:center; font-size: 2em;"><code>
-<bdo dir="ltr">&quot;&lt;span dir='rtl'&gt;HTML و CSS&lt;/span&gt;&quot;</bdo></code></p>
-<p>This use case is for applications that will parse the string and convert any HTML markup to the DOM. In this case, the text should be rendered correctly in an HTML context because the <code class="kw" translate="no">dir</code> attribute indicates the base direction to be applied within the markup. (The use of an inline element such as <code>span</code> also results in the application of bidi isolation to the text in browsers that fully support bidi markup, avoiding any spill-over effects.) It relies, however, on a system where the consumer expects to receive HTML, and knows how to handle bidi markup.</p>
+<p lang="he" dir="rtl" style="text-align:center; font-size: 2em;"><code>
+<bdo dir="ltr">&quot;&lt;span dir='ltr'&gt;one שתיים three&lt;/span&gt;&quot;</bdo>
+</code></p>
+<p>This use case is for applications that will parse the string and convert any HTML markup to the DOM. In this case, the text should be rendered correctly in an HTML context because the <code class="kw" translate="no">dir</code> attribute indicates the base direction to be applied within the markup. (It also applies bidi isolation to the text in browsers that fully support bidi markup, avoiding any spill-over effects.) It relies, however, on a system where the consumer expects to receive HTML, and knows how to handle bidi markup.</p>
 <p>It also requires the producer to take explicit action to identify the appropriate base direction and set up the required markup to indicate that.</p>
 </section>
 
@@ -565,7 +568,7 @@ working on.</p>
 
   <section>
   <h4 id="bidiCase5">Neutral LTR text</h4>
-<p>The text in this use case could be a phone number, product catalogue number, mac address, etc.The characters in this string are shown in the order in which they are stored in memory.</p>
+<p>The text in this use case could be a phone number, product catalogue number, mac address, etc. The characters in this string are shown in the order in which they are stored in memory.</p>
   <p lang="he" dir="rtl" style="text-align:center; font-size: 2em;"><code><bdo dir="ltr">&quot;123 456 789&quot;</bdo></code></p>
   <p>If the string is dropped into a LTR context, it will display like this, which is correct:</p>
   <p lang="he" dir="ltr" style="text-align:center; font-size: 2em;">123 456 789</p>
@@ -607,7 +610,7 @@ working on.</p>
 </section>
 
 <section>
-	<h3 id="bidi-approaches">Approaches Considered for Identifying the Base Direction</h3>
+<h3 id="bidi-approaches">Approaches Considered for Identifying the Base Direction</h3>
 	
 	<p>This section deals with different means of determining or estimating the base direction for string data.</p>
 	
