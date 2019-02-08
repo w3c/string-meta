@@ -938,14 +938,18 @@ access, to the original context of the string. Many document formats are generat
 		
 		<p>When a document contains records that all have the same base direction, providing a document level field to indicate the direction to use.</p>
 		
-		<p>[[JSON-LD]] includes some data structures that are partially helpful. Notably, it defines string internationalization in the form of a context-scoped <code>@language</code> value which can be associated with blocks of JSON or within individual objects. There is no definition for base direction, so the <code>@context</code> mechanism currently doesn't provide a way to accomplish this and specifications would have to define their own.</p>
+		<p>[[JSON-LD]] includes some data structures that are partially helpful with regard to <a href="#default-document-level-lang">language metadata</a>. However, the context mechanism doesn't currently supply an attribute for base direction. Changes or additions would be needed to extend the mechanism to support direction metadata.</p>
+		
 		
 <aside class=example>
-	<p>Here is the record used in the <a href="baseExample">original example</a> with a document-level default direction added (and showing the use of a <a>localizable</a> string to override the default for the <kbd>author</kbd> field):</p>
+	<p>Here is the record used in the <a href="baseExample">original example</a> with a proposed document-level default direction added (and showing the use of a <a>localizable</a> string to override the default for the <kbd>author</kbd> field):</p>
 
 <pre>
 {
-    "@dir": "rtl",
+    "@context": {
+		"@dir": "rtl",
+		"@language": "ar"
+	},
     "id": {"978-111800818-9"},
     "title": "<span dir=rtl>HTML &#x0648; CSS: &#x062A;&#x0635;&#x0645;&#x064A;&#x0645; &#x0648; &#x0625;&#x0646;&#x0634;&#x0627;&#x0621; &#x0645;&#x0648;&#x0627;&#x0642;&#x0639; &#x0627;&#x0644;&#x0648;&#x064A;&#x0628;</span>",
     "authors": [ {"value": "Jon Duckett", "lang": "en", "dir": "ltr"} ],
@@ -957,6 +961,7 @@ access, to the original context of the string. Many document formats are generat
 </pre>
 	
 </aside>
+
 </section>
 <section>
 	<h4 id="default-document-level-advantages">Advantages</h4>
@@ -1110,14 +1115,14 @@ myDataString:          "978-0-123-4567-X"             // language-neutral string
 		
 		<p>When a document contains a series of values that are all in the same language, specifying the language at the document level is an effective way of passing the necessary metadata.</p>
 		
-	    <p>[[JSON-LD]] includes some data structures that are partially helpful. Notably, it defines <a href="https://json-ld.org/spec/latest/json-ld/#string-internationalization">string internationalization</a> in the form of a context-scoped <kbd>@language</kbd> value which can be associated with blocks of JSON or within individual objects. The <kbd>@context</kbd> concept can be used by specifications as a means of indicating the default language metadata where omitted from individual strings.</p>
-
+		<p>[[JSON-LD]] includes some data structures that are partially helpful. Notably, it defines string internationalization in the form of a context-scoped <code>@language</code> value which can be associated with blocks of JSON or within individual objects. There is no definition for base direction, so the <code>@context</code> mechanism currently doesn't provide a way to identify both language and direction.</p>
+		
 <aside class=example>
 	<p>Here is the record used in the <a href="baseExample">original example</a> with a record-level default language and direction added (and showing the use of a localizable string to override the default for the <kbd>author</kbd> field):</p>
 
 <pre>
 {
-    "@language": "ar",
+    "@context": { "@language": "en" },
     "id": {"978-111800818-9"},
     "title": "<span dir=rtl>HTML &#x0648; CSS: &#x062A;&#x0635;&#x0645;&#x064A;&#x0645; &#x0648; &#x0625;&#x0646;&#x0634;&#x0627;&#x0621; &#x0645;&#x0648;&#x0627;&#x0642;&#x0639; &#x0627;&#x0644;&#x0648;&#x064A;&#x0628;</span>",
     "authors": [ {"value": "Jon Duckett", "lang": "en", "dir": "ltr"} ],
@@ -1129,6 +1134,7 @@ myDataString:          "978-0-123-4567-X"             // language-neutral string
 </pre>
 	
 </aside>
+
 </section>
 <section>
 	<h4 id="default-document-level-lang-advantages">Advantages</h4>
