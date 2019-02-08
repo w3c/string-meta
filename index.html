@@ -1265,7 +1265,7 @@ myDataString:          "978-0-123-4567-X"             // language-neutral string
 <section id="other-approaches">
 	<h3>Implementation Considerations</h3>
 	
-	<p>This section contains additional recommendations or considerations for implementers.</p>
+	<p>This section contains additional recommendations or considerations for specification authors or implementers to consider.</p>
 	
 <section>
 	<h4 id="language-indexing">Use <q>Language Indexing</q> for language negotiation</h4>
@@ -1306,12 +1306,84 @@ myDataString:          "978-0-123-4567-X"             // language-neutral string
 	           { "value": "&#x5B66;&#x4E60;&#x7F51;&#x9875;&#x8BBE;&#x8BA1;", "lang": "zh-Hans", "dir": "ltr"} ],
 </pre>
 </aside>
+
+<p>One potential advantage is that the indexed language tag can indicate the intended audience of the value separately from the language tag of the actual data value. An example of this might be the use of <em>language ranges</em> from [[!RFC4647]], as in the following example, where a more specific language value might be wrapped with a less-specific language tag. In this example, the content has been labeled with a specific language tag (<code>de-DE</code>), but is available and applicable to users who speak other variants of German, such as <code>de-CH</code> or <code>de-AT</code>:</p>
+
+<aside class=example>
+<pre>
+"title": [ {
+   "de": {"value": "HTML und CSS verstehen", "language": "de-DE" },
+   ...
+],
+</pre>
+</aside>
+
+<p>A less common example would be when a system supplies a specific value in a different ("wrong") language from the indexing language tag, perhaps because the actual translated value is missing:</p>
+
+<aside class=example>
+<pre>
+"title": [ {
+   "de": {"value": "Understanding HTML and CSS", "language": "en-US" }, // German not available
+   ...
+],
+</pre>
+</aside>
 </section>
 <section>
 	<h5 id="language-indexing-issues">Issues</h5>
+	<p>The primary issue with this approach is the need to extract the indexing language tag from the content in order to generate the index value. <a>Producers</a> might also need to have a <a>serialization agreement</a> with <a>consumers</a> about whether the indexing language tag will be in any way canonicalized. For example, the language tag <code>cel-gaulish</code> is one of the [[!BCP47]] grandfathered language tags. Some implementations, such as those following the rules in [[!CLDR]], would prefer that this tag be replaced with a modern equivalent (<code>xtg-x-cel-gaulish</code> in this case) for the purposes of language negotiation.</p>
 </section>
 
 </section>
+
+<section>
+	<h4 id="bidi-control-production">Automatic production of bidi controls in producers</h4>
+	
+	<p><strong>This approach is NOT recommended.</strong></p>
+	
+	<p><a href="#paired">Unicode bidirectional controls</a> are plain text control characters that can be used to indicate that a span of text should be "embedded" in or "isolated" from the surrounding bidirectional context. A frequent question is whether <a>producers</a>, such as content management systems or document formats, should generate or store these characters by default around strings that can appear in multiple contexts.</p>	
+	
+	<p>An example of this would be a set of translated data values in an application. Since the content author cannot know the bidi context in which the string will be displayed in advance but potentially can know each string's intended base direction, pre-wrapping the text with control characters could help insulate the strings from improper display by the <a>consumer</a>.</p>
+	
+	<section>
+		<h4>How it works</h4>
+		
+		<p><a>Producers</a> use local direction metadata to wrap each string with the appropriate bidirectional embedding or isolating control. For example:</p>
+		
+<aside class=example>
+<p dir="ltr" style="text-align:center; font-size: 2em;" lang="he">Input: <code><bdo dir="ltr">"one שתיים three"</bdo></code></p>
+<p dir="ltr" style="text-align:center; font-size: 2em;" lang="he">Output: <code><bdo dir="ltr">"\u2066one שתיים three\u2069"</bdo></code></p>
+</aside>
+
+    <p><a>Consumers</a> can then insert the string into any bidirectional context that supports isolation and get the intended display.</p>
+	
+
+    <p>HTML5 [[HTML5]] introduced isolation at the element level by default. This allows for text insertion into an HTML context without the need for isolating controls. However, not all strings appear in an HTML context. Use of strings in a plain text or other display context cannot be guaranteed the isolating behavior provided by HTML.</p>
+
+    <p>While some strings can certainly benefit from using isolating bidi controls, consistent usage can produce layers of overhead, processing, and validation that are unnecessary. Use of these controls should be reserved for cases in which the assembly and presentation of the text depends on runtime directional determination. For example, isolating controls can be included around a variable name in a string whose contents will be determined at runtime.</p>
+
+<aside class=example>
+	<p>Example of appropriate use of isolating controls:</p>
+	<p style="text-align:center; font-size: 2em;"><code>Restaurant \u2068$name\u2069 has \u2068$numReviews\u2069 reviews.</code></p>
+</aside>
+</section>
+<section>
+	<h4 id="bidi-control-production-advantages">Advantages</h4>
+
+<p>Isolating wrapped strings can be inserted into any context (that understands isolating controls) without additional processing.</p>
+
+</section>
+<section>
+	<h4 id="bidi-control-production-issues">Issues</h4>
+
+<p>For most text the controls are superfluous and contribute to storage and processing overhead. </p>
+<p>The controls affect the length and content of the string. Operations such as string truncation or substring extraction need to keep the controls paired to avoid unintended consequences. And the string will not be equal to the original string.</p>
+<p>There is a danger of multiple levels of embedding building up if applications blindly apply an additional layer of isolation or embedding.</p>
+
+</section>
+</section>
+
+
 </section>
 
 <section class="appendix" id="Localizable-String-Dictionary">
