@@ -533,7 +533,7 @@ working on.</p>
 <p>This has an additional complication. Often, applications will test the first strong character in the string in order to guess the base direction that needs to be applied. In this case, that heuristic will produce the wrong result.</p>
 <p>Notice how <a href="base_example">our original example</a> demonstrates this. The title of the book was displayed in an LTR context like this:</p>
 
-<p lang="ar" dir="ltr" style="text-align:center; font-size: 2em;">HTML و CSS: تصميم و إنشاء مواقع الويب</span>
+<p lang="ar" dir="ltr" style="text-align:center; font-size: 2em;">HTML و CSS: تصميم و إنشاء مواقع الويب
 
 <p>However, the title is not displayed properly. The first word in the title is "HTML" and it should show on the right side, like this:</p>
 
@@ -674,13 +674,14 @@ working on.</p>
 <section>
 <h4>How it works</h4>
 <p>A producer ascertains the  base direction of the string and adds that to a metadata field that accompanies the string when it is stored or transmitted.</p>
-<p>There are a number of possible approaches:</p>
+<p>There are a couple of possible approaches:</p>
 <ol>
 <li>Label every string for base direction.</li>
 <li>Rely on the consumer to do first-strong detection, and label only those strings which would produce the wrong result (ie. a RTL string that starts with LTR strong characters).</li>
-<li>If storing or transmitting a set of strings at a time, have a resource-level field that sets a global, default base direction which is inherited by all strings except individual strings with a direction field that overrides the default. Note that this means you need both a global field, and fields available, where needed, associated with each string.</li>
 </ol>
+<p>If storing or transmitting a set of strings at a time, it helps to have a  field for the resource as a whole that sets a global, default base direction which can be inherited by all strings in the resource. Note that  in addition to a global field, you still need the possibility of attaching string-specific metadata fields in cases where a string's base direction is not that of the default. The base direction set on an individual string must override the default.</p>
 <p>Consumers would need to understand how to read the metadata sent with a string, and would need to apply first-strong heuristics in the absence of metadata.</p>
+<p><a href="#resource_level"></a> illustrates how this could be implemented.</p>
 </section>
 
 
@@ -928,58 +929,9 @@ access, to the original context of the string. Many document formats are generat
 </section>
 </section>
 
-  <section>
-	  <h4 id="default-document-level">Provide document-level default direction</h4>
-	  
-	  <p><strong>This approach is recommended when combined with <a href="#use-the-localizable-data-structure">Localizable strings</a>.</strong></p>
-	  
-	  <section>
-		<h4 id="default-document-level-how">How it works</h4>
-		
-		<p>When a document contains records that all have the same base direction, providing a document level field to indicate the direction to use.</p>
-		
-		<p>[[JSON-LD]] includes some data structures that are partially helpful with regard to <a href="#default-document-level-lang">language metadata</a>. However, the context mechanism doesn't currently supply an attribute for base direction. Changes or additions would be needed to extend the mechanism to support direction metadata.</p>
-		
-		
-<aside class=example>
-	<p>Here is the record used in the <a href="baseExample">original example</a> with a proposed document-level default direction added (and showing the use of a <a>localizable</a> string to override the default for the <kbd>author</kbd> field):</p>
 
-<pre>
-{
-    "@context": {
-		"@dir": "rtl",
-		"@language": "ar"
-	},
-    "id": {"978-111800818-9"},
-    "title": "<span dir=rtl>HTML &#x0648; CSS: &#x062A;&#x0635;&#x0645;&#x064A;&#x0645; &#x0648; &#x0625;&#x0646;&#x0634;&#x0627;&#x0621; &#x0645;&#x0648;&#x0627;&#x0642;&#x0639; &#x0627;&#x0644;&#x0648;&#x064A;&#x0628;</span>",
-    "authors": [ {"value": "Jon Duckett", "lang": "en", "dir": "ltr"} ],
-    "pubDate": "2008-01-01",
-    "publisher": "&#x0645;&#x0643;&#x062A;&#x0628;&#x0629;"},
-    "coverImage": "https://example.com/images/learning_web_design_cover.jpg",
-    // etc.
-},
-</pre>
-	
-</aside>
 
-</section>
-<section>
-	<h4 id="default-document-level-advantages">Advantages</h4>
-	
-	<p class=issue>Richard suggests using the term "resource" instead of "document", but our document is heavily infected with the term "document". Making the change will require a careful search/replace/edit.</p>
-	
-	<p>Many documents contain string values that all have the same base direction. Using a document-level default makes the documents themselves less verbose.</p>
 
-	
-</section>
-<section>
-	<h4 id="default-document-level-issues">Issues</h4>
-	
-	<p>Document-level defaults by themselves cannot handle mixed language or mixed direction content.</p>
-	
-	<p>JSON-LD defines <kbd>@language</kbd>, but not <kbd>@dir</kbd>.</p>
-</section>
-</section>
 
 <section>
     <h3 id="html-content">Require markup for content</h3>
@@ -1386,9 +1338,64 @@ myDataString:          "978-0-123-4567-X"             // language-neutral string
 
 </section>
 
+
+
+
+
+<section id="more-other-approaches">
+	<h2>Parking lot for more implementation considerations</h2>
+	
+	<p><span class="ednote">This section contains stuff that should be merged into the previous section. I created a separate section temporarily so as not to produce editing conflicts.</span></p>
+	
+<section>
+	<h3 id="resource_level">Resource-level bidi metadata</h3>
+    
+<section>
+<h5 id="resource-level-how">How it works</h5>
+		
+<p>[[JSON-LD]] includes some data structures that are partially helpful with regard to <a href="#default-document-level-lang">language metadata</a>. </p>
+<p>Here is the record used in the <a href="baseExample">original example</a> with an illustration of how, in an ideal world, a default direction could be added for the whole of the resource. The example also shows the use of a <a>localizable</a> string to override the default for the <kbd>author</kbd> field.</p>
+		
+		
+<aside class="example">
+<pre>
+NOTE: This example assumes features in JSON that don't currently exist!
+It is only illustrative of an idea.
+
+{
+    "@context": {
+		"@dir": "rtl",
+		"@language": "ar"
+	},
+    "id": {"978-111800818-9"},
+    "title": "<span dir="rtl">HTML &#x0648; CSS: &#x062A;&#x0635;&#x0645;&#x064A;&#x0645; &#x0648; &#x0625;&#x0646;&#x0634;&#x0627;&#x0621; &#x0645;&#x0648;&#x0627;&#x0642;&#x0639; &#x0627;&#x0644;&#x0648;&#x064A;&#x0628;</span>",
+    "authors": [ {"value": "Jon Duckett", "lang": "en", "dir": "ltr"} ],
+    "pubDate": "2008-01-01",
+    "publisher": "&#x0645;&#x0643;&#x062A;&#x0628;&#x0629;"},
+    "coverImage": "https://example.com/images/learning_web_design_cover.jpg",
+    // etc.
+},
+</pre>
+	
+</aside>
+
+
+</section>
+<section>
+	<h5 id="resource-level-issues">Issues</h5>
+	<p>A major problem with this approach, currently, is that the JSON context mechanism doesn't currently supply an attribute for base direction. Changes or additions would be needed to extend the mechanism to support direction metadata.</p>
+</section>
+
+</section>
+</section>
+
+
+
+
+
 <section class="appendix" id="Localizable-String-Dictionary">
 	
-	<h2 id="use-the-localizable-data-structure">The Localizable WebIDL Dictionary</h2>
+<h2 id="use-the-localizable-data-structure">The Localizable WebIDL Dictionary</h2>
 	
 	<p>This section contains a WebIDL definition for a <code>Localizable</code> dictionary.</p>
 	
@@ -1432,7 +1439,7 @@ dir</code></dfn> member</dt>
 </aside>
 
 </section>
-</section>
+
 
 <section class="appendix" id="Acknowledgements">
 <h2>Acknowledgements</h2>
