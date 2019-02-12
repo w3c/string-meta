@@ -934,49 +934,38 @@ access, to the original context of the string. Many document formats are generat
 
 
 <section>
-    <h3 id="html-content">Require markup for content</h3>
+    <h3 id="use_bidi_markup">Require bidi markup for content</h3>
     
-    <p><strong>This approach is NOT recommended</strong> except in special cases where the content being exchanged is expected to consist of and is restricted to literal values in a given markup language.</p>
+    <p><strong>This approach is NOT recommended</strong> except under <a>agreements</a> that expect to exclusively interchange HTML or XML markup data.</p>
     
     <section>
     <h4 id="html-content-how">How it works</h4>
+<p>The producer ensures that all strings begin and end with markup which indicates the appropriate base direction for that string. This requires the producer to examine the string. If the string is not bounded by markup with directional information, the producer must add wrap the string with elements that have the <code class="kw" translate="no">dir</code> or <code class="kw" translate="no">its:direction</code> [[!ITS20]] attributes, or other markup appropriate to a given XML application. If the string <em>is</em> bounded by markup, but it is something such as an HTML <code class="kw" translate="no">h1</code> element, the producer needs to introduce directional information into the existing markup, rather than simply surround the string with a <code class="kw" translate="no">span</code>.</p>
+<p>This example uses HTML markup. (Simply to make the example easier to read, it shows the text content of the string as it should be displayed, rather than in the order in which the characters are stored.)</p>
     
-	<p>When a document is expected to consist of HTML or XML fragments and will be processed and displayed strictly in a markup context, the <a>producer</a> can use markup to convey the direction of the content by wrapping strings with elements that have the <code class="kw" translate="no">dir</code> or <code class="kw" translate="no">its:direction</code> [[!ITS20]] attributes.</p>
-    
-<aside class=example>
-	<p>Here is an example using HTML markup:</p>
-	
-<pre>
-{
-    "id": {"978-111800818-9"},
-    "title": "&ltspan dir='rtl' lang='ar'&gt;<span dir=rtl>HTML &#x0648; CSS: &#x062A;&#x0635;&#x0645;&#x064A;&#x0645; &#x0648; &#x0625;&#x0646;&#x0634;&#x0627;&#x0621; &#x0645;&#x0648;&#x0627;&#x0642;&#x0639; &#x0627;&#x0644;&#x0648;&#x064A;&#x0628;</span>&lt;/span&gt;",
-    "authors": [ "&lt;span dir='ltr' lang='en'&gt;Jon Duckett&lt;/span&gt;" ],
-    "pubDate": "2008-01-01",
-    "publisher": "&lt;span dir='rtl' lang='ar'&gt;&#x0645;&#x0643;&#x062A;&#x0628;&#x0629;&lt;/span&gt;",
-    "coverImage": "https://example.com/images/learning_web_design_cover.jpg",
-    // etc.
-},
-</pre>
+<aside class="example">
+	<pre>"title": "&ltspan dir="rtl" lang="ar"&gt;<span dir=rtl>HTML &#x0648; CSS: &#x062A;&#x0635;&#x0645;&#x064A;&#x0645; &#x0648; &#x0625;&#x0646;&#x0634;&#x0627;&#x0621; &#x0645;&#x0648;&#x0627;&#x0642;&#x0639; &#x0627;&#x0644;&#x0648;&#x064A;&#x0628;</span>&lt;/span&gt;"</pre>
 </aside>
-    
+    <p>The consumer then relies on the markup to set the base direction around the text content of the string when it is displayed. (Note that, unless additional metadata is provided, the consumer cannot remove the markup before integrating the string in the target location, because it cannot tell what markup has been added by the producer and what was already there. In general, however, such added markup is harmless.)</p>
     </section>
     
     <section>
 		<h4 id="html-content-advantages">Advantages</h4>
+<p>The benefit for content that already uses markup is clear. The content will already provide complete markup necessary for the display and processing of the text or it can be extracted from the source page context. HTML and XML processors already know how to deal with this markup and provide ready validation.</p>
+<p>For HTML, the <code class="kw" translate="no">dir</code> attribute bidirectionally isolates the content from the surrounding text, which removes spillover conflicts. This reduces the work of the consumer.</p>
 		
-		<p>This proposal is potentially useful for <a>agreements</a> that expect to interchange HTML or XML markup data.</p>
-		
-		<p>The benefit for content that already uses markup is clear. The content will already provide complete markup necessary for the display and processing of the text or it can be extracted from the source page context. HTML and XML processors already know how to deal with this markup and provide ready validation.</p>
-		
-		<p>Markup also provides for nesting of directional information, something base direction on its own cannot solve.</p>
+		<p>Markup can also be used for string-internal directional information, something base direction on its own cannot solve.</p>
     </section>
     <section>
 		<h4 id="html-content-issues">Issues</h4>
     </section>
     
-    <p>The downside of this approach is that many data values are just strings. As with adding Unicode tags or Unicode bidi controls, the addition of markup to strings alters the original string content. Producers are required to introspect strings and add markup as needed. Consumers must likewise remove any additional markup introduced by the producer. Altering the length of the content can cause problems with processes that enforce arbitrary limits or with processes that "sanitize" content by escaping HTML/XML unsafe characters such as angle brackets. Effectively, all levels of the implementation stack have to participate in understanding the markup (or ensure that they do no harm).</p>
-    
-    <p>The addition of markup also requires consumers to guard against the usual problems with markup insertion, such as XSS attacks.</p>
+    <p>Effectively, all levels of the implementation stack have to participate in understanding the markup (or ensure that they do no harm).</p>
+<p>If the system uses HTML, end to end, then appropriate markup is available and its semantics are understood (ie. the <code class="kw" translate="no">dir</code> attribute, and the <code class="kw" translate="no">bdi</code> and <code class="kw" translate="no">bdo</code> elements). For XML applications, however, there is no standard markup for bidi support. Such markup would need to first be defined, and then understood by both the producer and consumer.</p>
+<p>A key  downside of this approach is that many data values are just strings. As with adding Unicode tags or Unicode bidi controls, the addition of markup to strings alters the original string content. Altering the length of the content can cause problems with processes that enforce arbitrary limits or with processes that "sanitize" content by escaping HTML/XML unsafe characters such as angle brackets.</p>
+<p>Another issue is the work and sophistication required for producers to examine strings and add markup as needed.</p>
+<p>There are limits to the number of embeddings allowed by the Unicode bidirectional algorithm. Consumers would need to ensure that this limit is not passed when embedding strings into a wider context.</p>
+<p>The addition of markup also requires consumers to guard against the usual problems with markup insertion, such as XSS attacks.</p>
    
 </section>
 
