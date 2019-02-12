@@ -610,11 +610,8 @@ working on.</p>
 </section>
 
 <section>
-<h3 id="bidi-approaches">Approaches Considered for Identifying the Base Direction</h3>
-	
-	<p>This section deals with different means of determining or estimating the base direction for string data.</p>
-	
-	<p>The fundamental problem for bidirectional text values is how a <a>consumer</a> of a string will know what base direction should be used for that string when it is eventually displayed to a user. Note that each of these mechansisms for identifying or estimating the base direction have utility in specific applications and are in use in different specifications such as [[HTML5]]. The issue here is which are appropriate to adopt generally and specify for use as a best practice in document formats.</p>
+<h2 id="bidi-approaches">Approaches Considered for Identifying the Base Direction</h2>
+<p>The fundamental problem for bidirectional text values is how a <a>consumer</a> of a string will know what base direction should be used for that string when it is eventually displayed to a user. Note that some of these approaches for identifying or estimating the base direction have utility in specific applications and are in use in different specifications such as [[HTML5]]. The issue here is which are appropriate to adopt generally and specify for use as a best practice in document formats.</p>
 
 <section id="firststrong">
   <h3>First-strong property detection (alone)</h3>
@@ -627,7 +624,7 @@ working on.</p>
 <p>Consumers must look for the first character in the string with a strong Unicode directional property, and set the base direction to match it. They then take appropriate action  to ensure that the string will be displayed as needed. This is not quite so simple as it may appear, for the following reasons:</p>
 <ol>
 <li>Characters at the start of string without a strong direction (eg. punctuation, numbers, etc) and isolated sequences (ie. sequences of characters surrounded by RLI/LRI/FSI...PDI formatting characters) within a string must be skipped in order to find the first strong character.</li>
-<li>The detection algorithm needs to be able to handle markup at the start of the string. It needs to be able to tell whether the markup is just string text, or whether the markup needs to be processed – in which case it must understand the markup, and understand any direction-related information that is carried in the markup.</li>
+<li>The detection algorithm needs to be able to handle markup at the start of the string. It needs to be able to tell whether the markup is just string text, or whether the markup needs to be parsed in the target location – in which case it must understand the markup, and understand any direction-related information that is carried in the markup.</li>
 </ol>
 </section>
 
@@ -648,8 +645,9 @@ working on.</p>
 </ol>
 <p>In cases where the entire string starts and ends with RLI/LRI/FSI...PDI formatting characters, it is not possible to detect the first strong character by following the Unicode Bidirectional Algorithm. This is because the algorithm requires that bidi-isolated text be excluded from the detection.</p>
 <p>If no strong directional character is found in the string, the direction should probably be assumed to be LTR, and the consumer should act on that basis. This has not been tested fully, however.</p>
-<p>If a string contains markup that will be parsed by the consumer as markup, there are additional problems. Any such markup at the start of the string must also be skipped when searching for the first strong directional character. If, however, there is angle bracket content that is intended to be an <em>example</em> of markup, rather than actual markup, the markup must not be skipped – trying to display markup in a RTL context yields very confusing results! It isn't clear how a consumer of the string would know the difference between this case and the previous scenario.</p>
-<p>If parseable markup in the string contains information about the intended direction of the string (for example, a <span class="kw" translate="no">dir</span> attribute with the value <span class="kw" translate="no">rtl</span> in HTML), that information should be used rather than relying on first-strong heuristics. This is problematic in a couple of ways: (a) it assumes that the consumer of the string understands the semantics of the markup, which may be ok if there is an agreement between all parties to use, say, HTML markup only, but would be problematic, for example, when dealing with random XML vocabularies, and (b) the consumer must be able to  recognise and handle a situation where only the initial part of the string has markup, ie. the markup applies to an inline span of text rather than the string as a whole.</p>
+<p>If a string contains markup that will be parsed by the consumer as markup, there are additional problems. Any such markup at the start of the string must also be skipped when searching for the first strong directional character. </p>
+<p>If parseable markup in the string contains information about the intended direction of the string (for example, a <span class="kw" translate="no"><code class="kw" translate="no">dir</code></span> attribute with the value <span class="kw" translate="no"><code class="kw" translate="no">rtl</code></span> in HTML), that information should be used rather than relying on first-strong heuristics. This is problematic in a couple of ways: (a) it assumes that the consumer of the string understands the semantics of the markup, which may be ok if there is an agreement between all parties to use, say, HTML markup only, but would be problematic, for example, when dealing with random XML vocabularies, and (b) the consumer must be able to  recognise and handle a situation where only the initial part of the string has markup, ie. the markup applies to an inline span of text rather than the string as a whole.</p>
+<p>If, however, there is angle bracket content that is intended to be an <em>example</em> of markup, rather than actual markup, the markup must not be skipped – trying to display markup source code in a RTL context yields very confusing results! It isn't clear how a consumer of the string would always know the difference between examples and parseable strings.</p>
 </section>
 
 
