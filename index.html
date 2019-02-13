@@ -562,9 +562,10 @@ working on.</p>
 <section>
 <h4 id="bidiCase7">Spill-over effects</h4>
 <p>A common use for strings is to provide data that is inserted into a page or user interface at runtime. Consider a scenario where, in a LTR application environment, you are displaying book names and the number of reviews each book has received. The display should produce something ordered like this:</p>
-<span style="text-align:center; font-size: 2em;"><code>$title - $numReviews &quot;titles&quot;</code></span>
+<span style="text-align:center; font-size: 2em;"><code>$title - $numReviews reviews</code></span>
 <p>Then you insert a book with a title like that in the original example. You would expect to see this:</p>
-<p lang="ar" dir="ltr" style="font-size: 2em;"><bdi>HTML: تصميم و إنشاء مواقع الويب</bdi> - 4 titles</p>
+<p lang="ar" dir="ltr" style="font-size: 2em;"><bdi>HTML: تصميم و إنشاء مواقع الويب</bdi> 
+- 4 reviews</p>
 <p>What you would actually see is this:</p>
 <p lang="ar" dir="ltr" style="font-size: 2em;">HTML: تصميم و إنشاء مواقع الويب - 4 reviews</p>
 <p>This problem is caused by spillover effects as the Unicode bidirectional algorithm operates on the text inside and outside the inserted string without making any distinction between the two.</p>
@@ -581,37 +582,6 @@ working on.</p>
 <p>HTM5 provides base direction controls and isolation for any inline element when the <code class="kw" translate="no">dir</code> attribute is used, or when the <code class="kw" translate="no">bdi</code> element is used. When inserting strings into plain text environments, isolating Unicode formatting characters need to be used. (Unfortunately, support for the isolating characters, which the Unicode Standard recommends as the default, is still not universal.)</p>
 <p>The trick is to ensure that the direction information provided by the markup or control characters reflects the base direction of the string.</p>
 </section>
-
-
-
-
-<section>
-<h4 id="bidiCase6">Spill-over effects</h4>
-<p><span class="ednote">I leave this here just for comparison purposes, temporarily. I'll remove it if Addison is happy with the rewrite.</span></p>
-<p>A common use for document formats is to provide data to insert into a page or user interface at runtime. Consider this display string that shows the number of reviews (the Arabic word is <kbd dir=rtl>&#x062A;&#x0642;&#x064A;&#x064A;&#x0645;</kbd>) for the title:</p>
-<p lang="ar" dir="ltr" style="text-align:center; font-size: 2em;"><code>$title - $numReviews &#x062A;&#x0642;&#x064A;&#x064A;&#x0645;</code></p>
-
-<p>Here we see the the composed string with our example title, assuming it has 4 reviews, in an RTL context:</p>
-
-<p lang="ar" dir="rtl" style="text-align:center; font-size: 2em;">HTML و CSS - 4 &#x062A;&#x0642;&#x064A;&#x064A;&#x0645;</p>
-
-<p>Similarly, an LTR context can cause "position switching":</p>
-
-<p lang="ar" dir="ltr" style="text-align:center; font-size: 2em;">HTML &#x0648; CSS: &#x062A;&#x0635;&#x0645;&#x064A;&#x0645; &#x0648; &#x0625;&#x0646;&#x0634;&#x0627;&#x0621; &#x0645;&#x0648;&#x0627;&#x0642;&#x0639; &#x0627;&#x0644;&#x0648;&#x064A;&#x0628; - 4 &#x062A;&#x0642;&#x064A;&#x064A;&#x0645;</p>
-
-<p>The solution to this problem is called <dfn>bidi isolation</dfn>. HTML5 provides this by default for inline elements, but strings that are assembled at runtime may need the isolation provided, either as the form of additional markup or via the addition of bidi controls.</p> 
-
-<p>Here is the same example, with <code>span</code> tags isolating the two substrings (this may not display correctly in all browsers):</p>
-
-<p dir=ltr style="text-align:center; font-size: 2em;"><span lang=ar dir=rtl>HTML &#x0648; CSS: &#x062A;&#x0635;&#x0645;&#x064A;&#x0645; &#x0648; &#x0625;&#x0646;&#x0634;&#x0627;&#x0621; &#x0645;&#x0648;&#x0627;&#x0642;&#x0639; &#x0627;&#x0644;&#x0648;&#x064A;&#x0628;</span> - <span lang=ar dir=rtl>4 &#x062A;&#x0642;&#x064A;&#x064A;&#x0645;</span></p>
-
-<p>Of course, this Arabic language example probably should be displayed in an RTL context. Here is what that looks like:</p>
-
-<p dir=rtl style="text-align:center; font-size: 2em;"><span lang=ar dir=rtl>HTML &#x0648; CSS: &#x062A;&#x0635;&#x0645;&#x064A;&#x0645; &#x0648; &#x0625;&#x0646;&#x0634;&#x0627;&#x0621; &#x0645;&#x0648;&#x0627;&#x0642;&#x0639; &#x0627;&#x0644;&#x0648;&#x064A;&#x0628;</span> - <span lang=ar dir=rtl>4 &#x062A;&#x0642;&#x064A;&#x064A;&#x0645;</span></p>
-
-</section>
-
-
 </section>
 
 </section>
