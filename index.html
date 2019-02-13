@@ -836,26 +836,6 @@ access, to the original context of the string. Many document formats are generat
 <p>Consuming applications would need to recognise and appropriately handle the isolating formatting characters. At the moment such support for RLI/LRI/FSI is far from pervasive.</p>
 <p>This approach would disqualify the string from being amenable to UBA first-strong heuristics if used by a non-aware consumer, because the Unicode bidi algorithm is unable to ascertain the base direction for a string that starts with RLI/LRI/FSI and ends with PDI. This is because the algorithm skips over isolated sequences and treats them  as a neutral character. A consumer of the string would have to take special steps, in this case, to uncover the first-strong character.</p>
 
-<!-- orphan text -->
-
-<p>Bidi isolating controls are plain text control characters that can be used to indicate that a span of text should be "isolated" from the surrounding bidirectional context. A frequent question is whether content management systems or document formats should include these characters by default around strings that can appear in multiple contexts. An example of this would be a localizable string table for an application. Since the content author cannot know the bidi context in which the string will be displayed in advance, providing the controls could help insulate the strings from improper display later.</p>
-
-<p>HTML5 [[HTML5]] introduced isolation at the element level by default. This allows for text insertion into an HTML context without the need for isolating controls. However, not all strings appear in an HTML context. Use of strings in a plain text or other display context cannot be guaranteed the isolating behavior provided by HTML.</p>
-
-<p>While some strings can certainly benefit from using isolating bidi controls, consistent usage can produce layers of overhead, processing, and validation that are unnecessary. Use of these controls should be reserved for cases in which the assembly and presentation of the text depends on runtime directional determination. For example, isolating controls can be included around a variable name in a string whose contents will be determined at runtime.</p>
-
-<aside class=example>
-	<p>Example of inappropriate use of isolating controls:</p>
-	<pre>&amp;#x2066;This string has an LRI/PDI around it.&amp;#x2069;</pre>
-	
-	<p>Example of appropriate use of isolating controls:</p>
-	<pre>Restaurant &amp;#x2068;$name&amp;#x2069; has &amp;#x2068;$numReviews&amp;#x2069; reviews.</pre>
-</aside>
-
-<p>The advantages of using isolating controls around a string are that the string can then be inserted into any context (that understands isolating controls) without additional processing.</p>
-
-<p>The disadvantages of using isolating controls around a string are several. For most text the controls are superfluous and contribute to storage and processing overhead. The controls also affect the length of the string. Operations such as string truncation need to keep the controls paired.</p>
-
 </section>
 </section>
 
@@ -1261,7 +1241,7 @@ myDataString:          "978-0-123-4567-X^ltr"          // language-neutral strin
 	
 	<p><strong>This approach is NOT recommended.</strong></p>
 	
-	<p><a href="#paired">Unicode bidirectional controls</a> are plain text control characters that can be used to indicate that a span of text should be "embedded" in or "isolated" from the surrounding bidirectional context. A frequent question is whether <a>producers</a>, such as content management systems or document formats, should generate or store these characters by default around strings that can appear in multiple contexts.</p>	
+	<p><a href="#paired">Unicode bidirectional controls</a> are plain text control characters that can be used to indicate that a span of text should be "embedded" in or "isolated" from the surrounding bidirectional context. A frequent question is whether <a>producers</a>, such as content management systems or document formats, should generate or store these characters by default around strings that can appear in multiple contexts&mdash;in large part to try to avoid <a href="#spill-over-effects">spill-over effects</a>.</p>	
 	
 	<p>An example of this would be a set of translated data values in an application. Since the content author cannot know the bidi context in which the string will be displayed in advance but potentially can know each string's intended base direction, pre-wrapping the text with control characters could help insulate the strings from improper display by the <a>consumer</a>.</p>
 	
