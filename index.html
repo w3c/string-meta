@@ -974,15 +974,38 @@ myDataString:          "978-0-123-4567-X^ltr"          // language-neutral strin
 	<h3 id="language-metadata">Metadata</h3>
 
 <p><strong>This approach is recommended.</strong></p>
+<p class=note>A primary concern of this document is that language metadata is often unaccompanied by base direction metadata, as the use of metadata for storage and interchange of the language of data values is long-established and widely supported in the basic infrastructure of the Web. Beyond low level support such as found in [[XML]] and [[HTML]], schema languages such as XMLSchema [[xmlschema11-2]], the various RDF specifications including [[JSON-LD]], and more provide for natural language string metadata identified using [[BCP47]] language tags. Authors of new specifications or document formats must be aware of and use these mechanisms for natural language values. </p>
 
 <section>
 <h4 id="localizable-dictionary-how">How it works</h4>
 
-<p><a>Producers</a> include additional fields or use data structures that include language metadata for each natural language text value in a document.</p>
+<p>A <a>producer</a> ascertains the language of the string (generally from metadata supplied upstream) and includes this information a metadata field that accompanies the string when it is stored or transmitted.</p>
 
-<p><a>Consumers</a> can then extract and process this data for their own needs, or forward it as necessary.</p>
+<p>When storing or transmitting a set of strings at a time, it helps to have a field for the resource as a whole that sets a language which can be inherited by all strings in the resource. Note that in addition to a global field, you still need the possibility of attaching string-specific metadata fields in cases where a string's language is not that of the default. The language set on an individual string must override any resource-level value. It should also be noted that a process that extracts an individual value might need to add the document level language value to the extracted item as part of its API, so that, if the value is included into a new data set, the language information is retained.</p>
 
-<p>We RECOMMEND the use of the <a href="#use-the-localizable-data-structure">Localizable</a> dictionary structure.</p>
+<p>A <a>consumer</a> needs to understand how to read the metadata sent with a string and apply it to the display or data structures that it generates.</p>
+
+<p>The use of the <a href="#use-the-localizable-data-structure">Localizable</a> dictionary structure is RECOMMENDED for individual values in JSON-based document formats, as it combines both language and direction metadata and, if consistently adopted, makes interchange between different formats easier.</p>
+		
+<p>[[JSON-LD]] includes some data structures that are helpful in assigning language (but not base direction) metadata to collections of strings (including entire resources). Notably, it defines what it calls <q>string internationalization</q> in the form of a context-scoped <code>@language</code> value which can be associated with blocks of JSON or within individual objects. There is no definition for base direction, so the <code>@context</code> mechanism does not currently address all concerns raised by this document.</p>
+		
+<aside class=example>
+	<p>Here is the record used in the <a href="baseExample">original example</a> with a record-level default language and direction added (and showing the use of a localizable string to override the default for the <kbd>author</kbd> field):</p>
+
+<pre>
+{
+    "@context": { "@language": "ar" },
+    "id": {"978-111887164-5"},
+    "title": "<span dir=rtl>HTML &#x0648; CSS: &#x062A;&#x0635;&#x0645;&#x064A;&#x0645; &#x0648; &#x0625;&#x0646;&#x0634;&#x0627;&#x0621; &#x0645;&#x0648;&#x0627;&#x0642;&#x0639; &#x0627;&#x0644;&#x0648;&#x064A;&#x0628;</span>",
+    "authors": [ {"value": "Jon Duckett", "lang": "en", "dir": "ltr"} ],
+    "pubDate": "2008-01-01",
+    "publisher": "&#x0645;&#x0643;&#x062A;&#x0628;&#x0629;"},
+    "coverImage": "https://example.com/images/html_and_css_cover.jpg",
+    // etc.
+},
+</pre>
+	
+</aside>
 	
 </section>
 
@@ -1004,54 +1027,6 @@ myDataString:          "978-0-123-4567-X^ltr"          // language-neutral strin
 
 </section>
 </section>
-
-  <section>
-	  <h4 id="default-document-level-lang">Provide document-level default language</h4>
-	  
-	  <p><strong>This approach is recommended when combined with <a href="#use-the-localizable-data-structure">Localizable strings</a>.</strong> It is the same concept as found in the section on <a href="#default-document-level">providing a default direction</a>.</p>
-	  
-	  <section>
-		<h4 id="default-document-level-lang-how">How it works</h4>
-		
-		<p>When a document contains a series of values that are all in the same language, specifying the language at the document level is an effective way of passing the necessary metadata.</p>
-		
-		<p>[[JSON-LD]] includes some data structures that are partially helpful. Notably, it defines string internationalization in the form of a context-scoped <code>@language</code> value which can be associated with blocks of JSON or within individual objects. There is no definition for base direction, so the <code>@context</code> mechanism currently doesn't provide a way to identify both language and direction.</p>
-		
-<aside class=example>
-	<p>Here is the record used in the <a href="baseExample">original example</a> with a record-level default language and direction added (and showing the use of a localizable string to override the default for the <kbd>author</kbd> field):</p>
-
-<pre>
-{
-    "@context": { "@language": "en" },
-    "id": {"978-111887164-5"},
-    "title": "<span dir=rtl>HTML &#x0648; CSS: &#x062A;&#x0635;&#x0645;&#x064A;&#x0645; &#x0648; &#x0625;&#x0646;&#x0634;&#x0627;&#x0621; &#x0645;&#x0648;&#x0627;&#x0642;&#x0639; &#x0627;&#x0644;&#x0648;&#x064A;&#x0628;</span>",
-    "authors": [ {"value": "Jon Duckett", "lang": "en", "dir": "ltr"} ],
-    "pubDate": "2008-01-01",
-    "publisher": "&#x0645;&#x0643;&#x062A;&#x0628;&#x0629;"},
-    "coverImage": "https://example.com/images/html_and_css_cover.jpg",
-    // etc.
-},
-</pre>
-	
-</aside>
-
-</section>
-<section>
-	<h4 id="default-document-level-lang-advantages">Advantages</h4>
-	
-	<p>Many documents consist of a series of records or values that are all in the same language. Using a document-level default makes the documents themselves less verbose.</p>
-	
-	<p>A document-level default make <a>language negotiation</a> between multiple files in different languages slightly easier, since the value is found in a consistent location.</p>
-	
-</section>
-<section>
-	<h4 id="default-document-level-lang-issues">Issues</h4>
-	
-	<p>Document-level defaults by themselves cannot handle mixed language content.</p>
-
-</section>
-</section>
-
 
 <section>
     <h3 id="html-content-lang">Require markup for content</h3>
