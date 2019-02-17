@@ -643,7 +643,7 @@ working on.</p>
 
 <section id="metadata">
   <h3> Metadata</h3>
-<p><strong>This approach is Recommended.</strong></p>
+<p><strong>This approach is recommended.</strong></p>
 
 
 <section>
@@ -656,7 +656,10 @@ working on.</p>
 </ol>
 <p>If storing or transmitting a set of strings at a time, it helps to have a  field for the resource as a whole that sets a global, default base direction which can be inherited by all strings in the resource. Note that  in addition to a global field, you still need the possibility of attaching string-specific metadata fields in cases where a string's base direction is not that of the default. The base direction set on an individual string must override the default.</p>
 <p>Consumers would need to understand how to read the metadata sent with a string, and would need to apply first-strong heuristics in the absence of metadata.</p>
-<p><a href="#resource_level"></a> illustrates how this could be implemented.</p>
+
+<p>The use of the <a href="#use-the-localizable-data-structure">Localizable</a> dictionary structure is RECOMMENDED for individual values in JSON-based document formats, as it combines both language and direction metadata and, if consistently adopted, makes interchange between different formats easier.</p>
+		
+<p class=note>As noted <a href="#localizable-dictionary">here</a>, [[JSON-LD]] includes some data structures that are helpful in assigning language (but not base direction) metadata to collections of strings (including entire resources). These gaps in support for pre-built metadata at the resource or item level are one of the key reasons for this documents development.</p>
 </section>
 
 
@@ -981,9 +984,9 @@ myDataString:          "978-0-123-4567-X^ltr"          // language-neutral strin
 
 <p>A <a>producer</a> ascertains the language of the string (generally from metadata supplied upstream) and includes this information a metadata field that accompanies the string when it is stored or transmitted.</p>
 
-<p>When storing or transmitting a set of strings at a time, it helps to have a field for the resource as a whole that sets a language which can be inherited by all strings in the resource. Note that in addition to a global field, you still need the possibility of attaching string-specific metadata fields in cases where a string's language is not that of the default. The language set on an individual string must override any resource-level value. It should also be noted that a process that extracts an individual value might need to add the document level language value to the extracted item as part of its API, so that, if the value is included into a new data set, the language information is retained.</p>
+<p>When storing or transmitting a set of strings at a time, it helps to have a field for the resource as a whole that sets a language which can be inherited by all strings in the resource. Note that in addition to a global field, you still need the possibility of attaching string-specific metadata fields in cases where a string's language is not that of the default. The language set on an individual string must override any resource-level value.</p>
 
-<p>A <a>consumer</a> needs to understand how to read the metadata sent with a string and apply it to the display or data structures that it generates.</p>
+<p>A <a>consumer</a> needs to understand how to read the metadata associated with a string and apply it to the display, processing, or data structures that it generates. Note that this might include the need to apply a resource-level default language when serializing or exchanging an individual value.</p>
 
 <p>The use of the <a href="#use-the-localizable-data-structure">Localizable</a> dictionary structure is RECOMMENDED for individual values in JSON-based document formats, as it combines both language and direction metadata and, if consistently adopted, makes interchange between different formats easier.</p>
 		
@@ -991,7 +994,6 @@ myDataString:          "978-0-123-4567-X^ltr"          // language-neutral strin
 		
 <aside class=example>
 	<p>Here is the record used in the <a href="baseExample">original example</a> with a record-level default language and direction added (and showing the use of a localizable string to override the default for the <kbd>author</kbd> field):</p>
-
 <pre>
 {
     "@context": { "@language": "ar" },
@@ -1004,7 +1006,6 @@ myDataString:          "978-0-123-4567-X^ltr"          // language-neutral strin
     // etc.
 },
 </pre>
-	
 </aside>
 	
 </section>
@@ -1137,14 +1138,14 @@ myDataString:          "978-0-123-4567-X^ltr"          // language-neutral strin
 </section>
 </section>
 
-<section id="other-approaches">
-	<h3>Implementation Considerations</h3>
+<section id="faq">
+	<h3>Frquently Asked Questions</h3>
 	
-	<p>This section contains additional recommendations or considerations for specification authors or implementers to consider.</p>
+	<p>This section contains a few common questions and associated recommendations.</p>
 	
 <section>
-	<h4 id="language-indexing">Use <q>Language Indexing</q> for language negotiation</h4>
-    <p><strong>This approach is recommended.</strong></p>
+	<h4 id="language-indexing">How should I organize multiple language values for the same item?</h4>
+    <p><strong>Use <q>Language Indexing</q> for language negotiation</strong></p>
     
 	<section>
 		<h5 id="language-indexing-how">How it works</h5>
@@ -1162,7 +1163,7 @@ myDataString:          "978-0-123-4567-X^ltr"          // language-neutral strin
 </pre>
 </aside>
 	
-<p>Notice that this format embeds the <kbd>lang</kbd> field both as a key in the array and inside the enclosed <kbd>Localizable</kbd> so that the selected or preferred value can easily be extracted as a complete JavaScript or JSON object.</p>
+<p>Notice that this format can include the <kbd>lang</kbd> field both as a key in the array and inside the enclosed <kbd>Localizable</kbd> so that the selected or preferred value can easily be extracted as a complete JavaScript or JSON object.</p>
 
 <p>For example, if the language requested were U.S. English (<kbd>en-US</kbd>), this format makes it easier to match and extract the best fitting title object <kbd>{"value": "Learning Web Design", "lang": "en"}</kbd>.</p>
 
@@ -1212,11 +1213,9 @@ myDataString:          "978-0-123-4567-X^ltr"          // language-neutral strin
 </section>
 
 <section>
-	<h4 id="bidi-control-production">Automatic production of bidi controls in producers</h4>
+	<h4 id="bidi-control-production">Should I generate bidi controls around every string in my content store in order to avoid spill-over effects?</h4>
 	
-	<p><strong>This approach is NOT recommended.</strong></p>
-	
-	<p><a href="#paired">Unicode bidirectional controls</a> are plain text control characters that can be used to indicate that a span of text should be "embedded" in or "isolated" from the surrounding bidirectional context. A frequent question is whether <a>producers</a>, such as content management systems or document formats, should generate or store these characters by default around strings that can appear in multiple contexts&mdash;in large part to try to avoid <a href="#spill-over-effects">spill-over effects</a>.</p>	
+	<p><strong>No.</strong> <a href="#paired">Unicode bidirectional controls</a> are plain text control characters that can be used to indicate that a span of text should be "embedded" in or "isolated" from the surrounding bidirectional context. A frequent question is whether <a>producers</a>, such as content management systems or document formats, should generate or store these characters by default around strings that can appear in multiple contexts&mdash;in large part to try to avoid <a href="#spill-over-effects">spill-over effects</a>.</p>	
 	
 	<p>An example of this would be a set of translated data values in an application. Since the content author cannot know the bidi context in which the string will be displayed in advance but potentially can know each string's intended base direction, pre-wrapping the text with control characters could help insulate the strings from improper display by the <a>consumer</a>.</p>
 	
@@ -1260,59 +1259,6 @@ myDataString:          "978-0-123-4567-X^ltr"          // language-neutral strin
 
 
 </section>
-
-
-
-
-
-<section id="more-other-approaches">
-	<h2>Parking lot for more implementation considerations</h2>
-	
-	<p><span class="ednote">This section contains stuff that should be merged into the previous section. I created a separate section temporarily so as not to produce editing conflicts.</span></p>
-	
-<section>
-	<h3 id="resource_level">Resource-level bidi metadata</h3>
-    
-<section>
-<h5 id="resource-level-how">How it works</h5>
-		
-<p>[[JSON-LD]] includes some data structures that are partially helpful with regard to <a href="#default-document-level-lang">language metadata</a>. </p>
-<p>Here is the record used in the <a href="baseExample">original example</a> with an illustration of how, in an ideal world, a default direction could be added for the whole of the resource. The example also shows the use of a <a>localizable</a> string to override the default for the <kbd>author</kbd> field.</p>
-		
-		
-<aside class="example">
-<pre>
-NOTE: This example assumes features in JSON that don't currently exist!
-It is only illustrative of an idea.
-
-{
-    "@context": {
-		"@dir": "rtl",
-		"@language": "ar"
-	},
-    "id": {"978-111887164-5"},
-    "title": "<span dir="rtl">HTML &#x0648; CSS: &#x062A;&#x0635;&#x0645;&#x064A;&#x0645; &#x0648; &#x0625;&#x0646;&#x0634;&#x0627;&#x0621; &#x0645;&#x0648;&#x0627;&#x0642;&#x0639; &#x0627;&#x0644;&#x0648;&#x064A;&#x0628;</span>",
-    "authors": [ {"value": "Jon Duckett", "lang": "en", "dir": "ltr"} ],
-    "pubDate": "2008-01-01",
-    "publisher": "&#x0645;&#x0643;&#x062A;&#x0628;&#x0629;"},
-    "coverImage": "https://example.com/images/html_and_css_cover.jpg",
-    // etc.
-},
-</pre>
-	
-</aside>
-
-
-</section>
-<section>
-	<h5 id="resource-level-issues">Issues</h5>
-	<p>A major problem with this approach, currently, is that the JSON context mechanism doesn't currently supply an attribute for base direction. Changes or additions would be needed to extend the mechanism to support direction metadata.</p>
-</section>
-
-</section>
-</section>
-
-
 
 
 
