@@ -851,17 +851,24 @@ access, to the original context of the string. Many document formats are generat
 
 <section>
 <h4>How it works</h4>
-<p>A producer applies language tags to strings, specifying, in particular, the script in use.</p>
+<p>A <a>producer</a> <a href="localizable-dictionary">supplies language metadata</a> for strings, specifying, where necessary, the script in use.</p>
+
 <p>There are a number of possible approaches:</p>
 <ol>
-<li>Label every string for language+script.</li>
-<li>It may be reasonable to assume a default of LTR for all strings unless marked with a script subtag that indicates RTL.  Any string that needs to have an overall base direction of RTL should be labelled for language by the producer using a script subtag.</li>
-<li>Set a default language for a set of strings, at a higher level, but provide a mechanism to override that default for a given string where needed.</li>
+<li>Label every string for language, including a script subtag as needed. <a>Consumers</a> may need to compute the script subtag when the <a>producer</a> does not provide one.</li>
+<li>It might be reasonable to assume a default of LTR for all strings unless marked with a language tag whose script subtag (either present or implied) indicates RTL.</li>
+<li>Set a default language for a set of strings at a higher level, but provide a mechanism to override that default for a given string where needed.</li>
 </ol>
-<p>Consumers would identify strings associated with languages that are written RTL by default, and apply a RTL base direction to those strings.</p>
-<p>Language information must use [[BCP47]] language tags, and  the portion of the language tag that carries the information is the script subtag, not the primary language subtag. For example, Azeri may be written LTR (with the Latin or Cyrillic scripts) or RTL (with the Arabic script).  Therefore, the subtag <code class="kw" translate="no">az</code> is insufficient to clarify intended direction. A language tag such as <code class="kw" translate="no">az-Arab</code>, however, can generally be relied upon to indicate that the overall base direction should be RTL. </p>
-  
-  <p>Unicode locale identifiers, defined as part of the [[!LDML]] specification, include a "likely subtag" mechanism that can sometimes be used to supply the script subtag when the base language tag does not include it. For example, a language tag such as <kbd>ar</kbd> (Arabic), implies the <kbd>Arab</kbd> (Arabic) script subtag, since nearly all Arabic is written in this script.</p>
+<p><a>Consumers</a> extract the script subtag from the language tag associated with each string, computing the script subtag as necessary. Script subtags associated with RTL scripts are used to assign a base direction of RTL to their associated strings.</p>
+
+<p>Language information MUST use [[!BCP47]] language tags. The portion of the language tag that carries the information is the script subtag, not the primary language subtag. For example, Azeri may be written LTR (with the Latin or Cyrillic scripts) or RTL (with the Arabic script).  Therefore, the subtag <code class="kw" translate="no">az</code> is insufficient to clarify intended base direction. A language tag such as <code class="kw" translate="no">az-Arab</code> (Azeri as written in the Arabic script), however, can generally be relied upon to indicate that the overall base direction should be RTL. </p>
+ 
+<aside class=note>
+	
+<p>Script subtags should only be used in language tags when the language's script is not implied by other information in the language tag. Implementations and specifications SHOULD NOT require the addition or generation of script subtags not already present in a language tag. The IANA Language Subtag Registry, defined by [[!BCP47]] contains a <kbd>Suppress-Script</kbd> field for a few languages, indicating the script where it is missing. Additionally, the [[!LDML]] specification defines a "likely subtag" mechanism that can often be used to supply a missing script subtag. For example, language tags such as <kbd>ar</kbd> (Arabic) or <kbd>ar-EG</kbd> (Arabic as used in Egypt), imply the <kbd>Arab</kbd> (Arabic) script subtag, since nearly all Arabic is written in this script.</p>
+
+</aside> 
+
 </section>
 
 
@@ -871,7 +878,7 @@ access, to the original context of the string. Many document formats are generat
 
 <p>There is no need to inspect or change the string itself.</p>
 <p>This approach avoids the issues associated with first-strong detection when the first-strong character is not indicative of the necessary base direction for the string, and avoids issues relating to the interpretation of markup.</p>
-<p>Note that a string that begins with markup that sets a language for the string text content (eg. <code translate="no">&lt;cite lang=“en-Latn”&gt;</code>) is not problematic here, since that language declaration is not expected to play into the setting of the base direction.</p>
+<p>Note that a string that begins with markup that sets a language for the string text content (eg. <code translate="no">&lt;cite lang="zh-Hans"&gt;</code>) is not problematic here, since that language declaration is not expected to play into the setting of the base direction.</p>
 </section>
 
 
@@ -879,10 +886,10 @@ access, to the original context of the string. Many document formats are generat
 <section>
 <h4>Issues</h4>
 <p>The use of metadata as outlined above is a much better approach, if it is available. This script-related approach is only for use where that approach is unavailable, for legacy reasons.</p>
-<p>There are many strings which are not language-specific but which absolutely need to be  associated  with  a particular base direction for correct consumption. For example, MAC addresses inserted into a RTL context need to be displayed with a LTR overall base direction and isolation from the surrounding text. It's not clear how to distinguish these cases from others (in a way that would be feasible when using direction metadata).</p>
+<p>There are many strings which are not language-specific but which absolutely need to be  associated  with  a particular base direction for correct consumption. For example, MAC addresses inserted into a RTL context need to be displayed with a LTR overall base direction and isolation from the surrounding text. It's not clear how to distinguish these cases from others (in a way that would be feasible when using direction metadata). Special language tags, such as <kbd>zxx</kbd> (Non-Linguistic), exist for identifying this type of content, but usually data fields of this type omit language information altogether, since it is not applicable.</p>
 <p>The list of script subtags may be added to in future. In that case, any subtags that indicate a default RTL direction need to be added to the lists used by the consumers of the strings.</p>
-<p>It is perhaps possible to limit the use of script subtag metadata to situations where first-strong heuristics are expected to fail - provided that such cases can be identified, and appropriate action taken by the producer (not always reliable). Consumers would then need to use first-strong heuristics in the absence of a script subtag in order to identify the appropriate base direction. The use of script subtags should not, however, be restricted to strings that need to indicate direction; it is perfectly valid to associate a script subtag with any string.</p>
-<p>There are some rare situations where the appropriate base direction cannot  be identified from the script subtag, but these are really limited to archaic usage of text.  For example, Japanese and Chinese text prior to World War 2 was often written RTL, rather than LTR. Languages such as those written using Egyptian Hieroglyphs, or the Tifinagh Berber script, could formerly be written either LTR or RTL, however the default for scholastic research tends to LTR.</p>
+<p>It is perhaps possible to limit the use of script subtag metadata to situations where first-strong heuristics are expected to fail &mdash; provided that such cases can be identified, and appropriate action taken by the producer (not always reliable). <a>Consumers</a> would then need to use first-strong heuristics in the absence of a script subtag in order to identify the appropriate base direction. The use of script subtags should not, however, be restricted to strings that need to indicate direction; it is perfectly valid to associate a script subtag with any string.</p>
+<p>There are some rare situations where the appropriate base direction cannot be identified from the script subtag, but these are really limited to archaic usage of text.  For example, Japanese and Chinese text prior to World War 2 was often written RTL, rather than LTR. Languages such as those written using Egyptian Hieroglyphs, or the Tifinagh Berber script, could formerly be written either LTR or RTL, however the default for scholastic research tends to LTR.</p>
 </section>
 
 
