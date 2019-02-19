@@ -488,13 +488,15 @@ working on.</p>
 <section>
 <h4 id="bidiCase1">Final punctuation</h4>
 <p>This use case consists of a string containing Hebrew text followed by punctuation – in this case an exclamation mark. The characters in this string are shown here in the order in which they are stored in memory.</p>
-  <p lang="he" dir="rtl" style="text-align:center; font-size: 2em;"><code><bdo dir="ltr">&quot;בינלאומי!&quot;</bdo></code></p>
+  <p lang="he" dir="rtl" style="text-align:center; font-size: 1.8em;"><code><bdo dir="ltr">&quot;בינלאומי!&quot;</bdo></code></p>
   <p>If the string is dropped into a LTR context, it will display like this, which is incorrect – the exclamation mark is on the wrong side:</p>
-  <p lang="he" dir="ltr" style="text-align:center; font-size: 2em;">בינלאומי!</p>
+  <p lang="he" dir="ltr" style="font-size: 1.8em; color: grey;">Result: "בינלאומי!"</p>
   <p>Dropped into a RTL context, this will be the result, which is correct:</p>
-  <p lang="he" dir="rtl" style="text-align:center; font-size: 2em;">בינלאומי!</p>
+  <p lang="he" dir="rtl" style="font-size: 1.8em; color: grey;">תוצאה: "בינלאומי!"</p>
 
-<p>The Hebrew characters are reversed by applying the Unicode Bidirectional Algorithm (UBA). However, in a LTR context the UBA cannot make the exclamation mark appear to the left of the Hebrew text, where it belongs, unless the base direction is set to RTL around it.</p>
+<p>The Hebrew characters are automatically displayed right-to-left by applying the Unicode Bidirectional Algorithm (UBA). However, in a LTR context the UBA cannot make the exclamation mark appear to the left of the Hebrew text, where it belongs, unless the base direction is set to RTL around the inserted string.</p>
+<p>In HTML this can be done by inserting the string into a <code class="kw" translate="no">dir</code> attribute with the value <code class="kw" translate="no">rtl</code>. That yields the following:</p>
+<p lang="he" dir="ltr" style="font-size: 1.8em; color: grey;">Result: "<span dir="rtl">בינלאומי!</span>"</p>
 </section>
 
 
@@ -502,26 +504,26 @@ working on.</p>
   <section>
   <h4 id="bidiCase2">Initial Latin</h4>
 <p>In this case the Hebrew word is preceded by some Latin text (such as a hashtag). The characters in  the order in which they are stored in memory.</p>
-  <p lang="he" dir="rtl" style="text-align:center; font-size: 2em;"><code>
+  <p lang="he" dir="rtl" style="text-align:center; font-size: 1.8em;"><code>
 <bdo dir="ltr">&quot;bidi בינלאומי&quot;</bdo></code></p>
   <p>If the string is dropped into a LTR context, it will display like this, which is incorrect – the word 'bidi' should be to the right:</p>
-  <p lang="he" dir="ltr" style="font-size: 2em;">bidi בינלאומי</p>
+  <p lang="he" dir="ltr" style="font-size: 1.8em; color: grey;">bidi בינלאומי</p>
   <p>Dropped into a RTL context, this will be the result, which is correct:</p>
-  <p lang="he" dir="rtl" style="font-size: 2em;">bidi בינלאומי</p>
+  <p lang="he" dir="rtl" style="font-size: 1.8em; color: grey;">bidi בינלאומי</p>
 
 <p>The Hebrew characters are reversed by applying the Unicode Bidirectional Algorithm (UBA). However, in a LTR context the UBA cannot make the 'bidi' word appear to the right of the Hebrew text, where it belongs, unless the base direction is set to RTL around it.</p>
 <p>Notice how <a href="base_example">our original example</a> demonstrates this. The title of the book was displayed in an LTR context like this:</p>
 
-<p lang="ar" dir="ltr" style="font-size: 1.88em;">Title: HTML و CSS: تصميم و إنشاء مواقع الويب
+<p lang="ar" dir="ltr" style="font-size: 1.8em; color: grey;">Title: HTML و CSS: تصميم و إنشاء مواقع الويب
 </p>
 <p>However, the title is not displayed properly. The first word in the title is "HTML" and it should show on the right side, like this:</p>
 
-<p lang="ar" dir="ltr" style="font-size: 1.8em;">Title: <span dir="rtl">HTML و CSS: تصميم و إنشاء مواقع الويب</span></p>
+<p lang="ar" dir="ltr" style="font-size: 1.8em; color: grey;">Title: <span dir="rtl">HTML و CSS: تصميم و إنشاء مواقع الويب</span></p>
 
 <p>This has an additional complication. Often, applications will test the first strong character in the string in order to guess the base direction that needs to be applied. In this case, that heuristic will produce the wrong result.</p>
 <p>The example that follows is in a RTL context, but the injected string has been given a base direction based on the first strong directional character, and again the words 'HTML' and 'CSS' `are in the wrong place.</p>
 
-<p lang="ar" dir="rtl" style="font-size: 1.8em;">عنوان كتاب: <span dir="ltr">HTML و CSS: تصميم و إنشاء مواقع الويب</span></p>
+<p lang="ar" dir="rtl" style="font-size: 1.8em; color: grey;">عنوان كتاب: <span dir="ltr">HTML و CSS: تصميم و إنشاء مواقع الويب</span></p>
 
 </section>
 
@@ -531,26 +533,26 @@ working on.</p>
   <section>
   <h4 id="bidiCase3">Bidirectional text ordering</h4>
 <p>In this case the string contains three words with different directional properties. Here are the characters in the order in which they are stored in memory.</p>
-<p lang="he" dir="rtl" style="text-align:center; font-size: 2em;"><code>
+<p lang="he" dir="rtl" style="text-align:center; font-size: 1.8em;"><code>
 <bdo dir="ltr">&quot;one שתיים three&quot;</bdo>
 </code></p>
 <p>If the string is dropped into a LTR context, it will display like this:</p>
-<p lang="he" dir="ltr" style="font-size: 2em;">one שתיים three</p>
+<p lang="he" dir="ltr" style="font-size: 1.8em; color: grey;">one שתיים three</p>
 <p>Dropped into a RTL context, this will be the result – the order of the items has changed:</p>
-<p lang="he" dir="rtl" style="font-size: 2em;">one שתיים three </p>
+<p lang="he" dir="rtl" style="font-size: 1.8em; color: grey;">one שתיים three </p>
 <p>If a bidirectional string is inserted into a LTR context without specifying the RTL base direction for the inserted string, it can produce unreadable text. This is an example.</p>
-<p lang="ar" style="font-size: 1.4em;">Translation is: "في XHMTL 1.0 يتم تحقيق ذلك بإضافة العنصر المضمن bdo."</p>
+<p lang="ar" style="font-size: 1.4em; color: grey;">Translation is: "في XHMTL 1.0 يتم تحقيق ذلك بإضافة العنصر المضمن bdo."</p>
 <p>What you should have seen is:</p>
-<p lang="ar" style="font-size: 1.4em;">Translation is: "<span dir="rtl" lang="ar">في XHMTL 1.0 يتم تحقيق ذلك بإضافة العنصر المضمن bdo.</span>"</p>
+<p lang="ar" style="font-size: 1.4em; color: grey;">Translation is: "<span dir="rtl" lang="ar">في XHMTL 1.0 يتم تحقيق ذلك بإضافة العنصر المضمن bdo.</span>"</p>
 <p>This can be much worse when combined with punctuation, or in this case  markup. Take the following example of source code, presented to a user in an educational context in a RTL page: <code>&lt;span&gt;one שתיים three&lt;/span&gt;</code>. If the  base direction of the string is not specified as LTR, you will see the result below.</p>
-<p lang="he" dir="rtl" style="font-size: 1.4em;">&lt;span&gt;one שתיים three&lt;/span&gt;</p>
+<p lang="he" dir="rtl" style="font-size: 1.4em; color: grey;">&lt;span&gt;one שתיים three&lt;/span&gt;</p>
 <p>(This happens because the Unicode bidi algorithm sees <code>span&gt;one</code> as a single directional run, and <code>three&lt;/span</code> as another. The outermost angle brackets are balanced by the algorithm.)</p>
 </section>
 
   <section>
   <h4 id="bidiCase4">Interpreted HTML</h4>
 <p>The characters in this string are shown in the order in which they are stored in memory.</p>
-<p lang="he" dir="rtl" style="text-align:center; font-size: 2em;"><code>
+<p lang="he" dir="rtl" style="text-align:center; font-size: 1.8em;"><code>
 <bdo dir="ltr">&quot;&lt;span dir='ltr'&gt;one שתיים three&lt;/span&gt;&quot;</bdo>
 </code></p>
 <p>This use case is for applications that will parse the string and convert any HTML markup to the DOM. In this case, the text should be rendered correctly in an HTML context because the <code class="kw" translate="no">dir</code> attribute indicates the base direction to be applied within the markup. (It also applies bidi isolation to the text in browsers that fully support bidi markup, avoiding any spill-over effects.) It relies, however, on a system where the consumer expects to receive HTML, and knows how to handle bidi markup.</p>
@@ -562,11 +564,11 @@ working on.</p>
   <section>
   <h4 id="bidiCase5">Neutral LTR text</h4>
 <p>The text in this use case could be a phone number, product catalogue number, mac address, etc. The characters in this string are shown in the order in which they are stored in memory.</p>
-  <p lang="he" dir="rtl" style="text-align:center; font-size: 2em;"><code><bdo dir="ltr">&quot;123 456 789&quot;</bdo></code></p>
+  <p lang="he" dir="rtl" style="text-align:center; font-size: 1.8em;"><code><bdo dir="ltr">&quot;123 456 789&quot;</bdo></code></p>
   <p>If the string is dropped into a LTR context, it will display like this, which is correct:</p>
-  <p lang="he" dir="ltr" style="text-align:center; font-size: 2em;">123 456 789</p>
+  <p lang="he" dir="ltr" style="font-size: 1.8em; color: grey;">123 456 789</p>
   <p>Dropped into a RTL context, this will be the result, which is incorrect – the sequencing is wrong, and this may not even be apparent to the reader:</p>
-  <p lang="he" dir="rtl" style="text-align:center; font-size: 2em;">123 456 789</p>
+  <p lang="he" dir="rtl" style="font-size: 1.8em; color: grey;">123 456 789</p>
 
 <p>When presented to a user, the order of the numbers must remain the same even when the directional context of the surrounding text is RTL. There are no strong directional characters in this string, and the need to preserve a strong LTR base direction is more to do with the type of information in the string than with the content.</p>
 </section>
@@ -575,12 +577,12 @@ working on.</p>
 <section>
 <h4 id="bidiCase7">Spill-over effects</h4>
 <p>A common use for strings is to provide data that is inserted into a page or user interface at runtime. Consider a scenario where, in a LTR application environment, you are displaying book names and the number of reviews each book has received. The display should produce something ordered like this:</p>
-<p style="font-size: 2em;"><code>$title - $numReviews reviews</code></p>
+<p style="font-size: 1.8em;"><code>$title - $numReviews reviews</code></p>
 <p>Then you insert a book with a title like that in the original example. You would expect to see this:</p>
-<p lang="ar" dir="ltr" style="font-size: 2em;"><bdi>HTML: تصميم و إنشاء مواقع الويب</bdi> 
+<p lang="ar" dir="ltr" style="font-size: 1.8em; color: grey;"><bdi>HTML: تصميم و إنشاء مواقع الويب</bdi> 
 - 4 reviews</p>
 <p>What you would actually see is this:</p>
-<p lang="ar" dir="ltr" style="font-size: 2em;">HTML: تصميم و إنشاء مواقع الويب - 4 reviews</p>
+<p lang="ar" dir="ltr" style="font-size: 1.8em; color: grey;">HTML: تصميم و إنشاء مواقع الويب - 4 reviews</p>
 <p>This problem is caused by spillover effects as the Unicode bidirectional algorithm operates on the text inside and outside the inserted string without making any distinction between the two.</p>
 <p>The solution to this problem is called <dfn>bidi isolation</dfn>. The title needs to be directionally isolated from the rest of the text. </p>
 </section>
