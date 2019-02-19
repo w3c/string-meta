@@ -562,12 +562,12 @@ working on.</p>
 <section>
 <h4 id="bidiCase7">Spill-over effects</h4>
 <p>A common use for strings is to provide data that is inserted into a page or user interface at runtime. Consider a scenario where, in a LTR application environment, you are displaying book names and the number of reviews each book has received. The display should produce something ordered like this:</p>
-<p style="text-align:center; font-size: 2em;"><code>$title - $numReviews reviews</code></p>
+<p style="font-size: 2em;"><code>$title - $numReviews reviews</code></p>
 <p>Then you insert a book with a title like that in the original example. You would expect to see this:</p>
-<p lang="ar" dir="ltr" style="text-align:center; font-size: 2em;"><bdi>HTML و CSS: تصميم و إنشاء مواقع الويب</bdi> 
+<p lang="ar" dir="ltr" style="font-size: 2em;"><bdi>HTML: تصميم و إنشاء مواقع الويب</bdi> 
 - 4 reviews</p>
 <p>What you would actually see is this:</p>
-<p lang="ar" dir="ltr" style="text-align: center; font-size: 2em;">HTML و CSS: تصميم و إنشاء مواقع الويب - 4 reviews</p>
+<p lang="ar" dir="ltr" style="font-size: 2em;">HTML: تصميم و إنشاء مواقع الويب - 4 reviews</p>
 <p>This problem is caused by spillover effects as the Unicode bidirectional algorithm operates on the text inside and outside the inserted string without making any distinction between the two.</p>
 <p>The solution to this problem is called <dfn>bidi isolation</dfn>. The title needs to be directionally isolated from the rest of the text. </p>
 </section>
