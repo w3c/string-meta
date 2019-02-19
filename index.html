@@ -526,12 +526,16 @@ working on.</p>
 <p lang="he" dir="rtl" style="text-align:center; font-size: 2em;"><code>
 <bdo dir="ltr">&quot;one שתיים three&quot;</bdo>
 </code></p>
-<p>If the string is dropped into a LTR context, it will display like this, which is correct:</p>
-<p lang="he" dir="ltr" style="text-align:center; font-size: 2em;">one שתיים three</p>
-<p>Dropped into a RTL context, this will be the result, which is incorrect – the order of the items has changed:</p>
-<p lang="he" dir="rtl" style="text-align:center; font-size: 2em;">one שתיים three </p>
-<p>This can be much worse when combined with punctuation, or in this case an example of markup in an educational context (inserted into a RTL context). The sequence 'one two three' should just be wrapped in <code class="kw" translate="no">span</code> markup:</p>
-<p lang="he" dir="rtl" style="text-align:center; font-size: 2em;">&lt;span&gt;one שתיים three&lt;/span&gt;</p>
+<p>If the string is dropped into a LTR context, it will display like this:</p>
+<p lang="he" dir="ltr" style="font-size: 2em;">one שתיים three</p>
+<p>Dropped into a RTL context, this will be the result – the order of the items has changed:</p>
+<p lang="he" dir="rtl" style="font-size: 2em;">one שתיים three </p>
+<p>If a bidirectional string is inserted into a LTR context without specifying the RTL base direction for the inserted string, it can produce unreadable text. This is an example.</p>
+<p lang="ar" style="font-size: 1.4em;">Translation is: "في XHMTL 1.0 يتم تحقيق ذلك بإضافة العنصر المضمن bdo."</p>
+<p>What you should have seen is:</p>
+<p lang="ar" style="font-size: 1.4em;">Translation is: "<span dir="rtl" lang="ar">في XHMTL 1.0 يتم تحقيق ذلك بإضافة العنصر المضمن bdo.</span>"</p>
+<p>This can be much worse when combined with punctuation, or in this case  markup. Take the following example of source code, presented to a user in an educational context in a RTL page: <code>&lt;span&gt;one שתיים three&lt;/span&gt;</code>. If the  base direction of the string is not specified as LTR, you will see the result below.</p>
+<p lang="he" dir="rtl" style="font-size: 1.4em;">&lt;span&gt;one שתיים three&lt;/span&gt;</p>
 </section>
 
   <section>
