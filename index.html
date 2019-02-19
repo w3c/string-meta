@@ -544,6 +544,7 @@ working on.</p>
 <p lang="ar" style="font-size: 1.4em;">Translation is: "<span dir="rtl" lang="ar">في XHMTL 1.0 يتم تحقيق ذلك بإضافة العنصر المضمن bdo.</span>"</p>
 <p>This can be much worse when combined with punctuation, or in this case  markup. Take the following example of source code, presented to a user in an educational context in a RTL page: <code>&lt;span&gt;one שתיים three&lt;/span&gt;</code>. If the  base direction of the string is not specified as LTR, you will see the result below.</p>
 <p lang="he" dir="rtl" style="font-size: 1.4em;">&lt;span&gt;one שתיים three&lt;/span&gt;</p>
+<p>(This happens because the Unicode bidi algorithm sees <code>span&gt;one</code> as a single directional run, and <code>three&lt;/span</code> as another. The outermost angle brackets are balanced by the algorithm.)</p>
 </section>
 
   <section>
