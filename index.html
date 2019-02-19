@@ -501,24 +501,32 @@ working on.</p>
 
   <section>
   <h4 id="bidiCase2">Initial Latin</h4>
-<p>In this case the Hebrew word is preceded by some Latin text (here a hashtag). The characters in  the order in which they are stored in memory.</p>
+<p>In this case the Hebrew word is preceded by some Latin text (such as a hashtag). The characters in  the order in which they are stored in memory.</p>
   <p lang="he" dir="rtl" style="text-align:center; font-size: 2em;"><code>
 <bdo dir="ltr">&quot;bidi בינלאומי&quot;</bdo></code></p>
   <p>If the string is dropped into a LTR context, it will display like this, which is incorrect – the word 'bidi' should be to the right:</p>
-  <p lang="he" dir="ltr" style="text-align:center; font-size: 2em;">bidi בינלאומי</p>
+  <p lang="he" dir="ltr" style="font-size: 2em;">bidi בינלאומי</p>
   <p>Dropped into a RTL context, this will be the result, which is correct:</p>
-  <p lang="he" dir="rtl" style="text-align:center; font-size: 2em;">bidi בינלאומי</p>
+  <p lang="he" dir="rtl" style="font-size: 2em;">bidi בינלאומי</p>
 
 <p>The Hebrew characters are reversed by applying the Unicode Bidirectional Algorithm (UBA). However, in a LTR context the UBA cannot make the 'bidi' word appear to the right of the Hebrew text, where it belongs, unless the base direction is set to RTL around it.</p>
-<p>This has an additional complication. Often, applications will test the first strong character in the string in order to guess the base direction that needs to be applied. In this case, that heuristic will produce the wrong result.</p>
 <p>Notice how <a href="base_example">our original example</a> demonstrates this. The title of the book was displayed in an LTR context like this:</p>
 
-<p lang="ar" dir="ltr" style="text-align:center; font-size: 2em;">HTML و CSS: تصميم و إنشاء مواقع الويب
-
+<p lang="ar" dir="ltr" style="font-size: 1.88em;">Title: HTML و CSS: تصميم و إنشاء مواقع الويب
+</p>
 <p>However, the title is not displayed properly. The first word in the title is "HTML" and it should show on the right side, like this:</p>
 
-<p lang="ar" dir="rtl" style="text-align:center; font-size: 2em;">HTML و CSS: تصميم و إنشاء مواقع الويب</p>
+<p lang="ar" dir="ltr" style="font-size: 1.8em;">Title: <span dir="rtl">HTML و CSS: تصميم و إنشاء مواقع الويب</span></p>
+
+<p>This has an additional complication. Often, applications will test the first strong character in the string in order to guess the base direction that needs to be applied. In this case, that heuristic will produce the wrong result.</p>
+<p>The example that follows is in a RTL context, but the injected string has been given a base direction based on the first strong directional character, and again the words 'HTML' and 'CSS' `are in the wrong place.</p>
+
+<p lang="ar" dir="rtl" style="font-size: 1.8em;">عنوان كتاب: <span dir="ltr">HTML و CSS: تصميم و إنشاء مواقع الويب</span></p>
+
 </section>
+
+
+
 
   <section>
   <h4 id="bidiCase3">Bidirectional text ordering</h4>
