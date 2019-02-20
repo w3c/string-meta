@@ -300,6 +300,8 @@ data in an interchange format is not a good idea. These include:</p>
 <section>
 <h2 id="bp-and-reco">Best Practices, Recommendations, and Gaps</h2>
 
+<p class=issue>This section is being actively developed. Comments on it are incredibly welcome but take the stuff in here with a grain of salt.</p>
+
 <p>This section consists of the Internationalization (I18N) Working Group's set of best practices for identifying language and base direction in data formats on the Web. In some cases, there are gaps in existing standards, where the recommendations of the I18N WG require additional standardization or there might be barriers to full adoption.</p>
 
 <aside class=note>
@@ -309,20 +311,21 @@ data in an interchange format is not a good idea. These include:</p>
     <p class=recco>Recommendations appear with a different background color and decoration list this.</p>
 </aside>
 
-<p>There is widespread low-level support for natural language string metadata as the use of metadata for storage and interchange of the language of data values is long-established and widely supported in the basic infrastructure of the Web. This includes language attributes in [[XML]] and [[HTML]]; string types in schema languages (e.g. [[xmlschema11-2]]) or the various RDF specifications including [[JSON-LD]]; or protocol- or document format-specific provisions for language. A primary concern of this document is that this language metadata is frequently not accompanied by base direction metadata.</p>
-
-<p>The main issue is how a <a>producer</a> of a string knows how to encode and a <a>consumer</a> of a string will know how to find and interpret the language and base direction of a string so that, when it is eventually processed or displayed to the user, the results are correct. The use of metadata for supplying both the language and base direction of natural language string fields ensures that the necessary information is present, can be supplied and extracted with the minimal amount of processing, and does not require producers or consumers to scan or alter the data. The fundamental best practices are thus:</p>
+<p>The main issue is how to establish a common <a>serialization agreement</a> between producers and consumers of data values so that each knows how to encode, find, and interpret the language and base direction of each data field. The use of metadata for supplying both the language and base direction of natural language string fields ensures that the necessary information is present, can be supplied and extracted with the minimal amount of processing, and does not require producers or consumers to scan or alter the data. </p>
   
 <p class=mustard>Use metadata to indicate the language of each natural language string field.</p>
 
-<p>The use of <a href="#metadata">metadata</a> for indicating base direction is preferred, as it avoids requiring the consumer to interpolate the direction using methods such as <a href="#firststrong">first strong</a> or which require modification of the data itself (such as the <a href="rlm">insertion of RLM/LRM markers</a> or <a href="#paired">bidirectional controls</a>).</p>
+<p>There is widespread low-level support for natural language string metadata as the use of metadata for storage and interchange of the language of data values is long-established and widely supported in the basic infrastructure of the Web. This includes language attributes in [[XML]] and [[HTML]]; string types in schema languages (e.g. [[xmlschema11-2]]) or the various RDF specifications including [[JSON-LD]]; or protocol- or document format-specific provisions for language.</p>
 
 <p class=mustard>Use metadata to indicate the base direction of each natural language string field.</p>
 
-<p>Consistency between different specifications and document formats allows for the easy interchange of string data. By naming field attributes in the same way and adopting the same semantics, different specifications can more easily extract values from or add values into resources from other data sources. Thus:</p>
+<p class=recco>Schema languages, such as the RDF suite of specifications, need an in-built mechanism for associating base direction metadata with natural language string values.</p>
 
-<p class=mustard>For [[WebIDL]]-defined data structures, define each natural language text field consistently with the <a>Localizable</a> dictionary, as this combines both language and direction metadata and, if consistently adopted, makes interchange between different formats easier.</p>
+<p>The use of <a href="#metadata">metadata</a> for indicating base direction is preferred, as it avoids requiring the consumer to interpolate the direction using methods such as <a href="#firststrong">first strong</a> or which require modification of the data itself (such as the <a href="rlm">insertion of RLM/LRM markers</a> or <a href="#paired">bidirectional controls</a>).</p>
 
+<p class=mustard>For [[WebIDL]]-defined data structures, define each natural language text field as a <q><a>Localizable</a></q>.</p>
+
+<p> This combines both language and direction metadata and, if consistently adopted, makes interchange between different formats easier. Consistency between different specifications and document formats allows for the easy interchange of string data. By naming field attributes in the same way and adopting the same semantics, different specifications can more easily extract values from or add values into resources from other data sources.</p>
 
 <p>Many resources use only a single language and have a consistent base text direction. For efficiency, the following are best practices:</p>
 
@@ -334,14 +337,15 @@ data in an interchange format is not a good idea. These include:</p>
 
 <p class=mustard>Specifications MUST NOT assume that a document-level default is sufficient.</p>
 
-<p>For document formats that use it, [[JSON-LD]] includes some data structures that are helpful in assigning language (but not base direction) metadata to collections of strings (including entire resources). Notably, it defines what it calls <q>string internationalization</q> in the form of a context-scoped <code>@language</code> value which can be associated with blocks of JSON or within individual objects. There is no definition for base direction, so the <code>@context</code> mechanism does not currently address all concerns raised by this document.</p>
-		
 <p class=mustard>Use of [[JSON-LD]] <code>@context</code> and the built-in <code>@language</code> attribute is RECOMMENDED as a document level default.</p>
+
 <p class=recco>There is no built-in attribute for base direction in [[JSON-LD]]. There needs to be a corresponding built-in attribute (e.g. an <q><code>@dir</code></q>) or de facto convention for indicating document-level base direction.</p>
 
-<p>Not all resources make use of the available metadata mechanisms. The script subtag of a language tag (or the "likely" script subtag based on [[!BCP47]] and [[!LDML]]) can sometimes be used to provide a base direction when other data is not available. Note that using language information is a "last resort" and specifications SHOULD NOT use it as the primary way of indicating direction: make the effort to provide for metadata.</p>
+<p>For document formats that use it, [[JSON-LD]] includes some data structures that are helpful in assigning language (but not base direction) metadata to collections of strings (including entire resources). Notably, it defines what it calls <q>string internationalization</q> in the form of a context-scoped <code>@language</code> value which can be associated with blocks of JSON or within individual objects. There is no definition for base direction, so the <code>@context</code> mechanism does not currently address all concerns raised by this document.</p>
 
 <p class=mustard>If metadata is not available and cannot otherwise be provided, specifications MAY allow a base direction to be <a href="#script_subtag">interpolated from available language metadata</a>.</p>
+
+<p>Not all resources make use of the available metadata mechanisms. The script subtag of a language tag (or the "likely" script subtag based on [[!BCP47]] and [[!LDML]]) can sometimes be used to provide a base direction when other data is not available. Note that using language information is a "last resort" and specifications SHOULD NOT use it as the primary way of indicating direction: make the effort to provide for metadata.</p>
 
 <p class=mustard>Specifications MUST NOT require the production or use of <a href="#paired">paired bidi controls</a>.</p> 
 
@@ -352,14 +356,14 @@ data in an interchange format is not a good idea. These include:</p>
 <pre>
 {
     "@context": { 
-		"@language": "ar",
-		"@dir": "rtl"
-	 },
+        "@language": "ar",
+        "@dir": "rtl"
+    },
     "id": {"978-111887164-5"},
     "title": "<span dir=rtl>HTML &#x0648; CSS: &#x062A;&#x0635;&#x0645;&#x064A;&#x0645; &#x0648; &#x0625;&#x0646;&#x0634;&#x0627;&#x0621; &#x0645;&#x0648;&#x0627;&#x0642;&#x0639; &#x0627;&#x0644;&#x0648;&#x064A;&#x0628;</span>",
     "authors": [ {"value": "Jon Duckett", "lang": "en", "dir": "ltr"} ],
     "pubDate": "2008-01-01",
-    "publisher": "&#x0645;&#x0643;&#x062A;&#x0628;&#x0629;"},
+    "publisher": "&#x0645;&#x0643;&#x062A;&#x0628;&#x0629;",
     "coverImage": "https://example.com/images/html_and_css_cover.jpg",
     // etc.
 },
@@ -1287,10 +1291,16 @@ myDataString:          "978-0-123-4567-X^ltr"          // language-neutral strin
 <p><code><dfn id="Localizable">Localizable</dfn></code> dictionary</p>
 <pre class="def idl" data-dfn-for="Localizable" data-link-for="Localizable">
 <span class="idlDictionary" data-idl="" data-title="Localizable">dictionary <span class="idlDictionaryID"><code>Localizable</code></span> {
+    <span class="idlMember" id="idl-def-localizable-value" data-idl="" data-title="value" data-dfn-for="localizable"><span class="idlMemberType"><a href="https://www.w3.org/TR/WebIDL-1/#idl-DOMString">DOMString</a></span> <span class="idlMemberName"><a data-lt="value" href="#dom-localizable-value" class="internalDFN" data-link-type="dfn" data-for="Localizable"><code>value</code></a></span>;</span>
     <span class="idlMember" id="idl-def-localizable-lang" data-idl="" data-title="lang" data-dfn-for="localizable"><span class="idlMemberType"><a href="https://www.w3.org/TR/WebIDL-1/#idl-DOMString">DOMString</a></span> <span class="idlMemberName"><a data-lt="lang" href="#dom-localizable-lang" class="internalDFN" data-link-type="dfn" data-for="Localizable"><code>lang</code></a></span>;</span>
     <span class="idlMember" id="idl-def-localizable-dir" data-idl="" data-title="dir" data-dfn-for="localizable"><span class="idlMemberType"><a href="#dom-textdirection" class="internalDFN" data-link-type="dfn"><code>TextDirection</code></a></span> <span class="idlMemberName"><a data-lt="dir" href="#dom-localizable-dir" class="internalDFN" data-link-type="dfn" data-for="Localizable"><code>dir</code></a></span> = <span class="idlMemberValue">"auto"</span>;</span>
 };</span>
-</pre><dl><dt><dfn data-dfn-for="localizable" data-dfn-type="dfn" id="dom-localizable-lang" data-idl="" data-title="lang">
+</pre><dl>
+	<dt><dfn data-dfn-for="localizable" data-dfn-type="dfn" id="dom-localizable-value" data-idl="" data-title="value">
+	
+	<code>value</code></dfn> member</dt>
+	<dd>The string containing the data value of this field.</dd>
+	<dt><dfn data-dfn-for="localizable" data-dfn-type="dfn" id="dom-localizable-lang" data-idl="" data-title="lang">
 	
 	<code>lang</code></dfn> member</dt>
 	<dd>A [[!BCP47]] language tag that specifies the primary language for the values of the human-readable
