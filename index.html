@@ -112,8 +112,8 @@ cultures.</p>
   <p>A <dfn data-lt="consumer|consumers">consumer</dfn> is any process that receives natural language strings, either for display or processing.</p>
   <p>A <dfn data-lt="agreement|agreements|serialization agreement|serialization agreements|serialization">serialization agreement</dfn> (or "agreement" for short) is the common understanding between a producer and consumer about the serialization of string metadata: how it is to be understood, serialized, read, transmitted, removed, etc.</p>
   <p><dfn data-lt="language negotiation">Language negotiation</dfn> is any process which selects or filters content based on language. Usually this implies selecting content in a single language (or falling back to some meaningful default language that is available) by finding the best matching values when several languages or locales [[LTLI]] are present in the content. Some common language negotiation algorithms include the Lookup algorithm in [[BCP47]] or the BestFitMatcher in [[ECMA-402]].</p>
-  <p><dfn>LTR</dfn> stands for "left-to-right" and refers to the inline base direction of left-to-right [[!UAX9]]. This is the base text direction used by languages whose starting character progression begins on the left side of the page in horizontal text. It's used for scripts such as Latin, Cyrillic, Devanagari, and many others.</p>
-  <p><dfn>RTL</dfn> stands for "right-to-left" and refers to the inline base direction of right-to-left [[!UAX9]]. This is the base text direction used by languages whose starting character progression begins on the right side of the page in horizontal text. It's used for scripts such as Arabic, Hebrew, Syriac, and a few others.</p>
+  <p><dfn>LTR</dfn> stands for "left-to-right" and refers to the inline base direction of left-to-right [[UAX9]]. This is the base text direction used by languages whose starting character progression begins on the left side of the page in horizontal text. It's used for scripts such as Latin, Cyrillic, Devanagari, and many others.</p>
+  <p><dfn>RTL</dfn> stands for "right-to-left" and refers to the inline base direction of right-to-left [[UAX9]]. This is the base text direction used by languages whose starting character progression begins on the right side of the page in horizontal text. It's used for scripts such as Arabic, Hebrew, Syriac, and a few others.</p>
   
   <p class=note>If you are unfamiliar with bidirectional or right-to-left text, there is a basic introduction <a href="https://www.w3.org/International/articles/inline-bidi-markup/uba-basics">here</a>. Additional materials can be found in the Internationalization Working Group's <a href="https://www.w3.org/International/techniques/authoring-html.en?open=direction">Techniques Index</a>.</p>
  </section>
@@ -267,7 +267,7 @@ the following:</p>
 <section>
 <h3 id="unicode_enough">Isn't Unicode Enough?</h3>
 
-<p>[[!Unicode]] and its character encodings (such as UTF-8) are key elements 
+<p>[[Unicode]] and its character encodings (such as UTF-8) are key elements 
 of the Web and its formats. They provide the ability to encode and 
 exchange text in any language consistently throughout the Internet. 
 However, Unicode by itself does not guarantee perfect presentation and 
@@ -345,7 +345,7 @@ data in an interchange format is not a good idea. These include:</p>
 
 <p class=mustard>If metadata is not available and cannot otherwise be provided, specifications MAY allow a base direction to be <a href="#script_subtag">interpolated from available language metadata</a>.</p>
 
-<p>Not all resources make use of the available metadata mechanisms. The script subtag of a language tag (or the "likely" script subtag based on [[!BCP47]] and [[!LDML]]) can sometimes be used to provide a base direction when other data is not available. Note that using language information is a "last resort" and specifications SHOULD NOT use it as the primary way of indicating direction: make the effort to provide for metadata.</p>
+<p>Not all resources make use of the available metadata mechanisms. The script subtag of a language tag (or the "likely" script subtag based on [[BCP47]] and [[LDML]]) can sometimes be used to provide a base direction when other data is not available. Note that using language information is a "last resort" and specifications SHOULD NOT use it as the primary way of indicating direction: make the effort to provide for metadata.</p>
 
 <p class=mustard>Specifications MUST NOT require the production or use of <a href="#paired">paired bidi controls</a>.</p> 
 
@@ -372,7 +372,9 @@ data in an interchange format is not a good idea. These include:</p>
 
 <p><a>Producers</a> sometimes need to supply multiple language values (see <a href="#localization-considerations">Localization Considerations</a>) for the same content item or data record. One use for this <a>language negotiation</a> by the <a>consumer</a>.</p>
 
-<p class=mustard>Specifications SHOULD recommend the use of <a href="https://json-ld.org/spec/latest/json-ld/#language-indexing">language indexing</a>[[JSON-LD]] when <a>Localizable</a> strings can be supplied in multiple languages for the same value.</p>
+<p class=mustard>Specifications SHOULD recommend the use of <a>language indexing</a> when <a>Localizable</a> strings can be supplied in multiple languages for the same value.</p>
+
+<p class=recco>[[JSON-LD]] language indexing should be modified to support the use of  <a>Localizable</a> values in <a>language indexing</a>.</p>
 
 </section>
 
@@ -677,7 +679,7 @@ working on.</p>
 <section>
 <h4>Additional notes</h4>
 
-<p>Although first-strong detection is outlined in the Unicode Bidirectional Algorithm (UBA) [[!UAX9]], it is not the only possible higher-level protocol mentioned for estimating string direction. For example, Twitter and Facebook currently use different default heuristics for guessing the base direction of text – neither use just simple first-strong detection, and one uses a completely different method.</p>
+<p>Although first-strong detection is outlined in the Unicode Bidirectional Algorithm (UBA) [[UAX9]], it is not the only possible higher-level protocol mentioned for estimating string direction. For example, Twitter and Facebook currently use different default heuristics for guessing the base direction of text – neither use just simple first-strong detection, and one uses a completely different method.</p>
 </section>
 </section>
 
@@ -907,11 +909,11 @@ access, to the original context of the string. Many document formats are generat
 </ol>
 <p><a>Consumers</a> extract the script subtag from the language tag associated with each string, computing the string's base direction as necessary. Script subtags associated with RTL scripts are used to assign a base direction of RTL to their associated strings.</p>
 
-<p>Language information MUST use [[!BCP47]] language tags. The portion of the language tag that carries the information is the script subtag, not the primary language subtag. For example, Azeri may be written LTR (with the Latin or Cyrillic scripts) or RTL (with the Arabic script).  Therefore, the subtag <code class="kw" translate="no">az</code> is insufficient to clarify intended base direction. A language tag such as <code class="kw" translate="no">az-Arab</code> (Azeri as written in the Arabic script), however, can generally be relied upon to indicate that the overall base direction should be RTL. </p>
+<p>Language information MUST use [[BCP47]] language tags. The portion of the language tag that carries the information is the script subtag, not the primary language subtag. For example, Azeri may be written LTR (with the Latin or Cyrillic scripts) or RTL (with the Arabic script).  Therefore, the subtag <code class="kw" translate="no">az</code> is insufficient to clarify intended base direction. A language tag such as <code class="kw" translate="no">az-Arab</code> (Azeri as written in the Arabic script), however, can generally be relied upon to indicate that the overall base direction should be RTL. </p>
  
 <aside class=note>
 	
-<p>Script subtags should only be used in language tags when the language's script is not implied by other information in the language tag. Implementations and specifications SHOULD NOT require the addition or generation of script subtags not already present in a language tag. The IANA Language Subtag Registry, defined by [[!BCP47]] contains a <kbd>Suppress-Script</kbd> field for a few languages, indicating the script where it is missing. Additionally, the [[!LDML]] specification defines a "likely subtag" mechanism that can often be used to supply a missing script subtag. For example, language tags such as <kbd>ar</kbd> (Arabic) or <kbd>ar-EG</kbd> (Arabic as used in Egypt), imply the <kbd>Arab</kbd> (Arabic) script subtag, since nearly all Arabic is written in this script.</p>
+<p>Script subtags should only be used in language tags when the language's script is not implied by other information in the language tag. Implementations and specifications SHOULD NOT require the addition or generation of script subtags not already present in a language tag. The IANA Language Subtag Registry, defined by [[BCP47]] contains a <kbd>Suppress-Script</kbd> field for a few languages, indicating the script where it is missing. Additionally, the [[LDML]] specification defines a "likely subtag" mechanism that can often be used to supply a missing script subtag. For example, language tags such as <kbd>ar</kbd> (Arabic) or <kbd>ar-EG</kbd> (Arabic as used in Egypt), imply the <kbd>Arab</kbd> (Arabic) script subtag, since nearly all Arabic is written in this script.</p>
 
 </aside> 
 
@@ -956,7 +958,7 @@ access, to the original context of the string. Many document formats are generat
     
     <section>
     <h4 id="html-content-how">How it works</h4>
-<p>The producer ensures that all strings begin and end with markup which indicates the appropriate base direction for that string. This requires the producer to examine the string. If the string is not bounded by markup with directional information, the producer must add wrap the string with elements that have the <code class="kw" translate="no">dir</code> or <code class="kw" translate="no">its:direction</code> [[!ITS20]] attributes, or other markup appropriate to a given XML application. If the string <em>is</em> bounded by markup, but it is something such as an HTML <code class="kw" translate="no">h1</code> element, the producer needs to introduce directional information into the existing markup, rather than simply surround the string with a <code class="kw" translate="no">span</code>.</p>
+<p>The producer ensures that all strings begin and end with markup which indicates the appropriate base direction for that string. This requires the producer to examine the string. If the string is not bounded by markup with directional information, the producer must add wrap the string with elements that have the <code class="kw" translate="no">dir</code> or <code class="kw" translate="no">its:direction</code> [[ITS20]] attributes, or other markup appropriate to a given XML application. If the string <em>is</em> bounded by markup, but it is something such as an HTML <code class="kw" translate="no">h1</code> element, the producer needs to introduce directional information into the existing markup, rather than simply surround the string with a <code class="kw" translate="no">span</code>.</p>
 <p>This example uses HTML markup. (Simply to make the example easier to read, it shows the text content of the string as it should be displayed, rather than in the order in which the characters are stored.)</p>
     
 <aside class="example">
@@ -1107,7 +1109,7 @@ myDataString:          "978-0-123-4567-X^ltr"          // language-neutral strin
 
   <p>Unicode defines special characters that can be used as language tags. These characters are "default ignorable" and should have no visual appearance. Here is how Unicode tags are supposed to work:</p>
   
-  <p>Each tag is a character sequence. The sequence begins with a tag identification character. The only one currently defined is <code>U+E0001</code>, which identifies [[!BCP47]] language tags. Other types of tags are possible, via private agreement. The remainder of the Unicode block for forming tags mirrors the printable ASCII characters. That is, <code>U+E0020</code> is space (mirroring <code>U+0020</code>), <code>U+E0041</code> is capital A (mirroring <code>U+0041</code>), and so forth. Following the tag identification character, producers use each tag character to spell out a [[!BCP47]] language tag  using the upper/lowercase letters, digits, and the hyphen character. A given source language tag, which is composed from ASCII letters, digits and hyphens, can be transmogrified into tags by adding <code>0xE0000</code> to each character's code point. Additional structure, such as a language priority list (see [[RFC4647]]) might be constructed using other characters such as comma or semi-colon, although Unicode does not define or even necessarily permit this.</p>
+  <p>Each tag is a character sequence. The sequence begins with a tag identification character. The only one currently defined is <code>U+E0001</code>, which identifies [[BCP47]] language tags. Other types of tags are possible, via private agreement. The remainder of the Unicode block for forming tags mirrors the printable ASCII characters. That is, <code>U+E0020</code> is space (mirroring <code>U+0020</code>), <code>U+E0041</code> is capital A (mirroring <code>U+0041</code>), and so forth. Following the tag identification character, producers use each tag character to spell out a [[BCP47]] language tag  using the upper/lowercase letters, digits, and the hyphen character. A given source language tag, which is composed from ASCII letters, digits and hyphens, can be transmogrified into tags by adding <code>0xE0000</code> to each character's code point. Additional structure, such as a language priority list (see [[RFC4647]]) might be constructed using other characters such as comma or semi-colon, although Unicode does not define or even necessarily permit this.</p>
   
   <p>The end of a tag's scope is signalled by the end of the string, or can be signalled explicitly using the cancel tag character U+E007F, either alone (to cancel all tags) or preceeded by the language tag identification character <code>U+E0001</code> (i.e. the sequence <code>&lt;U+E0001,U+E007F&gt;</code> to end only language tags).</p>
   
@@ -1127,9 +1129,9 @@ myDataString:          "978-0-123-4567-X^ltr"          // language-neutral strin
 	  
 <p>Applications that treat the characters as unknown Unicode characters will display them as tofu (hollow box replacement characters) and may count them towards length limits, etc. So they are only useful when applications or interchange mechanisms are fully aware of them and can remove them or disregard them appropriately. Although the characters are not supposed to be displayed or have any effect on text processing, in practice they can interfere with normal text processes such as truncation. line wrapping, hyphenation, spell-checking and so forth.</p>
     
-<p>By design, [[!BCP47]] language tags are intended to be ASCII case-insensitive. Applications handling Unicode tag characters would have to apply similar case-insensitivity to ensure correct identification of the language. (The Unicode data doesn't specify case conversion pairings for these characters; this complicates the processing and matching of langauge tag values encoded using the tag characters.)</p>
+<p>By design, [[BCP47]] language tags are intended to be ASCII case-insensitive. Applications handling Unicode tag characters would have to apply similar case-insensitivity to ensure correct identification of the language. (The Unicode data doesn't specify case conversion pairings for these characters; this complicates the processing and matching of langauge tag values encoded using the tag characters.)</p>
   
-<p>Moreover, language tags need to be formed from valid subtags to conform to [[!BCP47]]. Valid subtags are kept in an IANA registry and new subtags are added regularly, so applications dealing with this kind of tagging would need to always check each subtag against the latest version of the registry.</p>
+<p>Moreover, language tags need to be formed from valid subtags to conform to [[BCP47]]. Valid subtags are kept in an IANA registry and new subtags are added regularly, so applications dealing with this kind of tagging would need to always check each subtag against the latest version of the registry.</p>
   
 <p>The language tag characters do not allow nesting of language tags. For example, if a string contains two languages, such as a quote in French inside an English sentence, Unicode tag characters can only indicate where one language starts. To indicate nested languages, tags would need to be embedded into the text not just prefixed to the front.</p>
   
@@ -1178,9 +1180,9 @@ myDataString:          "978-0-123-4567-X^ltr"          // language-neutral strin
 <section>
 	<h2 id="localization-considerations">Localization Considerations</h2>
 	
-	<p>Many specifications need to allow multiple different language values to be returned for a given field. This might be to support runtime localization or because the <a>producer</a> has multiple different language values and cannot select or distinguish them appropriately. There are several ways that multiple language values could be organized. For speed and ease of access, the use of <a href="https://json-ld.org/spec/latest/json-ld/#language-indexing">language indexing</a> [[JSON-LD]] is RECOMMENDED.</p>
+	<p>Many specifications need to allow multiple different language values to be returned for a given field. This might be to support runtime localization or because the <a>producer</a> has multiple different language values and cannot select or distinguish them appropriately. There are several ways that multiple language values could be organized. For speed and ease of access, the use of <dfn data-lt="language indexing">language indexing</dfn> is a useful strategy.</p>
 	
-	<p>A language-indexed array uses the language tag as a key within the array like this:</p>
+	<p>In language indexing, a given field's value is an array of key-value pairs. The keys in the array are language tags. The values of each language tag are strings or, ideally, <a>Localizable</a> objects. Here's an example of what a language indexed field <kbd>title</kbd> might look like:</p>
 
 <aside class=example>
 <pre>
@@ -1191,9 +1193,9 @@ myDataString:          "978-0-123-4567-X^ltr"          // language-neutral strin
 </pre>
 </aside>
 	
-<p>Notice that this format can include the <kbd>lang</kbd> field both as a key in the array and inside the enclosed <kbd>Localizable</kbd> so that the selected or preferred value can easily be extracted as a complete JavaScript or JSON object.</p>
+<p>Using the language tag as a key to the value array allow for rapid selection of the correct value for a given request. Notice that, if the value of the language tag is a <a>Localizable</a>, the language might be repeated in the data structure.</p>
 
-<p>For example, if the language requested were U.S. English (<kbd>en-US</kbd>), this format makes it easier to match and extract the best fitting title object <kbd>{"value": "Learning Web Design", "lang": "en"}</kbd>. An additional potential advantage is that the indexed language tag can indicate the intended audience of the value separately from the language tag of the actual data value. An example of this might be the use of <em>language ranges</em> from [[!RFC4647]], as in the following example, where a more specific language value might be wrapped with a less-specific language tag. In this example, the content has been labeled with a specific language tag (<code>de-DE</code>), but is available and applicable to users who speak other variants of German, such as <code>de-CH</code> or <code>de-AT</code>:</p>
+<p>For example, if the language requested were U.S. English (<kbd>en-US</kbd>), this format makes it easier to match and extract the best fitting title object <kbd>{"value": "Learning Web Design", "lang": "en"}</kbd>. An additional potential advantage is that the indexed language tag can indicate the intended audience of the value separately from the language tag of the actual data value. An example of this might be the use of <em>language ranges</em> from [[RFC4647]], as in the following example, where a more specific language value might be wrapped with a less-specific language tag. In this example, the content has been labeled with a specific language tag (<code>de-DE</code>), but is available and applicable to users who speak other variants of German, such as <code>de-CH</code> or <code>de-AT</code>:</p>
 
 <aside class=example>
 <pre>
@@ -1215,7 +1217,29 @@ myDataString:          "978-0-123-4567-X^ltr"          // language-neutral strin
 </pre>
 </aside>
 
-<p>The primary issue with this approach is the need to extract the indexing language tag from the content in order to generate the index. <a>Producers</a> might also need to have a <a>serialization agreement</a> with <a>consumers</a> about whether the indexing language tag will be in any way canonicalized. For example, the language tag <code>cel-gaulish</code> is one of the [[!BCP47]] grandfathered language tags. Some implementations, such as those following the rules in [[!CLDR]], would prefer that this tag be replaced with a modern equivalent (<code>xtg-x-cel-gaulish</code> in this case) for the purposes of language negotiation.</p>
+<p>The primary issue with this approach is the need to extract the indexing language tag from the content in order to generate the index. <a>Producers</a> might also need to have a <a>serialization agreement</a> with <a>consumers</a> about whether the indexing language tag will be in any way canonicalized. For example, the language tag <code>cel-gaulish</code> is one of the [[BCP47]] grandfathered language tags. Some implementations, such as those following the rules in [[CLDR]], would prefer that this tag be replaced with a modern equivalent (<code>xtg-x-cel-gaulish</code> in this case) for the purposes of language negotiation.</p>
+
+<p>[[JSON-LD]] defines a <a href="https://json-ld.org/spec/latest/json-ld/#language-indexing">specific implementation</a> of language indexing, which depends on the use of the <code>@context</code> structure. This structure does not support the use of <a>Localizable</a> values (only strings or arrays of strings are supported), so changes would be needed to allow some of the above capabilities in [[JSON-LD]] documents.</p>
+
+<aside class=example title="JSON-LD Language Indexing">
+<pre>
+{
+  "@context": {
+    "example": "http://example.com/example/",
+    "title": {
+      "@id": "example:title",
+      "@container": "@language"
+    }
+  },
+  "@id": "http://example.com/Learning%20Web%20Design",
+  "title": { "en": { "value": "Learning Web Design" },
+             "ar": { "value": "&#x0627;&#x0644;&#x062A;&#x0639;&#x0644;&#x0645; &#x0639;&#x0644;&#x0649; &#x0634;&#x0628;&#x0643;&#x0629; &#x0627;&#x0644;&#x0625;&#x0646;&#x062A;&#x0631;&#x0646;&#x062A; &#x0627;&#x0644;&#x062A;&#x0635;&#x0645;&#x064A;&#x0645;"}, 
+             "ja": { "value": "Web&#x30C7;&#x30B6;&#x30A4;&#x30F3;&#x3092;&#x5B66;&#x3076;" },
+             "zh-Hans": { "value": "&#x5B66;&#x4E60;&#x7F51;&#x9875;&#x8BBE;&#x8BA1;"} 
+   }
+}
+</pre>
+</aside>
 </section>
 
 
@@ -1303,7 +1327,7 @@ myDataString:          "978-0-123-4567-X^ltr"          // language-neutral strin
 	<dt><dfn data-dfn-for="localizable" data-dfn-type="dfn" id="dom-localizable-lang" data-idl="" data-title="lang">
 	
 	<code>lang</code></dfn> member</dt>
-	<dd>A [[!BCP47]] language tag that specifies the primary language for the values of the human-readable
+	<dd>A [[BCP47]] language tag that specifies the primary language for the values of the human-readable
 members of the inheriting dictionary.</dd>
 <dt><dfn data-dfn-for="localizable" data-dfn-type="dfn" id="dom-localizable-dir" data-idl="" data-title="dir"><code>
 dir</code></dfn> member</dt>
@@ -1320,7 +1344,7 @@ dir</code></dfn> member</dt>
 </pre>
 <p>The text-direction values are the following, implying that the value of the human-readable members is by default:</p>
 <dl><dt><dfn data-dfn-for="textdirection" data-dfn-type="dfn" id="dom-textdirection-auto" data-idl="" data-title="auto">
-	<code>auto</code></dfn></dt><dd> Directionality is determined by the Unicode Bidirectional Algorithm [[!UAX9]] algorithm.</dd>
+	<code>auto</code></dfn></dt><dd> Directionality is determined by the Unicode Bidirectional Algorithm [[UAX9]] algorithm.</dd>
 <dt><dfn data-dfn-for="textdirection" data-dfn-type="dfn" id="dom-textdirection-ltr" data-idl="" data-title="ltr">
 	<code>ltr</code></dfn></dt><dd>Left-to-right text.</dd>
 <dt><dfn data-dfn-for="textdirection" data-dfn-type="dfn" id="dom-textdirection-rtl" data-idl="" data-title="rtl">
