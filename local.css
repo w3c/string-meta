@@ -31,23 +31,34 @@ p.cjk-demo {
 	font-family: serif;
 }
 
-.mustard {
+.req {
     background-color: #FFC;
     font-style: italic;
 }
 
-.mustard::before {
+.req::before {
     content: "\1f44d \00A0 ";
     font-style: normal;
     color: #63F;;
 }
 
-.recco {
+.reqex {
+    background-color: #FFC;
+    font-style: italic;
+}
+
+.reqex::before {
+    content: "\1f44d \00A0 Req. #: ";
+    font-style: normal;
+    color: #63F;;
+}
+
+.gap {
     background-color: #FCF;
     font-style: italic;
 }
 
-.recco::before {
+.gap::before {
     content: "\1f631 \00A0 ";
     font-style: normal;
     color: #63F;;
