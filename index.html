@@ -1,14 +1,14 @@
 <!DOCTYPE html>
 <html lang="en" dir="ltr">
 <head>
-<title>Requirements for Language and Direction Metadata in Data Formats</title>
+<title>Strings on the Web: Language and Direction Metadata</title>
 <meta charset="utf-8"/>
 <script src="https://www.w3.org/Tools/respec/respec-w3c-common" class="remove"></script>
 <script class="remove">
       var respecConfig = {
           // specification status (e.g. WD, LCWD, WG-NOTE, etc.). If in doubt use ED.
-          specStatus:          "ED",
-          //publishDate:  		"2018-07-19",
+          specStatus:           "ED",
+          //publishDate:  		"2019-04-16",
           //previousPublishDate:  "2017-06-24",
           //previousMaturity:  	"WG-NOTE",
 
@@ -66,7 +66,7 @@
 
 <body>
 <div id="abstract">
-  <p>This document describes the best practices for identifying language and base direction in data formats used on the Web.</p>
+  <p>This document describes the best practices for identifying language and base direction for strings used on the Web.</p>
 </div>
 
 
@@ -85,6 +85,7 @@ reviews related to formats based on JSON, WebIDL, and other
 non-markup data languages. Unlike markup formats, such as XML, these 
 data languages generally do not provide extensible attributes and were 
 not conceived with built-in language or direction metadata.</p>
+<p>The concepts in this document are applicable any time strings are used on the Web, either as part of a formalised data structure, but also where they simply originate from JavaScript scripting or any stored list of strings.</p>
 
 <p>Natural language information on the Web depends on and benefits from 
 the presence of language and direction metadata. Along with support for 
@@ -96,8 +97,8 @@ technologies for the Web.</p>
 <p>Markup formats, such as HTML and XML, as well as related styling 
 languages, such as CSS and XSL, are reasonably mature and provide 
 support for the interchange and presentation of the world's languages 
-via built-in features. Data formats need similar mechanisms in order to 
-ensure a complete and consistent support for the world's languages and 
+via built-in features. Strings and string-based data formats need similar mechanisms in order to 
+ensure  complete and consistent support for the world's languages and 
 cultures.</p>
 
 	
@@ -330,7 +331,7 @@ data in an interchange format is not a good idea. These include:</p>
 <p class="advisement" id="bp-use_metadata">Use metadata to indicate the language and the base direction for each natural language string.</p>
 
 <p>There is widespread low-level support for natural language string metadata because the use of metadata for storage and interchange of the language of data values is long-established and widely supported in the basic infrastructure of the Web. This includes language attributes in [[XML]] and [[HTML]]; string types in schema languages (e.g. [[xmlschema11-2]]) or the various RDF specifications including [[JSON-LD]]; or protocol- or document format-specific provisions for language.</p>
-<p>The use of <a href="#metadata">metadata</a> for indicating base direction is preferred, because it avoids requiring the consumer to interpolate the direction using methods such as <a href="#firststrong">first strong</a> or which require modification of the data itself (such as the <a href="rlm">insertion of RLM/LRM markers</a> or <a href="#paired">bidirectional controls</a>).</p>
+<p>The use of <a href="#metadata">metadata</a> for indicating base direction is preferred, because it avoids requiring the consumer to interpolate the direction using methods such as <a href="#firststrong">first strong</a> or which require modification of the data itself (such as the <a href="#rlm">insertion of RLM/LRM markers</a> or <a href="#paired">bidirectional controls</a>).</p>
 <p class="issue">Schema languages, such as the RDF suite of specifications, have no in-built mechanism for associating base direction metadata with natural language string values.</p>
 
 <p class="issue">There is no built-in attribute for base direction in [[JSON-LD]]. There needs to be a corresponding built-in attribute (e.g. an <q><code>@dir</code></q>) or de facto convention for indicating document-level base direction.</p>
@@ -367,7 +368,7 @@ data in an interchange format is not a good idea. These include:</p>
 
 
 <aside class="example">
-<p>Here is the record used in the <a href="baseExample">original example</a> with a record-level default language and base direction added. It also shows the use of a Localizable string to override the document-level defaults for the <kbd>author</kbd> field. Note that this "worked example" is not valid.</p>
+<p>Here is the record used in the <a href="#base_example">original example</a> with a record-level default language and base direction added. It also shows the use of a Localizable string to override the document-level defaults for the <kbd>author</kbd> field. Note that this "worked example" is not valid.</p>
 <pre>
 {
     "@context": { 
@@ -553,7 +554,7 @@ working on.</p>
   <p lang="he" dir="rtl" style="font-size: 1.8em; color: grey;">bidi בינלאומי</p>
 
 <p>The Hebrew characters are reversed by applying the Unicode Bidirectional Algorithm (UBA). However, in a LTR context the UBA cannot make the 'bidi' word appear to the right of the Hebrew text, where it belongs, unless the base direction is set to RTL around it.</p>
-<p>Notice how <a href="base_example">our original example</a> demonstrates this. The title of the book was displayed in an LTR context like this:</p>
+<p>Notice how <a href="#base_example">our original example</a> demonstrates this. The title of the book was displayed in an LTR context like this:</p>
 
 <p lang="ar" dir="ltr" style="font-size: 1.8em; color: grey;">Title: HTML و CSS: تصميم و إنشاء مواقع الويب
 </p>
@@ -907,7 +908,7 @@ access, to the original context of the string. Many document formats are generat
 
 <section>
 <h4>How it works</h4>
-<p>A <a>producer</a> <a href="localizable-dictionary">supplies language metadata</a> for strings, specifying, where necessary, the script in use.</p>
+<p>A <a>producer</a> <a href="#localizable-dictionary">supplies language metadata</a> for strings, specifying, where necessary, the script in use.</p>
 
 <p>There are a number of possible approaches:</p>
 <ol>
@@ -1241,10 +1242,10 @@ myDataString:          "978-0-123-4567-X^ltr"          // language-neutral strin
     }
   },
   "@id": "http://example.com/Learning%20Web%20Design",
-  "title": { "en": { "value": "Learning Web Design" },
-             "ar": { "value": "&#x0627;&#x0644;&#x062A;&#x0639;&#x0644;&#x0645; &#x0639;&#x0644;&#x0649; &#x0634;&#x0628;&#x0643;&#x0629; &#x0627;&#x0644;&#x0625;&#x0646;&#x062A;&#x0631;&#x0646;&#x062A; &#x0627;&#x0644;&#x062A;&#x0635;&#x0645;&#x064A;&#x0645;"}, 
-             "ja": { "value": "Web&#x30C7;&#x30B6;&#x30A4;&#x30F3;&#x3092;&#x5B66;&#x3076;" },
-             "zh-Hans": { "value": "&#x5B66;&#x4E60;&#x7F51;&#x9875;&#x8BBE;&#x8BA1;"} 
+  "title": { "en"     : "Learning Web Design",
+             "ar"     : "&#x0627;&#x0644;&#x062A;&#x0639;&#x0644;&#x0645; &#x0639;&#x0644;&#x0649; &#x0634;&#x0628;&#x0643;&#x0629; &#x0627;&#x0644;&#x0625;&#x0646;&#x062A;&#x0631;&#x0646;&#x062A; &#x0627;&#x0644;&#x062A;&#x0635;&#x0645;&#x064A;&#x0645;", 
+             "ja"     : "Web&#x30C7;&#x30B6;&#x30A4;&#x30F3;&#x3092;&#x5B66;&#x3076;",
+             "zh-Hans": "&#x5B66;&#x4E60;&#x7F51;&#x9875;&#x8BBE;&#x8BA1;" 
    }
 }
 </pre>
