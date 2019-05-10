@@ -339,7 +339,7 @@ data in an interchange format is not a good idea. These include:</p>
 
 <p>Explicit metadata, if available, trumps the need for heuristics to be applied.  This is logical, since the heuristic method cannot reliably deduce the necessary direction on its own, and if metadata has been explicitly provided it indicates that it is intended to be authoritative.
 </p>
-<p>It is essential for a consumer to know that language and direction are unknown quantities in order for them to know when to apply fallback strategies to the data (this could include language-detection, or first-strong heuristics for direction).  In particular, the default direction should not be set to LTR, since that would override the need for first-strong detection.</p>
+<p>It is essential for a consumer to know that language and direction are unknown quantities in order for them to know when to apply fallback strategies to the data (this could include language-detection, or first-strong heuristics for direction).  In particular, the default direction should not be set to LTR, since that would override the need for first-strong detection, which is more appropriate for strings written in a RTL script.</p>
 
 
 <p class="advisement" id="bp-use_jsonld_context2">Use of [[JSON-LD]] <code>@context</code> and the built-in <code>@language</code> attribute is RECOMMENDED as a document level default.</p>
