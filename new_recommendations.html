@@ -363,7 +363,7 @@ data in an interchange format is not a good idea. These include:</p>
 <section>
 <h3 id="string_specific_direction">String-specific directional information</h3>
 <p class="advisement" id="bp-localizable2">If a resource-wide setting is available, specify field-based metadata to override the default. </p>
-<p>First-strong heuristics are ineffective when a default direction has been set for all strings, since  metadata overrides (intentionally) the value of the first-strong character. Even if an RLM character has been prepended to a string, the metadata overrides it.</p>
+<p>First-strong heuristics are ineffective when a default direction has been set for all strings, since  metadata overrides (intentionally) the value of the first-strong character, therefore it is necessary to use explicitly provided field data to override the default. Even if an RLM character has been prepended to a string, the default metadata overrides it.</p>
 <p>The use of <a href="#metadata">metadata</a> for indicating base direction is also preferred, because it avoids requiring the consumer to interpolate the direction using methods such as <a href="#firststrong">first strong</a> or which require modification of the data itself (such as the <a href="#rlm">insertion of RLM/LRM markers</a> or <a href="#paired">bidirectional controls</a>).</p>
 <p class="issue">Schema languages, such as the RDF suite of specifications, have no in-built mechanism for associating base direction metadata with natural language string values.</p>
 <p class="issue">There is no built-in attribute for base direction in [[JSON-LD]]. There needs to be a corresponding built-in attribute (e.g. an <q><code>@dir</code></q>) or de facto convention for indicating document-level base direction.</p>
