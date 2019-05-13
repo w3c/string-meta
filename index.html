@@ -149,7 +149,7 @@ cultures.</p>
 <section id="agreements">
   <h4>Serialization Agreements</h4>
   <p>Between any <a>producer</a> and <a>consumer</a>, there needs to be an <a>agreement</a> about what the document format contains and what the data in each field or attribute means. Any time a producer of a string takes special steps to collect and communicate information about the base direction or language of that string, it must do so with the expectation that the consumer of the string will understand how the producer encoded this information. If no action is taken by the producer, the consumer must still decide what rules to follow in order to decide on the appropriate base direction and language, even if it is only to provide some form of default value.</p>
-  <p>In some systems or document formats, the necessary behaviour of the producers and consumers of a string are fully specified. In others, such agreements are not available; it is up to users to provide an agreement for how to encode, transmit, and later decode the necessary language or direction informat. Low level specifications, such as JSON, do not provide a string metadata structure by default, so any document formats based on these need to provide the "agreement" themselves.</p>
+  <p>In some systems or document formats, the necessary behaviour of the producers and consumers of a string are fully specified. In others, such agreements are not available; it is up to users to provide an agreement for how to encode, transmit, and later decode the necessary language or direction information. Low level specifications, such as JSON, do not provide a string metadata structure by default, so any document formats based on these need to provide the "agreement" themselves.</p>
 </section>
 </section>
 
@@ -335,14 +335,14 @@ data in an interchange format is not a good idea. These include:</p>
 <p class="advisement" id="bp-not_only_default">Specifications MUST NOT assume that a document-level default is sufficient.</p>
 
 <p>Document level defaults, when combined with per-field metadata, can reduce the overall complexity of a given document instance, since the language and direction values don't have to be repeated across many fields. However, they do not solve all language or directionality problems, and so it must be possible to override the default on a string-by-string basis, where necessary.</p>
-<p class="advisement" id="bp-not_only_default2">Specify that, in the absence of other information, the default direction and default language are unknown.</p>
+<p class="advisement" id="bp-default_fallback">Specify that, in the absence of other information, the default direction and default language are unknown.</p>
 
 <p>Explicit metadata, if available, trumps the need for heuristics to be applied.  This is logical, since the heuristic method cannot reliably deduce the necessary direction on its own, and if metadata has been explicitly provided it indicates that it is intended to be authoritative.
 </p>
 <p>It is essential for a consumer to know that language and direction are unknown quantities in order for them to know when to apply fallback strategies to the data (this could include language-detection, or first-strong heuristics for direction).  In particular, the default direction should not be set to LTR, since that would override the need for first-strong detection, which is more appropriate for strings written in a RTL script.</p>
 
 
-<p class="advisement" id="bp-use_jsonld_context2">Use of [[JSON-LD]] <code>@context</code> and the built-in <code>@language</code> attribute is RECOMMENDED as a document level default.</p>
+<p class="advisement" id="bp-use_jsonld_language_context">Use of [[JSON-LD]] <code>@context</code> and the built-in <code>@language</code> attribute is RECOMMENDED as a document level default.</p>
 <p>For document formats that use it, [JSON-LD] includes some data structures that are helpful in assigning language (but not base direction) metadata to collections of strings (including entire resources). Notably, it defines what it calls “string internationalization” in the form of a context-scoped @language value which can be associated with blocks of JSON or within individual objects. There is no definition for base direction, so the @context mechanism does not currently address all concerns raised by this document.</p>
 </section>
 
@@ -350,10 +350,10 @@ data in an interchange format is not a good idea. These include:</p>
 <section>
 <h3 id="string_specific_language">String-specific language information</h3>
 
-<p class="advisement" id="bp-heuristics">Use field-based metadata or string datatypes to indicate the language and the base direction for individual natural language strings.</p>
+<p class="advisement" id="bp-lang_field_based_metadata">Use field-based metadata or string datatypes to indicate the language and the base direction for individual natural language strings.</p>
 
 <p>There is widespread low-level support for natural language string metadata because the use of metadata for storage and interchange of the language of data values is long-established and widely supported in the basic infrastructure of the Web. This includes language attributes in [[XML]] and [[HTML]]; string types in schema languages (e.g. [[xmlschema11-2]]) or the various RDF specifications including [[JSON-LD]]; or protocol- or document format-specific provisions for language.</p>
-<p class="advisement" id="bp-use_jsonld_context">Use of [[JSON-LD]] [language thingies are] RECOMMENDED as a way to provide string-specific language information.</p>
+<p class="advisement" id="bp-use_jsonld_atsign">Use of [[JSON-LD]] [language thingies are] RECOMMENDED as a way to provide string-specific language information.</p>
 </section>
 
 
@@ -362,19 +362,19 @@ data in an interchange format is not a good idea. These include:</p>
 
 <section>
 <h3 id="string_specific_direction">String-specific directional information</h3>
-<p class="advisement" id="bp-localizable2">If a resource-wide setting is available, specify field-based metadata to override the default. </p>
+<p class="advisement" id="bp-dir_field_based_metadata">If a resource-wide setting is available, specify field-based metadata to override the default. </p>
 <p>First-strong heuristics are ineffective when a default direction has been set for all strings, since  metadata overrides (intentionally) the value of the first-strong character, therefore it is necessary to use explicitly provided field data to override the default. Even if an RLM character has been prepended to a string, the default metadata overrides it.</p>
 <p>The use of <a href="#metadata">metadata</a> for indicating base direction is also preferred, because it avoids requiring the consumer to interpolate the direction using methods such as <a href="#firststrong">first strong</a> or which require modification of the data itself (such as the <a href="#rlm">insertion of RLM/LRM markers</a> or <a href="#paired">bidirectional controls</a>).</p>
 <p class="issue">Schema languages, such as the RDF suite of specifications, have no in-built mechanism for associating base direction metadata with natural language string values.</p>
 <p class="issue">There is no built-in attribute for base direction in [[JSON-LD]]. There needs to be a corresponding built-in attribute (e.g. an <q><code>@dir</code></q>) or de facto convention for indicating document-level base direction.</p>
-<p class="advisement" id="bp-localizable3">For the case where the resource-wide setting is not available, specify that consumers should use first-strong heuristics to identify the base direction of strings.</p>
-<p class="advisement" id="bp-localizable4">For the case where the resource-wide setting is available but not used, specify that consumers should fall back to first-strong heuristics to identify the base direction of strings.</p>
+<p class="advisement" id="bp-use_heuristics1">For the case where the resource-wide setting is not available, specify that consumers should use first-strong heuristics to identify the base direction of strings.</p>
+<p class="advisement" id="bp-use_heuristics2">For the case where the resource-wide setting is available but not used, specify that consumers should fall back to first-strong heuristics to identify the base direction of strings.</p>
 <p>If metadata is not available, consumers of strings should use heuristics, preferably based on the Unicode Standard's first-strong detection algorithm, to detect the base direction of a string.</p>
 <p>The <a href="#firststrong">first-strong algorithm</a> looks for the first strongly-directional character in a string (skipping certain preliminary substrings), and assumes that it represents the base direction for the string as a whole. However, the first strong directional character doesn't always coincide with the required base direction for the string as a whole, so it should be possible to  provide metadata, where needed, to address this problem.</p>
-<p class="advisement" id="bp-localizable5">If relying on first-strong heuristics, encourage content developers to use RLM/LRM at the beginning of a string where it is necessary to force a particular base direction, but do not prepend one of these characters to existing strings.</p>
-<p class="advisement" id="bp-localizable6">Do not rely on the availability of RLM/LRM formatting characters in most cases.</p>
+<p class="advisement" id="bp-using_rlm_lrm">If relying on first-strong heuristics, encourage content developers to use RLM/LRM at the beginning of a string where it is necessary to force a particular base direction, but do not prepend one of these characters to existing strings.</p>
+<p class="advisement" id="bp-rlm_lrm_availability">Do not rely on the availability of RLM/LRM formatting characters in most cases.</p>
 <p>If string data is being provided by users or content developers in web forms or other simple environments, users may not be able to enter these formatting characters.  In fact, most users will probably be unaware that such characters exist, or how to use them.  A web form can render their use unnecessary for immediate inspection if it sets the base direction for the input (which it should).</p>
-<p class="advisement" id="bp-interpolate">If metadata is not available and cannot otherwise be provided, specifications MAY allow a base direction to be <a href="#script_subtag">interpolated from available language metadata</a>.</p>
+<p class="advisement" id="bp-inferring_from_language">If metadata is not available and cannot otherwise be provided, specifications MAY allow a base direction to be <a href="#script_subtag">interpolated from available language metadata</a>.</p>
 <p>Not all resources make use of the available metadata mechanisms. The script subtag of a language tag (or the "likely" script subtag based on [[BCP47]] and [[LDML]]) can sometimes be used to provide a base direction when other data is not available. Note that using language information is a "last resort" and specifications SHOULD NOT use it as the primary way of indicating direction: make the effort to provide for metadata.</p>
 </section>
 
@@ -1171,7 +1171,7 @@ myDataString:          "978-0-123-4567-X^ltr"          // language-neutral strin
 	  
 <p>Applications that treat the characters as unknown Unicode characters will display them as tofu (hollow box replacement characters) and may count them towards length limits, etc. So they are only useful when applications or interchange mechanisms are fully aware of them and can remove them or disregard them appropriately. Although the characters are not supposed to be displayed or have any effect on text processing, in practice they can interfere with normal text processes such as truncation. line wrapping, hyphenation, spell-checking and so forth.</p>
     
-<p>By design, [[BCP47]] language tags are intended to be ASCII case-insensitive. Applications handling Unicode tag characters would have to apply similar case-insensitivity to ensure correct identification of the language. (The Unicode data doesn't specify case conversion pairings for these characters; this complicates the processing and matching of langauge tag values encoded using the tag characters.)</p>
+<p>By design, [[BCP47]] language tags are intended to be ASCII case-insensitive. Applications handling Unicode tag characters would have to apply similar case-insensitivity to ensure correct identification of the language. (The Unicode data doesn't specify case conversion pairings for these characters; this complicates the processing and matching of language tag values encoded using the tag characters.)</p>
   
 <p>Moreover, language tags need to be formed from valid subtags to conform to [[BCP47]]. Valid subtags are kept in an IANA registry and new subtags are added regularly, so applications dealing with this kind of tagging would need to always check each subtag against the latest version of the registry.</p>
   
