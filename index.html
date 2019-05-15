@@ -624,7 +624,7 @@ working on.</p>
 <p lang="ar" style="font-size: 1.4em; color: grey;">Translation is: "في XHMTL 1.0 يتم تحقيق ذلك بإضافة العنصر المضمن bdo."</p>
 <p>What you should have seen is:</p>
 <p lang="ar" style="font-size: 1.4em; color: grey;">Translation is: "<span dir="rtl" lang="ar">في XHMTL 1.0 يتم تحقيق ذلك بإضافة العنصر المضمن bdo.</span>"</p>
-<p>This can be much worse when combined with punctuation, or in this case  markup. Take the following example of source code, presented to a user in an educational context in a RTL page: <code>&lt;span&gt;one שתיים three&lt;/span&gt;</code>. If the  base direction of the string is not specified as LTR, you will see the result below.</p>
+<p id="withMarkup">This can be much worse when combined with punctuation, or in this case  markup. Take the following example of source code, presented to a user in an educational context in a RTL page: <code>&lt;span&gt;one שתיים three&lt;/span&gt;</code>. If the  base direction of the string is not specified as LTR, you will see the result below.</p>
 <p lang="he" dir="rtl" style="font-size: 1.4em; color: grey;">&lt;span&gt;one שתיים three&lt;/span&gt;</p>
 <p>(This happens because the Unicode bidi algorithm sees <code>span&gt;one</code> as a single directional run, and <code>three&lt;/span</code> as another. The outermost angle brackets are balanced by the algorithm.)</p>
 </section>
@@ -686,18 +686,19 @@ working on.</p>
 <p>The fundamental problem for bidirectional text values is how a <a>consumer</a> of a string will know what base direction should be used for that string when it is eventually displayed to a user. Note that some of these approaches for identifying or estimating the base direction have utility in specific applications and are in use in different specifications such as [[HTML5]]. The issue here is which are appropriate to adopt generally and specify for use as a best practice in document formats.</p>
 
 <section id="firststrong">
-  <h3>First-strong property detection<del> (alone)</del></h3>
-<p><strong>This approach is NOT recommended<ins> <span class="ednote"> except in combination with other approaches</span></ins>.</strong></p>
-<p>This section looks at the use of first-strong detection as the sole method for identifying base direction for a string.</p>
+  <h3>First-strong property detection</h3>
+<p><strong>This approach is NOT recommended  when used alone, but IS recommended  as a fallback in combination with other approaches.</strong></p>
 <section>
 <h4>How it works</h4>
 <p>A producer doesn't need to do anything.</p>
 <p>The string is stored as it is.</p>
 <p>Consumers must look for the first character in the string with a strong Unicode directional property, and set the base direction to match it. They then take appropriate action  to ensure that the string will be displayed as needed. This is not quite so simple as it may appear, for the following reasons:</p>
 <ol>
-<li>Characters at the start of string without a strong direction (eg. punctuation, numbers, etc) and isolated sequences (ie. sequences of characters surrounded by RLI/LRI/FSI...PDI formatting characters) within a string must be skipped in order to find the first strong character.</li>
+<li>Characters at the start of a string without a strong direction (eg. punctuation, numbers, etc) and isolated sequences (ie. sequences of characters surrounded by RLI/LRI/FSI...PDI formatting characters) within a string must be skipped in order to find the first strong character.</li>
 <li>The detection algorithm needs to be able to handle markup at the start of the string. It needs to be able to tell whether the markup is just string text, or whether the markup needs to be parsed in the target location – in which case it must understand the markup, and understand any direction-related information that is carried in the markup.</li>
 </ol>
+<p>First-strong detection is only needed where the required base direction is not already known. If direction is indicated for a string by metadata, either string-specific or via a resource-wide declaration, then first-strong heuristics should not be invoked. For example, first-strong heuristics would produce the wrong result for a string such as &quot;<span lang="ar" dir="rtl">HTML و CSS: تصميم و إنشاء مواقع الويب</span>&quot;. This can be corrected using metadata, the use of which signifies informed intention, and you would not need or want to apply heuristics that would then make the result incorrect.</p>
+<p>However, if there is no mechanism for the application of metadata, or if there is such a mechanism but the content developer omitted to use it, then first-strong heuristics can be helpful to establish base direction in many, though not all, cases. The application of strongly-directional formatting characters can help produce correct results for plain text strings such as the example just quoted, but it is not always possible to apply those (see [[[#rlm]]]).</p>
 </section>
 
 <section>
@@ -712,14 +713,14 @@ working on.</p>
 <p>The main problem with this approach is that it produces the wrong result for </p>
 <ol>
 <li>strings that begin with a strong character with a different directionality than that needed for the string overall (eg. an Arabic tweet that starts with a hashtag)</li>
-<li>strings that don't have a strong directional character (such as a telephone number) are likely to be displayed incorrectly in a RTL context.</li>
+<li>strings that don't have a strong directional character (such as a telephone number), which are likely to be displayed incorrectly in a RTL context.</li>
 <li>strings that begin with markup, such as <code>&lt;span&gt;</code>, since the first strong character is always going to be LTR.</li>
 </ol>
 <p>In cases where the entire string starts and ends with RLI/LRI/FSI...PDI formatting characters, it is not possible to detect the first strong character by following the Unicode Bidirectional Algorithm. This is because the algorithm requires that bidi-isolated text be excluded from the detection.</p>
 <p>If no strong directional character is found in the string, the direction should probably be assumed to be LTR, and the consumer should act on that basis. This has not been tested fully, however.</p>
 <p>If a string contains markup that will be parsed by the consumer as markup, there are additional problems. Any such markup at the start of the string must also be skipped when searching for the first strong directional character. </p>
-<p>If parseable markup in the string contains information about the intended direction of the string (for example, a <span class="kw" translate="no"><code class="kw" translate="no">dir</code></span> attribute with the value <span class="kw" translate="no"><code class="kw" translate="no">rtl</code></span> in HTML), that information should be used rather than relying on first-strong heuristics. This is problematic in a couple of ways: (a) it assumes that the consumer of the string understands the semantics of the markup, which may be ok if there is an agreement between all parties to use, say, HTML markup only, but would be problematic, for example, when dealing with random XML vocabularies, and (b) the consumer must be able to  recognise and handle a situation where only the initial part of the string has markup, ie. the markup applies to an inline span of text rather than the string as a whole.</p>
-<p>If, however, there is angle bracket content that is intended to be an <em>example</em> of markup, rather than actual markup, the markup must not be skipped – trying to display markup source code in a RTL context yields very confusing results! It isn't clear how a consumer of the string would always know the difference between examples and parseable strings.</p>
+<p>If <em>parseable</em> markup in the string contains information about the intended direction of the string (for example, a <span class="kw" translate="no"><code class="kw" translate="no">dir</code></span> attribute with the value <span class="kw" translate="no"><code class="kw" translate="no">rtl</code></span> in HTML), that information should be used rather than relying on first-strong heuristics. This is problematic in a couple of ways: (a) it assumes that the consumer of the string understands the semantics of the markup, which may be ok if there is an agreement between all parties to use, say, HTML markup only, but would be problematic, for example, when dealing with random XML vocabularies, and (b) the consumer must be able to  recognise and handle a situation where only the initial part of the string has markup, ie. the markup applies to an inline span of text rather than the string as a whole.</p>
+<p>If, however, there is angle bracket content that is intended to be an <em>example</em> of markup, rather than actual markup, the markup must not be skipped – trying to display markup source code in a RTL context yields <a href="#withMarkup">very confusing results</a>! It isn't clear, however, how a consumer of the string would always know the difference between examples and parseable strings.</p>
 </section>
 
 
@@ -739,8 +740,16 @@ working on.</p>
 <section id="metadata">
   <h3> Metadata</h3>
 <p><strong>This approach is recommended.</strong></p>
+<p>By 'metadata' we mean field-based information associated with a specific string or a set of strings in a data format, or information built into a string datatype (see also [[[#dir-approach-new-datatype]]]).</p>
+<p>An example would be:</p>
+<pre id="example1Data2">
+{
+    "title": "<span dir=rtl>HTML &#x0648; CSS: &#x062A;&#x0635;&#x0645;&#x064A;&#x0645; &#x0648; &#x0625;&#x0646;&#x0634;&#x0627;&#x0621; &#x0645;&#x0648;&#x0627;&#x0642;&#x0639; &#x0627;&#x0644;&#x0648;&#x064A;&#x0628;</span>",
+    "language": "ar",
+},
+</pre>
 
-
+<p>Metadata indicating the default direction for all the strings in a resource could also be set using an appropriate field.</p>
 <section>
 <h4>How it works</h4>
 <p>A producer ascertains the  base direction of the string and adds that to a metadata field that accompanies the string when it is stored or transmitted.</p>
@@ -783,7 +792,7 @@ working on.</p>
 
 <section id="rlm">
   <h3>Augmenting <q>first-strong</q> by inserting RLM/LRM markers</h3>
-<p><strong>This approach is NOT recommended.</strong></p>
+<p><strong>This approach is NOT workable for all situations.</strong></p>
 
 
 <section>
@@ -791,11 +800,12 @@ working on.</p>
 <p>A producer ascertains the  base direction of the string and adds an marker character (either <span class="unicode">U+200F RIGHT-TO-LEFT MARK</span> (RLM) or <span class="unicode">U+200E LEFT-TO-RIGHT MARK</span> (LRM)) to the beginning of the string. The marker is not functional, ie. it will not automatically apply a base direction to the string that can be used by the consumer, it is simply a marker.</p>
 <p>There are a number of possible approaches:</p>
 <ol>
-<li>Add a marker to every string.</li>
+<li>Add a marker to every string (not recommended).</li>
 <li>Rely on the consumer to do first-strong detection, and add a marker to only those strings which would produce the wrong result (eg. a RTL string that starts with LTR strong characters).</li>
 <li>Assume a default of LTR (no marker), and apply only RLM markers.</li>
 </ol>
 <p>Consumers  apply first-strong heuristics to detect the base direction for the string. The RLM and LRM characters are strongly typed, directionally, and should therefore indicate the appropriate base direction.</p>
+<p>As described in [[[#firststrong]]], this approach is not relevant if directional information is provided via metadata.</p>
 </section>
 
 
@@ -814,21 +824,18 @@ working on.</p>
 
 <p>If the producer is a human, they could theoretically apply one of 
   these characters when creating a string in order to signal the 
-  directionality. One problem, especially on mobile devices, is the 
-  availability or inconvenience of inputting an RLM/LRM character. Perhaps more important, because the characters are invisible and because Unicode 
-  bidi is complicated, it can be difficult for the user to know that a 
-bidi control will be necessary (or even what it is).</p>
-<p>Furthermore, if a person types information into, say, an HTML form and relies 
-  on the form's base direction (in a RTL page) or use of shortcut keys to make the 
-  string look correct in the form field, they would not need to add 
-  RLM/LRM to make the string 'look correct' for themselves. However, 
-  outside of that context the string would look incorrect unless an 
-  appropriate strong character was added to it. Similarly, strings 
+  directionality. </p>
+<p>A significant  problem with this, especially on mobile devices, is the 
+  availability or inconvenience of inputting an RLM/LRM character. The keyboards of mobile devices generally do not provide keys for RLM/LRM characters. Perhaps more important, because the characters are invisible and because Unicode 
+  bidi is complicated, it can be difficult for the user to know how to use the character effectively. In fact, a large percentage of users don't actually know what these characters are or what they do.</p>
+<p>Furthermore, if a person types information into, say, an HTML form in a RTL page or uses shortcut keys to set the direction for the form field, strings will look correct without the need to add 
+  RLM/LRM. However, 
+  used outside of that context the string would look incorrect unless it is associated with information about the required base direction. Similarly, strings 
   scraped from a web page that has <code class="kw" 
   translate="no">dir=rtl</code> set in the <code class="kw" 
   translate="no">html</code> element would not normally have or need an 
 RLM/LRM character at the start of the string in HTML.</p>
-<p>Another issue with this approach is that is changes the string value and identity. This may also create problems for working with string length 
+<p>It may be possible for the steps used by a producer  to include an examination of the original context of the string for directional information (for example, by testing the computed direction of an HTML form field), followed by automatic insertion of an RLM/LRM mark into the beginning of the string where necessary. An issue with this approach is that it changes the string value and identity. This may also create problems for working with string length 
 or pointer positions, especially if some producers add markers and others don't.</p>
 <p>If directional information is contained in markup that will be 
   parsed as such by the consumer (for example, <code class="kw" 
@@ -1002,7 +1009,7 @@ access, to the original context of the string. Many document formats are generat
 <section>
     <h3 id="html-content">Require bidi markup for content</h3>
     
-    <p><strong>This approach is NOT recommended</strong> except under <a>agreements</a> that expect to exclusively interchange HTML or XML markup data.</p>
+    <p><strong>This approach is NOT recommended, except under <a>agreements</a> that expect to exclusively interchange HTML or XML markup data.</strong></p>
     
     <section>
     <h4 id="html-content-how">How it works</h4>
@@ -1010,7 +1017,7 @@ access, to the original context of the string. Many document formats are generat
 <p>This example uses HTML markup. (Simply to make the example easier to read, it shows the text content of the string as it should be displayed, rather than in the order in which the characters are stored.)</p>
     
 <aside class="example">
-	<pre>"title": "&ltspan dir="rtl" lang="ar"&gt;<span dir=rtl>HTML &#x0648; CSS: &#x062A;&#x0635;&#x0645;&#x064A;&#x0645; &#x0648; &#x0625;&#x0646;&#x0634;&#x0627;&#x0621; &#x0645;&#x0648;&#x0627;&#x0642;&#x0639; &#x0627;&#x0644;&#x0648;&#x064A;&#x0628;</span>&lt;/span&gt;"</pre>
+	<pre>"title": "&lt;span dir="rtl" lang="ar"&gt;<span dir="rtl">HTML &#x0648; CSS: &#x062A;&#x0635;&#x0645;&#x064A;&#x0645; &#x0648; &#x0625;&#x0646;&#x0634;&#x0627;&#x0621; &#x0645;&#x0648;&#x0627;&#x0642;&#x0639; &#x0627;&#x0644;&#x0648;&#x064A;&#x0628;</span>&lt;/span&gt;"</pre>
 </aside>
     <p>The consumer then relies on the markup to set the base direction around the text content of the string when it is displayed. (Note that, unless additional metadata is provided, the consumer cannot remove the markup before integrating the string in the target location, because it cannot tell what markup has been added by the producer and what was already there. In general, however, such added markup is harmless.)</p>
     </section>
