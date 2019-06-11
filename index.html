@@ -371,7 +371,7 @@ data in an interchange format is not a good idea. These include:</p>
 <p>First-strong heuristics are ineffective when a default direction has been set for all strings, since  metadata overrides (intentionally) the value of the first-strong character, therefore it is necessary to use explicitly provided field data to override the default. Even if an RLM character has been prepended to a string, the default metadata overrides it.</p>
 <p>The use of <a href="#metadata">metadata</a> for indicating base direction is also preferred, because it avoids requiring the consumer to interpolate the direction using methods such as <a href="#firststrong">first strong</a> or which require modification of the data itself (such as the <a href="#rlm">insertion of RLM/LRM markers</a> or <a href="#paired">bidirectional controls</a>).</p>
 <p class="issue">Schema languages, such as the RDF suite of specifications, have no in-built mechanism for associating base direction metadata with natural language string values.</p>
-<p class="issue">There is no built-in attribute for base direction in [[JSON-LD]]. There needs to be a corresponding built-in attribute (e.g. an <q><code>@dir</code></q>) or de facto convention for indicating document-level base direction.</p>
+<p class="issue">There is no built-in attribute for base direction in [[JSON-LD]]. There needs to be a corresponding built-in attribute (e.g. an <q><code>@direction</code></q>) or de facto convention for indicating document-level base direction.</p>
 <p class="advisement" id="bp-use_heuristics1">For the case where the resource-wide setting is not available, specify that consumers should use first-strong heuristics to identify the base direction of strings.</p>
 <p class="advisement" id="bp-use_heuristics2">For the case where the resource-wide setting is available but not used, specify that consumers should fall back to first-strong heuristics to identify the base direction of strings.</p>
 <p>If metadata is not available, consumers of strings should use heuristics, preferably based on the Unicode Standard's first-strong detection algorithm, to detect the base direction of a string.</p>
@@ -383,7 +383,72 @@ data in an interchange format is not a good idea. These include:</p>
 <p>Not all resources make use of the available metadata mechanisms. The script subtag of a language tag (or the "likely" script subtag based on [[BCP47]] and [[LDML]]) can sometimes be used to provide a base direction when other data is not available. Note that using language information is a "last resort" and specifications SHOULD NOT use it as the primary way of indicating direction: make the effort to provide for metadata.</p>
 </section>
 
+<section>
+<h3>Cross-Syntax Expression</h3>
+<p><a>Producers</a> sometimes need to supply multiple language values (see <a href="#localization-considerations">Localization Considerations</a>) for the same content item or data record, often across multiple different syntaxes. This can occur during <a>language negotiation</a> by the <a>consumer</a>.</p>
 
+<p class="issue">[[JSON-LD]] language indexing should be modified to support the use of  <a>Localizable</a> values in <a>language indexing</a>.</p>
+
+<aside class="example">
+<p>Here is the record used in the <a href="#base_example">original example</a> with a record-level default language and base direction added. It also shows the use of a Localizable string to override the document-level defaults for the <kbd>author</kbd> field. Note that this "worked example" will only be possible in an experimental version of JSON-LD 1.1.</p>
+<pre>
+{
+    "@context": {
+        "@version": 1.1,
+        "@language": "ar",
+        "@direction": "rtl",
+        "value": "@value",
+        "lang": "@language",
+        "dir": "@direction"
+        // etc.
+    },
+    "identifier": "978-111887164-5",
+    "title": "HTML &#x0648; CSS: &#x062A;&#x0635;&#x0645;&#x064A;&#x0645; &#x0648; &#x0625;&#x0646;&#x0634;&#x0627;&#x0621; &#x0645;&#x0648;&#x0627;&#x0642;&#x0639; &#x0627;&#x0644;&#x0648;&#x064A;&#x0628;",
+    "authors": [{"value": "Jon Duckett", "lang": "en", "dir": "ltr"}],
+    "pubDate": "2008-01-01",
+    "publisher": "&#x0645;&#x0643;&#x062A;&#x0628;&#x0629;",
+    "coverImage": "https://example.com/images/html_and_css_cover.jpg",
+    // etc.
+}
+</pre>
+</aside>
+
+<p>The approach shown above is useful when expressing data using [[JSON-LD]], but often challenges developers that only want to utilize [[?JSON]] or CBOR [[?RFC7049]] while supporting language and base direction. While [[?JSON]] and CBOR [[?RFC7049]] have no formal mechanisms for expressing language and base direction, it is possible to utilize a small subset of [[JSON-LD]] that does not require the use of a [[JSON-LD]] library to achieve excellent cross-syntax language and base direction expression.</p>
+
+<p>In order to implement this design pattern in a specification, designers can:</p>
+
+<ol>
+  <li>Define a [[JSON-LD]] Context for their specification. For example, <code>https://example.com/myapp/v1</code>.</li>
+  <li>In the [[JSON-LD]] Context from the previous step, alias <code>@language</code> to <code>lang</code>, <code>@direction</code> to <code>dir</code>, and <code>@value</code> to <code>value</code>. It is possible to do this globally, or locally fine tune it to a specific [[JSON-LD]] term using <a href="https://www.w3.org/TR/json-ld11/#scoped-contexts">Scoped Contexts</a>.</li>
+  <li>Require document authors to specify the <code>@context</code> property and include the [[JSON-LD]] Context from step #1. For example: <code>"@context": "https://example.com/myapp/v1"</code>.</li>
+  <li>Require syntax processors to process the <code>@context</code> property in a way that does not require the use of a [[JSON-LD]] library. See <a href="https://w3c.github.io/vc-data-model/#semantic-interoperability">Section 5.3.1: Semantic Interoperability</a> of the Verifiable Credentials specification for an example.</li>
+</ol>
+
+<p>Use of the design pattern above results in a common way to express language and base direction across [[JSON-LD]], [[JSON]], and CBOR [[?RFC7049]]] that developers find intuitive, palatable, and easy to deploy and consume.</p>
+
+<aside class="example">
+<pre>
+{
+    "@context": "https://example.com/myapp/v1",
+    "identifier": "978-111887164-5",
+    "title": [{
+      "value": "HTML &#x0648; CSS: &#x062A;&#x0635;&#x0645;&#x064A;&#x0645; &#x0648;  &#x0625;&#x0646;&#x0634;&#x0627;&#x0621; &#x0645;&#x0648;&#x0627;&#x0642;&#x0639; &#x0627;&#x0644;&#x0648;&#x064A;&#x0628;",
+      "lang: "ar",
+      "dir": "rtl"
+    }],
+    "authors": [{"value": "Jon Duckett", "lang": "en", "dir": "ltr"}],
+    "pubDate": "2008-01-01",
+    "publisher": [{
+      "value": "&#x0645;&#x0643;&#x062A;&#x0628;&#x0629;",
+      "lang: "ar",
+      "dir": "rtl"
+    }],
+    "coverImage": "https://example.com/images/html_and_css_cover.jpg",
+    // etc.
+}
+</pre>
+</aside>
+</section>
 
 <section>
 <h3 id="other_approaches">Other approaches</h3>
@@ -396,32 +461,6 @@ data in an interchange format is not a good idea. These include:</p>
 <p>Another way to say this is: <strong><em>do not require implementations to modify data passing through them</em></strong>. Unicode bidi control characters might be found in a particular piece of string content, where the producer or data source has used them to make the text display properly. That is, they might already be part of the data. Implementations should not disturb any controls that they find&mdash;but they shouldn't be required to produce additional controls on their own.</p>
 
 <p class="advisement" id="bp-language_indexing">Specifications SHOULD recommend the use of <a>language indexing</a> when <a>Localizable</a> strings can be supplied in multiple languages for the same value.</p>
-
-<p><a>Producers</a> sometimes need to supply multiple language values (see <a href="#localization-considerations">Localization Considerations</a>) for the same content item or data record. One use for this <a>language negotiation</a> by the <a>consumer</a>.</p>
-
-<p class="issue">[[JSON-LD]] language indexing should be modified to support the use of  <a>Localizable</a> values in <a>language indexing</a>.</p>
-
-
-
-
-<aside class="example">
-<p>Here is the record used in the <a href="#base_example">original example</a> with a record-level default language and base direction added. It also shows the use of a Localizable string to override the document-level defaults for the <kbd>author</kbd> field. Note that this "worked example" is not valid.</p>
-<pre>
-{
-    "@context": { 
-        "@language": "ar",
-        "@dir": "rtl"
-    },
-    "id": {"978-111887164-5"},
-    "title": "<span dir="rtl">HTML &#x0648; CSS: &#x062A;&#x0635;&#x0645;&#x064A;&#x0645; &#x0648; &#x0625;&#x0646;&#x0634;&#x0627;&#x0621; &#x0645;&#x0648;&#x0627;&#x0642;&#x0639; &#x0627;&#x0644;&#x0648;&#x064A;&#x0628;</span>",
-    "authors": [ {"value": "Jon Duckett", "lang": "en", "dir": "ltr"} ],
-    "pubDate": "2008-01-01",
-    "publisher": "&#x0645;&#x0643;&#x062A;&#x0628;&#x0629;",
-    "coverImage": "https://example.com/images/html_and_css_cover.jpg",
-    // etc.
-},
-</pre>
-</aside>
 </section>
 </section>
 
@@ -742,9 +781,10 @@ working on.</p>
 <p>By 'metadata' we mean field-based information associated with a specific string or a set of strings in a data format, or information built into a string datatype (see also [[[#dir-approach-new-datatype]]]).</p>
 <p>An example would be:</p>
 <pre id="example1Data2">
-{
-    "title": "<span dir=rtl>HTML &#x0648; CSS: &#x062A;&#x0635;&#x0645;&#x064A;&#x0645; &#x0648; &#x0625;&#x0646;&#x0634;&#x0627;&#x0621; &#x0645;&#x0648;&#x0627;&#x0642;&#x0639; &#x0627;&#x0644;&#x0648;&#x064A;&#x0628;</span>",
-    "language": "ar",
+"title": {
+    "value": "HTML &#x0648; CSS: &#x062A;&#x0635;&#x0645;&#x064A;&#x0645; &#x0648; &#x0625;&#x0646;&#x0634;&#x0627;&#x0621; &#x0645;&#x0648;&#x0627;&#x0642;&#x0639; &#x0627;&#x0644;&#x0648;&#x064A;&#x0628;",
+    "lang": "ar",
+    "dir": "rtl"
 },
 </pre>
 
@@ -1254,7 +1294,7 @@ myDataString:          "978-0-123-4567-X^ltr"          // language-neutral strin
 <aside class=example>
 <pre>
 "title": [ {
-   "de": {"value": "HTML und CSS verstehen", "language": "de-DE" },
+   "de": {"value": "HTML und CSS verstehen", "lang": "de-DE" },
    ...
 ],
 </pre>
@@ -1265,7 +1305,7 @@ myDataString:          "978-0-123-4567-X^ltr"          // language-neutral strin
 <aside class=example>
 <pre>
 "title": [ {
-   "de": {"value": "Understanding HTML and CSS", "language": "en-US" }, // German not available
+   "de": {"value": "Understanding HTML and CSS", "lang": "en-US" }, // German not available
    ...
 ],
 </pre>
