@@ -1274,7 +1274,7 @@ myDataString:          "978-0-123-4567-X^ltr"          // language-neutral strin
 
 <p>The primary issue with this approach is the need to extract the indexing language tag from the content in order to generate the index. <a>Producers</a> might also need to have a <a>serialization agreement</a> with <a>consumers</a> about whether the indexing language tag will be in any way canonicalized. For example, the language tag <code>cel-gaulish</code> is one of the [[BCP47]] grandfathered language tags. Some implementations, such as those following the rules in [[CLDR]], would prefer that this tag be replaced with a modern equivalent (<code>xtg-x-cel-gaulish</code> in this case) for the purposes of language negotiation.</p>
 
-<p>[[JSON-LD]] defines a <a href="https://json-ld.org/spec/latest/json-ld/#language-indexing">specific implementation</a> of language indexing, which depends on the use of the <code>@context</code> structure. This structure does not support the use of <a>Localizable</a> values (only strings or arrays of strings are supported), so changes would be needed to allow some of the above capabilities in [[JSON-LD]] documents.</p>
+<p>[[JSON-LD]] defines a <a href="https://www.w3.org/TR/json-ld11/#language-indexing">specific implementation</a> of language indexing, which depends on the use of the <code>@context</code> structure. This structure does not support the use of <a>Localizable</a> values (only strings or arrays of strings are supported), so changes would be needed to allow some of the above capabilities in [[JSON-LD]] documents.</p>
 
 <aside class=example title="JSON-LD Language Indexing">
 <pre>
