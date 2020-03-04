@@ -634,7 +634,7 @@ working on.</p>
 <p lang="he" dir="rtl" style="text-align:center; font-size: 1.8em;"><code>
 <bdo dir="ltr">&quot;&lt;span dir='ltr'&gt;one שתיים three&lt;/span&gt;&quot;</bdo>
 </code></p>
-<p>This use case is for applications that will parse the string and convert any HTML markup to the DOM. In this case, the text should be rendered correctly in an HTML context because the <code class="kw" translate="no">dir</code> attribute indicates the base direction to be applied within the markup. (It also applies bidi isolation to the text in browsers that fully support bidi markup, avoiding any spill-over effects.) It relies, however, on a system where the consumer expects to receive HTML, and knows how to handle bidi markup.</p>
+<p>This use case is for applications that will parse the string and convert any HTML markup to the DOM. In this case, the text should be rendered correctly in an HTML context because the <code class="kw" translate="no">dir</code> attribute indicates the base direction to be applied within the markup. (It also applies <a>bidi isolation</a> to the text in browsers that fully support bidi markup, avoiding any spill-over effects.) It relies, however, on a system where the consumer expects to receive HTML, and knows how to handle bidi markup.</p>
 <p>It also requires the producer to take explicit action to identify the appropriate base direction and set up the required markup to indicate that.</p>
 </section>
 
@@ -663,7 +663,7 @@ working on.</p>
 <p>What you would actually see is this:</p>
 <p lang="ar" dir="ltr" style="font-size: 1.8em; color: grey;">HTML: تصميم و إنشاء مواقع الويب - 4 reviews</p>
 <p>This problem is caused by spillover effects as the Unicode bidirectional algorithm operates on the text inside and outside the inserted string without making any distinction between the two.</p>
-<p>The solution to this problem is called <dfn>bidi isolation</dfn>. The title needs to be directionally isolated from the rest of the text. </p>
+<p>The solution to this problem is called <a>bidi isolation</a>. The title needs to be directionally isolated from the rest of the text. </p>
 </section>
 
 
@@ -671,8 +671,10 @@ working on.</p>
 
 <section>
 <h4 id="what_consumers_do">What consumers need to do</h4>
-<p>Given the use cases in this section it will be clear that a consumer cannot simply insert a string into a target location without some additional work or preparation taking place, first to establish the appropriate base direction for the string being inserted, and secondly to apply bidi isolation around the string.</p>
-<p>This requires the presence of markup or Unicode formatting controls around the string. If the string's base direction is opposite that into which it is being inserted, the markup or control codes need to tightly wrap the string. Strings that are inserted adjacent to each other all need to be individually wrapped in order to avoid the spillover issues we saw in the previous section.</p>
+<p>Given the use cases in this section it will be clear that a consumer cannot simply insert a string into a target location without some additional work or preparation taking place, first to establish the appropriate base direction for the string being inserted, and secondly to apply <a>bidi isolation</a> around the string.</p>
+<p>The <dfn>bidi isolation</dfn> is to isolate string's base direction from 
+its parent element, and 
+requires the presence of markup or Unicode formatting controls around the string. If the string's base direction is opposite that into which it is being inserted, the markup or control codes need to tightly wrap the string. Strings that are inserted adjacent to each other all need to be individually wrapped in order to avoid the spillover issues we saw in the previous section.</p>
 <p>[[HTML5]] provides base direction controls and isolation for any inline element when the <code class="kw" translate="no">dir</code> attribute is used, or when the <code class="kw" translate="no">bdi</code> element is used. When inserting strings into plain text environments, isolating Unicode formatting characters need to be used. (Unfortunately, support for the isolating characters, which the Unicode Standard recommends as the default for plain text/non-markup applications, is still not universal.)</p>
 <p>The trick is to ensure that the direction information provided by the markup or control characters reflects the base direction of the string.</p>
 </section>
