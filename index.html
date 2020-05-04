@@ -115,6 +115,7 @@ cultures.</p>
   <p><dfn>LTR</dfn> stands for "left-to-right" and refers to the inline base direction of left-to-right [[UAX9]]. This is the base text direction used by languages whose starting character progression begins on the left side of the page in horizontal text. It's used for scripts such as Latin, Cyrillic, Devanagari, and many others.</p>
   <p><dfn>RTL</dfn> stands for "right-to-left" and refers to the inline base direction of right-to-left [[UAX9]]. This is the base text direction used by languages whose starting character progression begins on the right side of the page in horizontal text. It's used for scripts such as Arabic, Hebrew, Syriac, and a few others.</p>
 <p><dfn>Bidi isolation</dfn> often needs to be applied to a range of text in order to prevent the automatic rules of the Unicode Bidirectional Algorithm incorrectly ordering that content in relation to the surrounding text. For example, numbers following right-to-left text in memory are automatically positioned to the left of that text by the Bidi Algorithm, but sometimes need to appear to the right. Another example occurs when lists of RTL items occur in a LTR sentence: the Bidi Algorithm will automatically assume that the order of items in the list should be "3 ,2 ,1", but actually what's needed is "1, 2, 3". In HTML, bidi isolation can be applied to a range of text by enclosing it in an element with a <code class="kw" translate="no">dir</code> attribute. In plain text there are Unicode formatting characters that can do the job. These mechanisms remove unwanted 'spillover effects'.</p>
+<p>Unicode code points are associated with properties relating to text direction. Generally, Arabic and Hebrew letters have a strong RTL direction, whereas Latin and Han characters have a strong LTR direction. Other characters, such as punctuation, only have a weak intrinsic directionality, and the actual directionality is determined according to the context in which they are found. <dfn>First-strong detection</dfn> is an algorithm that looks for the first strongly-directional character in a string, and then uses that to guess at the appropriate base direction for the string as a whole.</p>
   
   <p class="note">If you are unfamiliar with bidirectional or right-to-left text, there is a basic introduction <a href="https://www.w3.org/International/articles/inline-bidi-markup/uba-basics">here</a>. Additional materials can be found in the Internationalization Working Group's <a href="https://www.w3.org/International/techniques/developing-specs.en?open=text_direction#text_direction">Techniques Index</a>.</p>
  </section>
@@ -757,7 +758,7 @@ working on.</p>
 <p>There are a couple of possible approaches:</p>
 <ol>
 <li>Label every string for base direction.</li>
-<li>Rely on the consumer to do first-strong detection, and label only those strings which would produce the wrong result (ie. a RTL string that starts with LTR strong characters).</li>
+<li>Rely on the consumer to do <a href="#firststrong">first-strong detection</a>, and label only those strings which would produce the wrong result (ie. a RTL string that starts with LTR strong characters).</li>
 </ol>
 <p>If storing or transmitting a set of strings at a time, it helps to have a  field for the resource as a whole that sets a global, default base direction which can be inherited by all strings in the resource. Note that  in addition to a global field, you still need the possibility of attaching string-specific metadata fields in cases where a string's base direction is not that of the default. The base direction set on an individual string must override the default.</p>
 <p>Consumers would need to understand how to read the metadata sent with a string, and would need to apply first-strong heuristics in the absence of metadata.</p>
@@ -802,7 +803,7 @@ working on.</p>
 <p>There are a number of possible approaches:</p>
 <ol>
 <li>Add a marker to every string (not recommended).</li>
-<li>Rely on the consumer to do first-strong detection, and add a marker to only those strings which would produce the wrong result (eg. a RTL string that starts with LTR strong characters).</li>
+<li>Rely on the consumer to do <a href="#firststrong">first-strong detection</a>, and add a marker to only those strings which would produce the wrong result (eg. a RTL string that starts with LTR strong characters).</li>
 <li>Assume a default of LTR (no marker), and apply only RLM markers.</li>
 </ol>
 <p>Consumers  apply first-strong heuristics to detect the base direction for the string. The RLM and LRM characters are strongly typed, directionally, and should therefore indicate the appropriate base direction.</p>
@@ -872,7 +873,7 @@ access, to the original context of the string. Many document formats are generat
 <p>There are a number of possible approaches:</p>
 <ol>
 <li>Add the formatting codes to every string.</li>
-<li>Rely on the consumer to do first-strong detection, and add a marker to only those strings which would produce the wrong result (eg. a RTL string that starts with LTR strong characters).</li>
+<li>Rely on the consumer to do <a href="#firststrong">first-strong detection</a>, and add a marker to only those strings which would produce the wrong result (eg. a RTL string that starts with LTR strong characters).</li>
 </ol>
 <p>Consumers  would theoretically just insert the string in the place it will be displayed, and rely on the formatting codes to apply the base direction. However, things are not quite so simple (see below).</p>
 <p>There are two types of paired formatting characters. The original set of controls provide the ability to add an additional level of bidirectional "embedding" to the Unicode bidirectional Algorithm. More recently, Unicode added a complementary set of "isolating" controls. Isolating controls are used to surround a string. The inside of the string is treated as its own bidirectional sequence, and the string is protected against spill-over effects related to any surrounding text. The enclosing string treats the entire surrounded string as a single unit that is ignored for bidi reordering. This issue is described <a href="https://www.w3.org/TR/html-bidi/#bidi-isolation-problem">here</a>.</p>
@@ -908,7 +909,7 @@ access, to the original context of the string. Many document formats are generat
 <td></td>
 <td>U+2068</td>
 <td>FSI</td>
-<td>First String Isolate</td>
+<td>First Strong Isolate</td>
 </tr>
 <tr>
 <td>U+200C</td>
@@ -960,7 +961,7 @@ access, to the original context of the string. Many document formats are generat
 <ol>
 <li>Label every string for language, including a script subtag as needed. <a>Consumers</a> may need to compute the script subtag when the <a>producer</a> does not provide one.</li>
 <li>It might be reasonable to assume a default of LTR for all strings unless marked with a language tag whose script subtag (either present or implied) indicates RTL.</li>
-<li>Alternatively, limit the use of script subtag metadata to situations where first-strong heuristics are expected to fail &mdash; provided that such cases can be identified, and appropriate action taken by the producer (not always reliable). <a>Consumers</a> would then need to use first-strong heuristics in the absence of a script subtag in order to identify the appropriate base direction. The use of script subtags should not, however, be restricted to strings that need to indicate direction; it is perfectly valid to associate a script subtag with any string.</li>
+<li>Alternatively, limit the use of script subtag metadata to situations where <a href="#firststrong">first-strong heuristics</a> are expected to fail &mdash; provided that such cases can be identified, and appropriate action taken by the producer (not always reliable). <a>Consumers</a> would then need to use first-strong heuristics in the absence of a script subtag in order to identify the appropriate base direction. The use of script subtags should not, however, be restricted to strings that need to indicate direction; it is perfectly valid to associate a script subtag with any string.</li>
 <li>Set a default language for a set of strings at a higher level, but provide a mechanism to override that default for a given string where needed.</li>
 </ol>
 <p><a>Consumers</a> extract the script subtag from the language tag associated with each string, computing the string's base direction as necessary. Script subtags associated with RTL scripts are used to assign a base direction of RTL to their associated strings.</p>
@@ -1067,7 +1068,7 @@ myDataString:          "978-0-123-4567-X^ltr"          // language-neutral strin
 
 <p>Note that the last string does not include language information  because it is an internal data value, but <em>does</em> include direction information because strings of this kind <em>must</em> be presented in the LTR order.</p>
 <p>Producers would need to attach the direction information to a string.</p>
-<p>Again, it would be sensible to establish rules that expect the consumer to use first-strong heuristics for those strings that are amenable to that approach, and for the producer to only add directional information if the first-strong approach would otherwise produce the wrong result. This would greatly simplify the management of strings and the amount of data to be transmittted, because the number of strings requiring metadata is relatively small.</p>
+<p>Again, it would be sensible to establish rules that expect the consumer to use <a href="#firststrong">first-strong heuristics</a> for those strings that are amenable to that approach, and for the producer to only add directional information if the first-strong approach would otherwise produce the wrong result. This would greatly simplify the management of strings and the amount of data to be transmittted, because the number of strings requiring metadata is relatively small.</p>
 <p>The consumer would look to see whether the string has metadata associated with it, in which case it would set the indicated base direction. Otherwise, it would use first-strong heuristics to determine the base direction of the string.</p>
 
   </section>
