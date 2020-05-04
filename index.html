@@ -114,6 +114,7 @@ cultures.</p>
   <p><dfn data-lt="language negotiation">Language negotiation</dfn> is any process which selects or filters content based on language. Usually this implies selecting content in a single language (or falling back to some meaningful default language that is available) by finding the best matching values when several languages or locales [[LTLI]] are present in the content. Some common language negotiation algorithms include the Lookup algorithm in [[BCP47]] or the BestFitMatcher in [[ECMA-402]].</p>
   <p><dfn>LTR</dfn> stands for "left-to-right" and refers to the inline base direction of left-to-right [[UAX9]]. This is the base text direction used by languages whose starting character progression begins on the left side of the page in horizontal text. It's used for scripts such as Latin, Cyrillic, Devanagari, and many others.</p>
   <p><dfn>RTL</dfn> stands for "right-to-left" and refers to the inline base direction of right-to-left [[UAX9]]. This is the base text direction used by languages whose starting character progression begins on the right side of the page in horizontal text. It's used for scripts such as Arabic, Hebrew, Syriac, and a few others.</p>
+<p><dfn>Bidi isolation</dfn> often needs to be applied to a range of text in order to prevent the automatic rules of the Unicode Bidirectional Algorithm incorrectly ordering that content in relation to the surrounding text. For example, numbers following right-to-left text in memory are automatically positioned to the left of that text by the Bidi Algorithm, but sometimes need to appear to the right. Another example occurs when lists of RTL items occur in a LTR sentence: the Bidi Algorithm will automatically assume that the order of items in the list should be "3 ,2 ,1", but actually what's needed is "1, 2, 3". In HTML, bidi isolation can be applied to a range of text by enclosing it in an element with a <code class="kw" translate="no"></code> attribute. In plain text there are Unicode formatting characters that can do the job. These mechanisms remove unwanted 'spillover effects'.</p>
   
   <p class="note">If you are unfamiliar with bidirectional or right-to-left text, there is a basic introduction <a href="https://www.w3.org/International/articles/inline-bidi-markup/uba-basics">here</a>. Additional materials can be found in the Internationalization Working Group's <a href="https://www.w3.org/International/techniques/developing-specs.en?open=text_direction#text_direction">Techniques Index</a>.</p>
  </section>
@@ -664,7 +665,7 @@ working on.</p>
 <p>What you would actually see is this:</p>
 <p lang="ar" dir="ltr" style="font-size: 1.8em; color: grey;">HTML: تصميم و إنشاء مواقع الويب - 4 reviews</p>
 <p>This problem is caused by spillover effects as the Unicode bidirectional algorithm operates on the text inside and outside the inserted string without making any distinction between the two.</p>
-<p>The solution to this problem is called <dfn>bidi isolation</dfn>. The title needs to be directionally isolated from the rest of the text. </p>
+<p>The solution to this problem is  <a>bidi isolation</a>. The title needs to be directionally isolated from the rest of the text. </p>
 </section>
 
 
