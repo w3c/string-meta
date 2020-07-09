@@ -187,8 +187,8 @@ cultures.</p>
 <h3 id="resource_wide_defaults">Resource-wide defaults</h3>
 <p>Many resources use only a single language and have a consistent base text direction. For efficiency, the following are best practices:</p>
 
-<p class="advisement" id="bp-default_setting">Define a rule or a field to provide the default language and base direction for all strings in a given resource.</p>
-<p class="advisement" id="bp-not_only_default">Specifications MUST NOT assume that a document-level default is sufficient.</p>
+<p class="advisement" id="bp-default_setting"><a class="self" href="#bp-default_setting">&#x200B;</a>Define a rule or a field to provide the default language and base direction for all strings in a given resource.</p>
+<p class="advisement" id="bp-not_only_default"><a class="self" href="#bp-not_only_default">&#x200B;</a>Specifications MUST NOT assume that a document-level default is sufficient.</p>
 
 <p>Document level defaults, when combined with per-field metadata, can reduce the overall complexity of a given document instance, since the language and direction values don't have to be repeated across many fields. However, they do not solve all language or directionality problems, and so it must be possible to override the default on a string-by-string basis, where necessary.</p>
 <p class="advisement" id="bp-default_fallback">Specify that, in the absence of other information, the default direction and default language are unknown.</p>
@@ -198,7 +198,7 @@ cultures.</p>
 <p>It is essential for a consumer to know that language and direction are unknown quantities in order for them to know when to apply fallback strategies to the data (this could include language-detection, or first-strong heuristics for direction).  In particular, the default direction should not be set to LTR, since that would override the need for first-strong detection, which is more appropriate for strings written in a RTL script.</p>
 
 
-<p class="advisement" id="bp-use_jsonld_language_context">Use of [[JSON-LD]] <code class="kw" translate="no">@context</code> and the built-in <code class="kw" translate="no">@language</code> attribute is RECOMMENDED as a document level default.</p>
+<p class="advisement" id="bp-use_jsonld_language_context"><a class="self" href="#bp-use_jsonld_language_context">&#x200B;</a>Use of [[JSON-LD]] <code class="kw" translate="no">@context</code> and the built-in <code class="kw" translate="no">@language</code> attribute is RECOMMENDED as a document level default.</p>
 <p>For document formats that use it, [[JSON-LD]] includes some data structures that are helpful in assigning language (but not base direction) metadata to collections of strings (including entire resources). Notably, it defines what it calls “string internationalization” in the form of a context-scoped <code class="kw" translate="no">@language</code> value which can be associated with blocks of JSON or within individual objects. There is no definition for base direction, so the <code class="kw" translate="no">@context</code> mechanism does not currently address all concerns raised by this document.</p>
 </section>
 
@@ -206,10 +206,10 @@ cultures.</p>
 <section>
 <h3 id="string_specific_language">String-specific language information</h3>
 
-<p class="advisement" id="bp-lang_field_based_metadata">Use field-based metadata or string datatypes to indicate the language and the base direction for individual natural language strings.</p>
+<p class="advisement" id="bp-lang_field_based_metadata"><a class="self" href="#bp-lang_field_based_metadata">&#x200B;</a>Use field-based metadata or string datatypes to indicate the language and the base direction for individual natural language strings.</p>
 
 <p> Low-level support for natural language string metadata is widespread because the use of metadata for storage and interchange of the language of data values is long-established and widely supported in the basic infrastructure of the Web. This includes language attributes in [[XML]] and [[HTML]]; string types in schema languages (e.g. [[xmlschema11-2]]) or the various RDF specifications including [[JSON-LD]]; or protocol- or document format-specific provisions for language.</p>
-<p class="advisement" id="bp-use_jsonld_atsign">Use of [[JSON-LD]]  plain string literals are RECOMMENDED as a way to provide string-specific language information.</p>
+<p class="advisement" id="bp-use_jsonld_atsign"><a class="self" href="#bp-use_jsonld_atsign">&#x200B;</a>Use of [[JSON-LD]]  plain string literals are RECOMMENDED as a way to provide string-specific language information.</p>
 <p>Some datatypes, such as [[RDF-PLAIN-LITERAL]], already exist that allow for <em>language</em> metadata to be serialized as part of a string value. Examples include:</p>
 <div class="example">
 <p>&quot;title&quot;: &quot;تصميم و إنشاء مواقع الويب@ar&quot;,</p>
@@ -224,19 +224,19 @@ cultures.</p>
 
 <section>
 <h3 id="string_specific_direction">String-specific directional information</h3>
-<p class="advisement" id="bp-dir_field_based_metadata">If a resource-wide setting is available, specify field-based metadata to override the default. </p>
+<p class="advisement" id="bp-dir_field_based_metadata"><a class="self" href="#bp-dir_field_based_metadata">&#x200B;</a>If a resource-wide setting is available, specify field-based metadata to override the default. </p>
 <p>First-strong heuristics are ineffective when a default direction has been set for all strings, since  metadata overrides (intentionally) the value of the first-strong character. Therefore it is necessary to use explicitly provided field data to override the default. Even if an RLM character has been prepended to a string, the default metadata overrides it.</p>
 <p>The use of <a href="#metadata">metadata</a> for indicating base direction is also preferred, because it avoids requiring the consumer to interpolate the direction using methods such as <a href="#firststrong">first strong</a> or use of methods which require modification of the data itself (such as the <a href="#rlm">insertion of RLM/LRM markers</a> or <a href="#paired">bidirectional controls</a>).</p>
 <p class="issue">Schema languages, such as the RDF suite of specifications, have no in-built mechanism for associating base direction metadata with natural language string values.</p>
 <p class="issue">There is no built-in attribute for base direction in [[JSON-LD]]. There needs to be a corresponding built-in attribute (e.g. a <code class="kw" translate="no">dir</code>) or de facto convention for indicating document-level base direction.</p>
-<p class="advisement" id="bp-use_heuristics1">For the case where the resource-wide setting is not available, specify that consumers should use first-strong heuristics to identify the base direction of strings.</p>
-<p class="advisement" id="bp-use_heuristics2">For the case where the resource-wide setting is available but not used, specify that consumers should fall back to first-strong heuristics to identify the base direction of strings.</p>
+<p class="advisement" id="bp-use_heuristics_1"><a class="self" href="#bp-use_heuristics_1">&#x200B;</a>For the case where the resource-wide setting is not available, specify that consumers should use first-strong heuristics to identify the base direction of strings.</p>
+<p class="advisement" id="bp-use_heuristics_2"><a class="self" href="#bp-use_heuristics_2">&#x200B;</a>For the case where the resource-wide setting is available but not used, specify that consumers should fall back to first-strong heuristics to identify the base direction of strings.</p>
 <p>If metadata is not available, consumers of strings should use heuristics, preferably based on the Unicode Standard's first-strong detection algorithm, to detect the base direction of a string.</p>
 <p>The <a href="#firststrong">first-strong algorithm</a> looks for the first strongly-directional character in a string (skipping certain preliminary substrings), and assumes that it represents the base direction for the string as a whole. However, the first strong directional character doesn't always coincide with the required base direction for the string as a whole, so it should be possible to  provide metadata, where needed, to address this problem.</p>
-<p class="advisement" id="bp-using_rlm_lrm">If relying on first-strong heuristics, encourage content developers to use RLM/LRM at the beginning of a string where it is necessary to force a particular base direction, but do not prepend one of these characters to existing strings.</p>
-<p class="advisement" id="bp-rlm_lrm_availability">Do not rely on the availability of RLM/LRM formatting characters in most cases.</p>
+<p class="advisement" id="bp-using_rlm_lrm"><a class="self" href="#bp-using_rlm_lrm">&#x200B;</a>If relying on first-strong heuristics, encourage content developers to use RLM/LRM at the beginning of a string where it is necessary to force a particular base direction, but do not prepend one of these characters to existing strings.</p>
+<p class="advisement" id="bp-rlm_lrm_availability"><a class="self" href="#bp-rlm_lrm_availability">&#x200B;</a>Do not rely on the availability of RLM/LRM formatting characters in most cases.</p>
 <p>If string data is being provided by users or content developers in web forms or other simple environments, users may not be able to enter these formatting characters.  In fact, most users will probably be unaware that such characters exist, or how to use them.  A web form can render their use unnecessary for immediate inspection if it sets the base direction for the input (which it should).</p>
-<p class="advisement" id="bp-inferring_from_language">Specifications SHOULD NOT allow a base direction to be <a href="#script_subtag">interpolated from available language metadata</a> unless direction metadata is not available and cannot otherwise be provided.</p>
+<p class="advisement" id="bp-inferring_from_language"><a class="self" href="#bp-inferring_from_language">&#x200B;</a>Specifications SHOULD NOT allow a base direction to be <a href="#script_subtag">interpolated from available language metadata</a> unless direction metadata is not available and cannot otherwise be provided.</p>
 <p>Not all resources make use of the available metadata mechanisms. The script subtag of a language tag (or the "likely" script subtag based on [[BCP47]] and [[LDML]]) can sometimes be used to provide a base direction when other data is not available. Note that using language information is a "last resort" and specifications SHOULD NOT use it as the primary way of indicating direction: make the effort to provide for metadata.</p>
 </section>
 
@@ -245,14 +245,15 @@ cultures.</p>
 <section>
 <h3 id="other_approaches">Other approaches</h3>
 
-<p class="advisement" id="bp-localizable">For [[WebIDL]]-defined data structures, define each natural language text field as a <q><a>Localizable</a></q>.</p>
+<p class="advisement" id="bp-localizable"><a class="self" href="#bp-localizable">&#x200B;</a>For [[WebIDL]]-defined data structures, define each natural language text field as a <q><a>Localizable</a></q>.</p>
 
 <p> This combines both language and direction metadata and, if consistently adopted, makes interchange between different formats easier. Consistency between different specifications and document formats allows for the easy interchange of string data. By naming field attributes in the same way and adopting the same semantics, different specifications can more easily extract values from or add values into resources from other data sources.</p>
-<p class="advisement" id="bp-no_paired_bidi">Specifications MUST NOT require the production or use of <a href="#paired">paired bidi controls</a>.</p> 
+
+<p class="advisement" id="bp-no_paired_bidi"><a class="self" href="#bp-no_paired_bidi">&#x200B;</a>Specifications MUST NOT require the production or use of <a href="#paired">paired bidi controls</a>.</p> 
 
 <p>Another way to say this is: <strong><em>do not require implementations to modify data passing through them</em></strong>. Unicode bidi control characters might be found in a particular piece of string content, where the producer or data source has used them to make the text display properly. That is, they might already be part of the data. Implementations should not disturb any controls that they find&mdash;but they shouldn't be required to produce additional controls on their own.</p>
 
-<p class="advisement" id="bp-language_indexing">Specifications SHOULD recommend the use of <a>language indexing</a> when <a>Localizable</a> strings can be supplied in multiple languages for the same value.</p>
+<p class="advisement" id="bp-language_indexing"><a class="self" href="#bp-language_indexing">&#x200B;</a>Specifications SHOULD recommend the use of <a>language indexing</a> when <a>Localizable</a> strings can be supplied in multiple languages for the same value.</p>
 
 <p><a>Producers</a> sometimes need to supply multiple language values (see <a href="#localization-considerations">Localization Considerations</a>) for the same content item or data record. One use for this <a>language negotiation</a> by the <a>consumer</a>.</p>
 
@@ -315,8 +316,8 @@ include:</p>
 <p>Similarly, direction metadata is important to the Web. When a string 
 contains text in a script that runs right-to-left (RTL), it must be 
 possible to eventually display that string correctly when it reaches an 
-end user. For that to happen, it is necessary to establish what <dfn>base 
-direction</dfn> needs to be applied to the string as a whole. The 
+end user. For that to happen, it is necessary to establish what <a>base 
+direction</a> needs to be applied to the string as a whole. The 
 appropriate base direction cannot always be deduced by simply looking 
 at the string; even where it is possible, the producer and consumer of 
 the string  need to use the same heuristics to interpret the 
