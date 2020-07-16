@@ -852,22 +852,24 @@ access, to the original context of the string. Many document formats are generat
   <section id="dir-approach-new-datatype">
     <h3>Create a new bidi datatype</h3>
     
-    <p><strong>This approach is not currently available.</strong></p>
+    <p><strong>This approach was added to [[JSON-LD]] 1.1.</strong></p>
     
     <section>
 	
 	<h4 id="dir-approach-new-datatype-how">How it works</h4>
     <p>This is similar to the idea of sending metadata with a string as discussed previously, however the metadata is not stored in a completely separate field (as in  <a href="#metadata"></a>), or inserted into the string itself (as in <a href="#rlm"></a>), but is associated with the string as part of the string format itself.</p>
-<p>Some datatypes, such as [[RDF-PLAIN-LITERAL]], already exist that allow for <em>language</em> metadata to be serialized as part of a string value. However, these do not include a consideration for base direction. This might be addressed by defining a new datatype (or extending an existing one) that document formats could then use to serialize natural language strings that includes both language and direction metadata.</p>
+    <p>Some datatypes, such as [[RDF-PLAIN-LITERAL]], already exist that allow for <em>language</em> metadata to be serialized as part of a string value. However, these do not include a consideration for base direction. This might be addressed by defining a new datatype (or extending an existing one) that document formats could then use to serialize natural language strings that includes both language and direction metadata.</p>
+    <p>[[JSON-LD]] 1.1. added the <code>i18n</code> Namespace to permit JSON documents to serialize language and direction metadata directly with a string value. It provides a deserialization to RDF for specifications that need it.</p>
   
 <aside class="example">  
 	<p>Using RDF plain string literals as a model, here is what a serialization <em>might</em> look like. (The RTL text is shown in the order in which characters are stored in memory, rather than the display order.)</p>
 <pre>
-myLocalizedString:     "Hello World!@en^ltr"           // language and direction
-myLocalizedString_ar:  "<bdo dir="ltr">مرحبا بالعالم</bdo>!@ar-EG^rtl"      // right-to-left example
-myLocalizedString_fr:  "Bonjour monde !@fr"            // language only
-myLocalizedString_und: "<bdo dir="ltr">שלום עולם</bdo>!^rtl"                // direction information only
-myDataString:          "978-0-123-4567-X^ltr"          // language-neutral string</pre>
+myLocalizedString:     "Hello World!"^^i18n:en_ltr            // language and direction
+myLocalizedString_ar:  "<bdo dir="ltr">مرحبا بالعالم</bdo>!"^^i18n:ar_rtl          // right-to-left example
+myLocalizedString_fr:  "Bonjour monde !"^^i18n:fr             // language only
+myLocalizedString_und: "<bdo dir="ltr">שלום עולם</bdo>!"^^i18n:_rtl                // direction information only
+myDataString:          "978-0-123-4567-X"^^i18n:_ltr          // language-neutral string
+</pre>
 </aside>
 
 <p>Note that the last string does not include language information  because it is an internal data value, but <em>does</em> include direction information because strings of this kind <em>must</em> be presented in the LTR order.</p>
