@@ -35,22 +35,12 @@
 			     ],
          
 
-          wg:           "Internationalization Working Group",
-          wgURI:         "https://www.w3.org/International/core/",
-          //wgPublicList: "www-international",
 		
 		  github: "w3c/string-meta",
+		  group: "i18n",
 		  
-          
-          // URI of the patent status for this WG, for Rec-track documents
-          // !!!! IMPORTANT !!!!
-          // This is important for Rec-track documents, do not copy a patent URI from a random
-          // document unless you know what you're doing. If in doubt ask your friendly neighbourhood
-          // Team Contact.
-          wgPatentURI:  "https://www.w3.org/2004/01/pp-impl/32113/status",
-          // !!!! IMPORTANT !!!! MAKE THE ABOVE BLINK IN YOUR HEAD
-          
-          		  localBiblio: {
+                    
+        localBiblio: {
 		"LDML": {
 		    title: "Unicode Technical Standard #35: Unicode Locale Data Markup Language (LDML)",
 			href: "https://unicode.org/reports/tr35/",
@@ -59,7 +49,7 @@
 	}
       };
     </script>
-<link rel="stylesheet" href="local.css" type="text/css" />
+<link rel="stylesheet" href="local.css" />
 
 </head>
 
@@ -114,8 +104,9 @@ cultures.</p>
   <p><dfn data-lt="language negotiation">Language negotiation</dfn> is any process which selects or filters content based on language. Usually this implies selecting content in a single language (or falling back to some meaningful default language that is available) by finding the best matching values when several languages or locales [[LTLI]] are present in the content. Some common language negotiation algorithms include the Lookup algorithm in [[BCP47]] or the BestFitMatcher in [[ECMA-402]].</p>
   <p><dfn>LTR</dfn> stands for "left-to-right" and refers to the inline base direction of left-to-right [[UAX9]]. This is the base text direction used by languages whose starting character progression begins on the left side of the page in horizontal text. It's used for scripts such as Latin, Cyrillic, Devanagari, and many others.</p>
   <p><dfn>RTL</dfn> stands for "right-to-left" and refers to the inline base direction of right-to-left [[UAX9]]. This is the base text direction used by languages whose starting character progression begins on the right side of the page in horizontal text. It's used for a variety of scripts which include Arabic, Hebrew, N'Ko, Adlam, Thaana, and Syriac among others.</p>
+<p><dfn>Bidirectional text</dfn> is a term used to refer to text that mixes runs of both LTR and RTL text inline. It is common for text written in Arabic, Hebrew, etc. to contain short runs of Latin text, and several of the scripts that are written predominantly right-to-left write their numbers from left-to-right. Bidirectional text of this kind is the source of many of the difficulties when dealing with RTL scripts.</p>
 <p><dfn>Bidi isolation</dfn> often needs to be applied to a range of text in order to prevent the automatic rules of the Unicode Bidirectional Algorithm incorrectly ordering that content in relation to the surrounding text. For example, numbers following right-to-left text in memory are automatically positioned to the left of that text by the Bidi Algorithm, but sometimes need to appear to the right. Another example occurs when lists of RTL items occur in a LTR sentence: the Bidi Algorithm will automatically assume that the order of items in the list should be "3 ,2 ,1", but actually what's needed is "1, 2, 3". In HTML, bidi isolation can be applied to a range of text by enclosing it in an element with a <code class="kw" translate="no">dir</code> attribute. In plain text there are Unicode formatting characters that can do the job. These mechanisms remove unwanted 'spillover effects'.</p>
-<p> <dfn>First-strong detection</dfn> is an algorithm that looks for the first strongly-directional character in a string, and then uses that to guess at the appropriate base direction for the string as a whole. Unicode code points are associated with properties relating to text direction: generally, letters in right-to-left scripts such as Arabic and Hebrew have a strong RTL direction, whereas Latin and Han characters have a strong LTR direction. Other characters, such as punctuation, only have a weak intrinsic directionality, and the actual directionality is determined according to the context in which they are found.</p>
+<p> <dfn>First-strong detection</dfn> is an algorithm that looks for the first strongly-directional character in a string that is not inside a nested isolate, and then uses that to guess at the appropriate base direction for the string as a whole. Unicode code points are associated with properties relating to text direction: generally, letters in right-to-left scripts such as Arabic and Hebrew have a strong RTL direction, whereas Latin and Han characters have a strong LTR direction. Other characters, such as punctuation, only have a weak intrinsic directionality, and the actual directionality is determined according to the context in which they are found.</p>
 <p><dfn>Base direction</dfn>  determines the general arrangement and progression of content when bidirectional text is displayed. The <dfn data-lt="unicode bidirectional algorithm|uba">Unicode Bidirectional Algorithm</dfn> or <q>UBA</q> [[UAX9]] is primarily focused on arranging adjacent characters, based on character properties. Base direction works at a higher level, and dictates (a) the visual order and direction in which runs of strongly-typed LTR and RTL character are displayed, and (b) where there are weakly-typed characters such as punctuation, the placement of those items relative to the other content.</p>
   
   <p class="note">If you are unfamiliar with bidirectional or right-to-left text, there is a basic introduction <a href="https://www.w3.org/International/articles/inline-bidi-markup/uba-basics">here</a>. This will give you a basic grasp of how the <a>Unicode Bidirectional Algorithm</a> works and the interplay between it and the base direction, which will stand you in good stead for reading this document. Additional materials can be found in the Internationalization Working Group's <a href="https://www.w3.org/International/techniques/developing-specs.en?open=text_direction#text_direction">Techniques Index</a>.</p>
