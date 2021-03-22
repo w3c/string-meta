@@ -155,10 +155,15 @@ cultures.</p>
   <p>In some systems or document formats, the necessary behaviour of the producers and consumers of a string are fully specified. In others, such agreements are not available; it is up to users to provide an agreement for how to encode, transmit, and later decode the necessary language or direction information. Low level specifications, such as JSON, do not provide a string metadata structure by default, so any document formats based on these need to provide the "agreement" themselves.</p>
 </section>
 </section>
+
+<section id="plain_strings">
+	  <h3>Plain Strings</h3>
+	  <p>This document is primarily concerned with natural language strings, that is, strings that contain human language content whose purpose is to be read or consumed by human beings. There also exist many other types of content on the Web.</p>
+	  <p>The Web uses strings and character sequences to encode most data. Leaving aside different data types (such as numbers, time values, or binary data serializations), there are still values that are defined as using a string type but which are not intended for use as natural language. Some examples of these types of strings might include the built-in keywords in a formal language such as CSS or HTML. Many of these values are enumerated by specifications.</p>
+	  <p>In other cases, specifications allow users to define identifiers, often inside of a given namespace. For example, SSIDs on a Wifi network are user-defined. So too are class names in a CSS stylesheet. While these strings can use a wide range of Unicode characters and while users often choose human-meaningful values, these types of strings (and other string internal values) cannot be considered "natural language text" and should not be encumbered with additional metadata related to langauge or base direction.</p>
+	  <p>Specifications need to be careful to distinguish these "plain" string values from natural language text. Implementers are cautioned that in most instances these values should be wrapped with localizable display strings for presentation to the user (in cases where the values are enumerated in advance).</p>
 </section>
-
-
-
+</section>
 
 
 <section>
