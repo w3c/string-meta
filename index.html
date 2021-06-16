@@ -297,13 +297,19 @@
 </section>
 
 <section>
-<h2 id="defining_bidi_attributes">Defining Bidirectional Attributes in Specifications</h2>
+<h2 id="defining_bidi_keywords">Defining Bidirectional Keywords in Specifications</h2>
 
-<p>Specifications for document formats and protocols sometimes need to define the direction attribute and its values. These definitions need to be consistent across the Web in order to ensure interoperability.</p>
+<p>Specifications for a document format and protocol need to provide a data field or attribute to store the direction of natural language content. These definitions need to be consistent across the Web in order to ensure interoperability and this section describes how to provide such a definition along with the specific content to use.</p>
 
-<p>Define the base direction attribute using the name <code>direction</code> or the name <code>dir</code>. Use <code>direction</code> for data values in a data structure. Use <code>dir</code> for attribute values, such as in markup languages.</p>
+<p>There are two common use cases for defining content direction: (1) metadata stored or exchanged with a natural language string giving its base direction; and (2) attribute values, particularly in document formats, used to control the display of specific content.</p>
 
-<p>The values of the base direction data value or attribute MUST include <code>ltr</code> and <code>rtl</code>. The values MAY also include the value <code>auto</code> when that is appropriate.</p>
+<p class="advisement" id="bp-define-direction-field"><a class="self" href="#bp-define-direction-field">&#x200B;</a>The base direction MUST be named either <code>direction</code> or <code>dir</code>.</p>
+
+<p>The field name <code>direction</code> is preferred for metadata. The name <code>dir</code> is preferred for an attribute, such as in markup languages. Note that both [[HTML]] and [[XML10]] have a <code>dir</code> attribute. A <code>dir</code> attribute should have scope within a document and should be defined to provide bidi isolation.</p>
+
+<p class="advisement" id="bp-define-dir-values"><a class="self" href="#bp-define-dir-values">&#x200B;</a>The values of any base direction data value MUST include and be limited to <code>ltr</code> and <code>rtl</code>. The values of any base direction attribute MUST include and be limited to the values <code>ltr</code>, <code>rtl</code>, and <code>auto</code>.</p>
+
+<p class="advisement" id="bp-dir-auto-non-use"><a class="self" href="#bp-dir-auto-non-use">&#x200B;</a>The value <code>auto</code> SHOULD NOT be used as metadata: omitting the direction is preferred when the content direction is not known.</p>
 
 <p>The value <code>ltr</code> indicates a base direction of left-to-right, in exactly the same manner indicated by <a href="https://www.w3.org/TR/css-writing-modes/#direction">CSS writing modes</a> [[CSS-WRITING-MODES-4]]</p>
 
@@ -312,8 +318,6 @@
 <p>The value <code>auto</code> indicates that the user agent uses the first strong character of the content to determine the base direction using the <a href="https://html.spec.whatwg.org/multipage/dom.html#the-dir-attribute">algorithm</a> for <code>auto</code> found in [[HTML]].</p>
 
 <p class="note">The heuristic used by <code>auto</code> just looks at the first character with a strong directionality, in a manner analogous to the Paragraph Level determination in the bidirectional algorithm [[UAX9]]. Authors are urged to only use this value as a last resort when the direction of the text is truly unknown and no better server-side heuristic can be applied.</p>
-
-<p>The value <code>auto</code> is only appropriate for presentation, not as metadata about the direction of content. When the direction of content is not known, omitting the <code>direction</code> attribute is preferred.</p>
 
 </section>
 
