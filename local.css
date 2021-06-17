@@ -59,7 +59,7 @@ p.cjk-demo {
 }
 
 .gap::before {
-    content: "\1f631 \00A0 ";
+    content: "\2757 \fe0f \00A0 ";
     font-style: normal;
     color: #63F;;
 }
@@ -109,4 +109,14 @@ a.self:hover {
 
 .advisement {
     position: relative;
+}
+
+.definition {
+    position: relative;
+    background-color: #efefef;
+    padding: 0.5em;
+    border: 0.5em;
+    border-left: 6pt solid green;
+    border-right: 6pt solid green;
+    margin: 1em auto;
 }

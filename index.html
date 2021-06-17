@@ -167,7 +167,7 @@
 <aside class="note">
 <p>In this section [[RFC2119]] keywords in uppercase italics have their usual meaning. We differentiate <em>best practices</em>, which should be adopted by all specifications and <em>recommendations</em>, which require additional standardization or which are speculative prior to adoption.</p>
     <p class="advisement">Best practices appear with a different background color and decoration like this.</p>
-    <p>Gaps or recommendations for future work are listed as issues.</p>
+    <p class="gap">Gaps or recommendations for future work are listed as issues or displayed like this.</p>
 </aside>
 
 <p>The main issue is how to establish a common <a>serialization agreement</a> between producers and consumers of data values so that each knows how to encode, find, and interpret the language and base direction of each data field. The use of metadata for supplying both the language and base direction of natural language string fields ensures that the necessary information is present, can be supplied and extracted with the minimal amount of processing, and does not require producers or consumers to scan or alter the data.</p>
@@ -299,17 +299,43 @@
 <section>
 <h2 id="defining_bidi_keywords">Defining Bidirectional Keywords in Specifications</h2>
 
-<p>Specifications for a document format and protocol need to provide a data field or attribute to store the direction of natural language content. These definitions need to be consistent across the Web in order to ensure interoperability and this section describes how to provide such a definition along with the specific content to use.</p>
+<p>A specification for a document format or protocol that includes natural language text will need to define a data field or attribute to store the direction of that natural language content. These definitions need to be consistent across the Web in order to ensure interoperability, as <a>consumers</a> of one document format will need to map the base direction to fields in documents that they produce or control the base direction in text fields for display. This section describes how to provide such a definition along with the specific content to use.</p>
 
-<p>There are two common use cases for defining content direction: (1) metadata stored or exchanged with a natural language string giving its base direction; and (2) attribute values, particularly in document formats, used to control the display of specific content.</p>
+<p>There are two common use cases for defining content direction:</p>
 
-<p class="advisement" id="bp-define-direction-field"><a class="self" href="#bp-define-direction-field">&#x200B;</a>The base direction MUST be named either <code>direction</code> or <code>dir</code>.</p>
+<p class="definition">A <dfn data-lt="field direction value|field direction">field direction value</dfn> is a data field stored or exchanged with a natural language string giving its base direction.</p>
+<p class="definition">A <dfn data-lt="">display direction attribute</dfn> is a field or value, usually represented by an attribute in markup languages, that controls the base direction of a span of content.</p>
 
-<p>The field name <code>direction</code> is preferred for metadata. The name <code>dir</code> is preferred for an attribute, such as in markup languages. Note that both [[HTML]] and [[XML10]] have a <code>dir</code> attribute. A <code>dir</code> attribute should have scope within a document and should be defined to provide bidi isolation.</p>
+<aside class="example">
+<p><strong>Example of a <a>field direction value</a>.</strong> In this JSON fragment, the <code>title</code> structure has a value <code>direction</code> which represents the <a>field direction</a> of the <code>value</code> field.</p>
+<pre class="json">"title": {
+	"value": "HTML و CSS: تصميم و إنشاء مواقع الويب",
+	"direction": "rtl",
+	"language": "ar"
+}</pre>
 
-<p class="advisement" id="bp-define-dir-values"><a class="self" href="#bp-define-dir-values">&#x200B;</a>The values of any base direction data value MUST include and be limited to <code>ltr</code> and <code>rtl</code>. The values of any base direction attribute MUST include and be limited to the values <code>ltr</code>, <code>rtl</code>, and <code>auto</code>.</p>
+<p><strong>Example of a <a>display direction attribute</a>.</strong> If the above JSON were received by a process that was assembling a Web page for display, it might be filling in a template similar to the top line in this example. Here the <code>dir</code> attribute from [[HTML]] is an example of a <a>display direction attribute</a>.</p>
 
-<p class="advisement" id="bp-dir-auto-non-use"><a class="self" href="#bp-dir-auto-non-use">&#x200B;</a>The value <code>auto</code> SHOULD NOT be used as metadata: omitting the direction is preferred when the content direction is not known.</p>
+<pre class="html">
+&lt;p dir={$dir}>{$title}&lt;/p>
+&lt;p dir="rtl">HTML و CSS: تصميم و إنشاء مواقع الويب&lt;/p>
+</pre>
+	
+</aside>
+
+<p class="advisement" id="bp-define-field-direction-value"><a class="self" href="#bp-define-field-direction-value">&#x200B;</a>Use the field name <code>direction</code> when defining a <a>field direction value</a>.</p>
+
+<p>The name <code>direction</code> is preferred for data values. The name <code>dir</code> is an acceptable alternative.</p>
+
+<p class="advisement" id="bp-define-display-dir-attribute"><a class="self" href="#bp-define-display-dir-attribute">&#x200B;</a>Use the field name <code>dir</code> when defining a <a>display direction attribute</a>.</p>
+
+<p>The name <code>dir</code> is preferred for an attribute, such as in markup languages. Using <code>direction</code> for an attribute is not recommended, since it is long and relatively uncommon for this use case. Note that both [[HTML]] and [[XML10]] have a built-in <code>dir</code> attribute. A <code>dir</code> attribute should have scope within a document and should be defined to provide bidi isolation.</p>
+
+<p class="advisement" id="bp-define-direction-values"><a class="self" href="#bp-define-direction-values">&#x200B;</a>Define the values of a <a>field direction</a> to include and be limited to <code>ltr</code> and <code>rtl</code>.</p>
+
+<p class="advisement" id="bp-define-dir-attribute-values"><a class="self" href="#bp-define-dir-attribute-values">&#x200B;</a> Define the values of any <a>display direction attribute</a> to include and be limited to the values <code>ltr</code>, <code>rtl</code>, and <code>auto</code>.</p>
+
+<p class="advisement" id="bp-dir-auto-non-use"><a class="self" href="#bp-dir-auto-non-use">&#x200B;</a>The value <code>auto</code> SHOULD NOT be used as <a>field direction value</a>: omitting the direction is preferred when the content direction is not known.</p>
 
 <p>The value <code>ltr</code> indicates a base direction of left-to-right, in exactly the same manner indicated by <a href="https://www.w3.org/TR/css-writing-modes/#direction">CSS writing modes</a> [[CSS-WRITING-MODES-4]]</p>
 
