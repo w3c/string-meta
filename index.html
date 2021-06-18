@@ -348,10 +348,10 @@
 	"language": "ar"
 }</pre>
 
-<p><strong>Example of a <a>display direction attribute</a>.</strong> If the above JSON were received by a process that was assembling a Web page for display, it might be filling in a template similar to the top line in this example. Here the <code>dir</code> attribute from [[HTML]] is an example of a <a>display direction attribute</a>.</p>
+<p><strong>Example of a <a>display direction attribute</a>.</strong> If the above JSON were received by a process that was assembling a Web page for display, it might be filling in a template similar to the top line in this example to produce markup like the second line. Here the <code>dir</code> attribute from [[HTML]] is an example of a <a>display direction attribute</a>.</p>
 
 <pre class="html">
-&lt;p dir={$dir}>{$title}&lt;/p>
+&lt;p dir={$title.direction}>{$title.value}&lt;/p>
 &lt;p dir="rtl">HTML و CSS: تصميم و إنشاء مواقع الويب&lt;/p>
 </pre>
 	
