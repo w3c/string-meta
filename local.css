@@ -31,16 +31,26 @@ p.cjk-demo {
 	font-family: serif;
 }
 
-.req {
-    background-color: #FFC;
-    font-style: italic;
-}
 
-.req::before {
-    content: "\1f44d \00A0 ";
-    font-style: normal;
-    color: #63F;;
-}
+
+
+
+.advisement + .links { margin-top: -1em; }
+.advisement + .links a { text-decoration: none; border-bottom: none; }
+.advisement { }
+.req { position: relative; }
+.req .links { padding-bottom: 0; }
+.req .self-link {
+	margin-left: -1em;
+	float: left;
+	text-decoration: none;
+	border: 0;
+	font-size: 80%;
+	color: #999;
+	}
+
+
+
 
 .reqex {
     background-color: #FFC;
