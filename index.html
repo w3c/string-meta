@@ -357,19 +357,29 @@
 	
 </aside>
 
-<p class="advisement" id="bp-define-field-direction-value"><a class="self" href="#bp-define-field-direction-value">&#x200B;</a>Use the field name <code>direction</code> when defining a <a>field direction value</a>.</p>
+<div class="req" id="bp-define-field-direction-value">
+   <p class="advisement">Use the field name <code>direction</code> when defining a <a>field direction value</a>.</p>
+</div>
 
 <p>The name <code>direction</code> is preferred for data values. The name <code>dir</code> is an acceptable alternative.</p>
 
-<p class="advisement" id="bp-define-display-dir-attribute"><a class="self" href="#bp-define-display-dir-attribute">&#x200B;</a>Use the field name <code>dir</code> when defining a <a>display direction attribute</a>.</p>
+<div class="req" id="bp-define-display-dir-attribute">
+   <p class="advisement">Use the field name <code>dir</code> when defining a <a>display direction attribute</a>.</p>
+</div>
 
 <p>The name <code>dir</code> is preferred for an attribute, such as in markup languages. Using <code>direction</code> for an attribute is not recommended, since it is long and relatively uncommon for this use case. Note that both [[HTML]] and [[XML10]] have a built-in <code>dir</code> attribute. A <code>dir</code> attribute should have scope within a document and should be defined to provide bidi isolation.</p>
 
-<p class="advisement" id="bp-define-direction-values"><a class="self" href="#bp-define-direction-values">&#x200B;</a>Define the values of a <a>field direction</a> to include and be limited to <code>ltr</code> and <code>rtl</code>.</p>
+<div class="req" id="bp-define-direction-values">
+   <p class="advisement">Define the values of a <a>field direction</a> to include and be limited to <code>ltr</code> and <code>rtl</code>.</p>
+</div>
 
-<p class="advisement" id="bp-define-dir-attribute-values"><a class="self" href="#bp-define-dir-attribute-values">&#x200B;</a> Define the values of any <a>display direction attribute</a> to include and be limited to the values <code>ltr</code>, <code>rtl</code>, and <code>auto</code>.</p>
+<div class="req" id="bp-define-dir-attribute-values">
+   <p class="advisement"> Define the values of any <a>display direction attribute</a> to include and be limited to the values <code>ltr</code>, <code>rtl</code>, and <code>auto</code>.</p>
+</div>
 
-<p class="advisement" id="bp-dir-auto-non-use"><a class="self" href="#bp-dir-auto-non-use">&#x200B;</a>The value <code>auto</code> SHOULD NOT be used as <a>field direction value</a>: omitting the direction is preferred when the content direction is not known.</p>
+<div class="req" id="bp-dir-auto-non-use">
+   <p class="advisement">The value <code>auto</code> SHOULD NOT be used as <a>field direction value</a>: omitting the direction is preferred when the content direction is not known.</p>
+</div>
 
 <p>The value <code>ltr</code> indicates a base direction of left-to-right, in exactly the same manner indicated by <a href="https://www.w3.org/TR/css-writing-modes/#direction">CSS writing modes</a> [[CSS-WRITING-MODES-4]]</p>
 
