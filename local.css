@@ -130,3 +130,10 @@ a.self:hover {
     border-right: 6pt solid green;
     margin: 1em auto;
 }
+
+.uname {
+   font-size: 75%;
+   letter-spacing: 0.05em;
+   text-transform: uppercase;
+   margin: 0 2px;
+}

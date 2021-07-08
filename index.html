@@ -180,6 +180,14 @@
 <aside class="note">
    <p>Error messages are not syntactic content. They consist of and should be treated as <a>localizable content</a>.</p>
 </aside>
+
+<div class="req" id="bp_unicode_tag_chars_nonuse">
+<p class="advisement">Specifications SHOULD NOT use the Unicode "language tag" characters (code points <code>U+E0000</code> to <code>U+E007F</code>) for language identification.</p>
+
+<p>[[Unicode]] says that the <q>... use of tag characters to convey language tags is strongly discouraged</q> and that the use of the character <span class="uname">U+E0001 LANGUAGE TAG</span> is <em>strongly discouraged</em>. The only current use of characters in this block of Unicode is to form various flag emoji.</p>
+</div>
+
+
 </section>
 
 <section>
@@ -1014,6 +1022,10 @@ myDataString:          "978-0-123-4567-X^ltr"          // language-neutral strin
 <section id="unicodeTags">
   <h3>Use Unicode language tag characters</h3> 
   <p><strong>This approach is NOT recommended.</strong></p>
+  
+  <aside class="warning">
+	  <p>As noted in <a href="#bp_unicode_tag_chars_nonuse">this best practice</a>, Unicode tag characters in the <code>U+E0000</code> block SHOULD NOT be used to encode langauge tags. This section mainly exists to provide guidance to specifications against adopting these as a potential solution.</p>
+  </aside>
   
   <section>
   <h4 id="unicode-tags-how">How it works</h4>
