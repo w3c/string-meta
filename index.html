@@ -146,7 +146,7 @@
 
 <p>The Web uses strings and character sequences to encode most data. Leaving aside different data types (such as numbers, time values, or binary data serializations such as <code>base64</code>), there are still values that are defined as using a string data type but which are not intended for use as <a>natural language</a> data values. For example, the <a>syntactic content</a> defined by a specification, such as the reserved keywords in CSS or the names of the various definitions in a WebIDL document, are not part of the <a>localizable content</a> of their respective document formats or protocols.</p>
 
-<p>Many specifications also allow users to provide <a>user-supplied values</a> inside of a given namespace or document format. For example, SSIDs on a Wifi network are user-defined. So too are class names in a CSS stylesheet. Most specifications allow (and are encouraged to allow) a wide range of Unicode characters in these names. Most users choose values that are recognizable as words in one or another natural language, as doing so makes the values easier to work with. However, even though these strings consist of words in a natural language, these types of strings are not considered <a>localizable content</a> and do not need to be encumbered with additional metadata related to langauge or base direction. Usually they are merely identifiers that enable a computer to match the values.</p>
+<p>Many specifications also allow users to provide <a>user-supplied values</a> inside of a given namespace or document format. For example, SSIDs on a Wifi network are user-defined. So too are class names in a CSS stylesheet. Most specifications allow (and are encouraged to allow) a wide range of Unicode characters in these names. Most users choose values that are recognizable as words in one or another natural language, as doing so makes the values easier to work with. However, even though these strings consist of words in a natural language, these types of strings are not considered <a>localizable content</a> and do not need to be encumbered with additional metadata related to language or base direction. Usually they are merely identifiers that enable a computer to match the values.</p>
 
 <p>A sometimes-useful test is that if replacing the identifier with an arbitrary string such as <code>tK0001.37B</code> would still be allowed, functional, and "normal", then it's not <a>localizable content</a>.</p>
 
@@ -200,7 +200,7 @@
 <div class="req" id="bp_unicode_tag_chars_nonuse">
 <p class="advisement">Specifications SHOULD NOT use the Unicode "language tag" characters (code points <code>U+E0000</code> to <code>U+E007F</code>) for language identification.</p>
 
-<p>[[Unicode]] says that the <q>... use of tag characters to convey language tags is strongly discouraged</q> and that the use of the character <span class="uname">U+E0001 LANGUAGE TAG</span> is <em>strongly discouraged</em>. The only current use of characters in this block of Unicode is to form various flag emoji.</p>
+<p>[[Unicode]] says that the <q>... use of tag characters to convey language tags is strongly discouraged</q> and that the use of the character <span class="uname">U+E0001 LANGUAGE TAG</span> is <em>strongly discouraged</em>.</p>
 </div>
 
 
@@ -1040,7 +1040,7 @@ myDataString:          "978-0-123-4567-X^ltr"          // language-neutral strin
   <p><strong>This approach is NOT recommended.</strong></p>
   
   <aside class="warning">
-	  <p>As noted in <a href="#bp_unicode_tag_chars_nonuse">this best practice</a>, Unicode tag characters in the <code>U+E0000</code> block SHOULD NOT be used to encode langauge tags. This section mainly exists to provide guidance to specifications against adopting these as a potential solution.</p>
+	  <p>As noted in <a href="#bp_unicode_tag_chars_nonuse">this best practice</a>, Unicode tag characters in the <code>U+E0000</code> block SHOULD NOT be used to encode language tags. This section mainly exists to provide guidance to specifications against adopting these as a potential solution.</p>
   </aside>
   
   <section>
@@ -1067,7 +1067,7 @@ myDataString:          "978-0-123-4567-X^ltr"          // language-neutral strin
   <section>
 	  <h4 id="unicode-tag-issues">Issues</h4>
 	  
-<p>Unicode tag characters are strongly deprecated by the Unicode Consortium. These tag characters were intended for use in language tagging within plain text contexts and are often suggested as an alternate means of providing in-band non-markup language tagging. We are unaware of any implementations that use them as language tags.</p>
+<p>Use of Unicode tag characters for language identification are strongly discouraged by the Unicode Consortium (and thus deprecated). These tag characters were intended for use in language tagging within plain text contexts and are often suggested as an alternate means of providing in-band non-markup language tagging. We are unaware of any implementations that use them as language tags.</p>
 	  
 <p>Applications that treat the characters as unknown Unicode characters will display them as tofu (hollow box replacement characters) and may count them towards length limits, etc. So they are only useful when applications or interchange mechanisms are fully aware of them and can remove them or disregard them appropriately. Although the characters are not supposed to be displayed or have any effect on text processing, in practice they can interfere with normal text processes such as truncation. line wrapping, hyphenation, spell-checking and so forth.</p>
     
