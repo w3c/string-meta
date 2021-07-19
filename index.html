@@ -363,9 +363,9 @@
 
 <p>A specification for a document format or protocol that includes natural language text will need to define a data field or attribute to store the direction of that natural language content. These definitions need to be consistent across the Web in order to ensure interoperability, as <a>consumers</a> of one document format will need to map the base direction to fields in documents that they produce or control the base direction in text fields for display. This section describes how to provide such a definition along with the specific content to use.</p>
 
-<p>There are two common use cases for defining content direction: (i) defining a <a>directional metadata field</a> for storing and transmitting direction and (ii) defining a <a>direction attribute</a> for managing the display of strings.</p>
+<p>There are two common use cases for defining content direction: (i) defining a <a>directional metadata field</a> for storing and transmitting <a>starting base direction</a> as a field in a data structure or (ii) defining a <a>direction attribute</a> to associate a <a>starting base direction</a> with a given piece of natural language content.</p>
 
-<p class="definition"><dfn data-lt="directional metadata field|direction field">Directional metadata field</dfn>. A directional metadata field (or <em>direction field</em> for short) is a field in a data structure that associates a starting base direction with a given natural language string field or data value.</p>
+<p class="definition"><dfn data-lt="directional metadata field|direction field">Directional metadata field</dfn>. A directional metadata field (or <em>direction field</em> for short) is a field in a data structure used to associate a starting base direction with a given natural language string field or data value.</p>
 
 <aside class="example" id="example-direction-metadata">
 	<p><strong>Example of a <a>direction field</a>.</strong> In this JSON fragment, the <code>title</code> structure has a value <code>direction</code> which represents the <a>base direction</a> to use for the <code>value</code> field.</p>
@@ -376,7 +376,7 @@
 }</pre>
 </aside>
 
-<p class="definition"><dfn data-lt="direction attribute">Direction attribute</dfn>. A direction attribute is a field or value, usually represented by an attribute in markup languages, that controls the base direction of a span of content.</p>
+<p class="definition"><dfn data-lt="direction attribute">Direction attribute</dfn>. A direction attribute is a field or value, usually represented by an attribute in markup languages, that provides the starting base direction of the associated natural language string content.</p>
 
 <aside class="example">
 
