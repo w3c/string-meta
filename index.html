@@ -69,7 +69,7 @@
 	<h3>Terminology</h3>
 	<p>This section defines terminology necessary to understand the contents of this document. Most of the terms defined here are specific to this document. Terminology borrowed from other Internationalization documents have a link to the original definition.</p>
 
-<p class="definition"><dfn data-lt="metadata">Metadata</dfn> is data <em>about</em> data: it is information included in a data structure that provides additonal context, meaning, or presentation. In this document, the function of metadata is to express information about direction and language.</p>
+<p class="definition"><dfn data-lt="metadata">Metadata</dfn> is data <em>about</em> data: it is information included in a data structure that provides additional context, meaning, or presentation. In this document, the function of metadata is to express information about direction and language.</p>
 
 <p class="definition">A <dfn data-lt="producer|producers">producer</dfn> is any process where natural language string data is created for later storage, processing, or interchange.</p>
 
@@ -85,9 +85,9 @@
 
 <p class="definition"><dfn data-lt="unicode bidirectional algorithm|uba|bidi algorithm">Unicode Bidirectional Algorithm</dfn> (<q>UBA</q>) or <em>Bidi algorithm</em>. This is the name for the rules described in <a href="http://www.unicode.org/reports/tr9/"><cite>Unicode Standard Annex #9: <q>Unicode Bidirectional Algorithm</q></cite></a> [[UAX9]]. Those rules describe how inline bidirectional text should be rendered. The effects of the bidi algorithm depend on the <a>base direction</a> and the directional properties of the characters to which it is applied.</p>
 
-<p class="definition"><dfn>Base direction</dfn>. The base direction is the initial direction applied to a paragraph or to isolated inline runs of text. The base direction determines the general arrangement and progression of content in the <a>bidi algorithm</a> when bidirectional text is displayed.</p>
+<p class="definition"><dfn data-lt="starting base direction|base direction">Starting base direction</dfn> (or <em>base direction</em> in this document). The initial base direction applied to a given string. The starting base direction represents the directional context in which the associated string is expected to be rendered.</p>
 
-<p>In this document we are concerned with identifying the base direction of a whole string and how to apply that base direction when displaying strings in various contexts. We do not talk about how to determine the direction of runs of text within a string.</p>
+<p>In this document we are concerned with identifying the starting base direction of a whole string and how to transmit and apply that base direction when displaying strings in various contexts. We do not talk about how to determine the direction or display of runs of text within a string.</p>
 
 <p>The <a>bidi algorithm</a> is primarily focused on arranging adjacent characters, based on character properties. The base direction dictates (a) the visual order and direction in which runs of strongly-typed LTR and RTL character are displayed, and (b) where there are weakly-directional or neutral characters such as punctuation, the placement of those items relative to the other content.</p>
  
@@ -363,12 +363,12 @@
 
 <p>A specification for a document format or protocol that includes natural language text will need to define a data field or attribute to store the direction of that natural language content. These definitions need to be consistent across the Web in order to ensure interoperability, as <a>consumers</a> of one document format will need to map the base direction to fields in documents that they produce or control the base direction in text fields for display. This section describes how to provide such a definition along with the specific content to use.</p>
 
-<p>There are two common use cases for defining content direction:</p>
+<p>There are two common use cases for defining content direction: (i) defining a <a>directional metadata field</a> for storing and transmitting direction and (ii) defining a <a>direction attribute</a> for managing the display of strings.</p>
 
-<p class="definition"><dfn data-lt="direction value">Direction value</dfn>. A direction value is a <a>metadata</a> field associated with natural language string giving its base direction.</p>
+<p class="definition"><dfn data-lt="directional metadata field|direction field">Directional metadata field</dfn>. A directional metadata field (or <em>direction field</em> for short) is a field in a data structure that associates a starting base direction with a given natural language string field or data value.</p>
 
-<aside class="example" id="example-direction-value">
-	<p><strong>Example of a <a>direction value</a>.</strong> In this JSON fragment, the <code>title</code> structure has a value <code>direction</code> which represents the <a>base direction</a> to use for the <code>value</code> field.</p>
+<aside class="example" id="example-direction-metadata">
+	<p><strong>Example of a <a>direction field</a>.</strong> In this JSON fragment, the <code>title</code> structure has a value <code>direction</code> which represents the <a>base direction</a> to use for the <code>value</code> field.</p>
 <pre class="json">"title": {
 	"value": "HTML و CSS: تصميم و إنشاء مواقع الويب",
 	"direction": "rtl",
@@ -380,7 +380,7 @@
 
 <aside class="example">
 
-<p><strong>Example of a <a>direction attribute</a>.</strong> If the JSON in the <a href="#example-direction-value">above example</a> of a <a>direction value</a> were received by a process that was assembling a Web page for display, it might be filling in a template similar to the top line in this example to produce markup like the second line. Here the <code>dir</code> attribute from [[HTML]] is an example of a <a>direction attribute</a>.</p>
+<p><strong>Example of a <a>direction attribute</a>.</strong> If the JSON in the <a href="#example-direction-metadata">above example</a> of a <a>directional metadata field</a> were received by a process that was assembling a Web page for display, it might fill in a template similar to the top line in this example to produce markup like the second line. Here the <code>dir</code> attribute from [[HTML]] is an example of a <a>direction attribute</a>.</p>
 
 <pre class="html">
 &lt;p dir={$title.direction}>{$title.value}&lt;/p>
@@ -390,7 +390,7 @@
 </aside>
 
 <div class="req" id="bp-define-field-direction-value">
-   <p class="advisement">Use the field name <code>direction</code> when defining a <a>direction value</a>.</p>
+   <p class="advisement">Use the field name <code>direction</code> when defining a <a>directional metadata field</a> in a data structure or protocol.</p>
 </div>
 
 <p>The name <code>direction</code> is preferred for data values. The name <code>dir</code> is an acceptable alternative.</p>
@@ -402,7 +402,7 @@
 <p>The name <code>dir</code> is preferred for an attribute, such as in markup languages. Using <code>direction</code> for an attribute is not recommended, since it is long and relatively uncommon for this use case. Note that both [[HTML]] and [[XML10]] have a built-in <code>dir</code> attribute. A <code>dir</code> attribute should have scope within a document and should be defined to provide bidi isolation.</p>
 
 <div class="req" id="bp-define-direction-values">
-   <p class="advisement">Define the values of a <a>direction value</a> to include and be limited to <code>ltr</code> and <code>rtl</code>.</p>
+   <p class="advisement">Define the values of a <a>directional metadata field</a> to include and be limited to <code>ltr</code> and <code>rtl</code>.</p>
 </div>
 
 <div class="req" id="bp-define-dir-attribute-values">
@@ -410,7 +410,7 @@
 </div>
 
 <div class="req" id="bp-dir-auto-non-use">
-   <p class="advisement">The value <code>auto</code> SHOULD NOT be used in a <a>direction value</a>: omitting the direction is preferred when the content direction is not known.</p>
+   <p class="advisement">The value <code>auto</code> SHOULD NOT be used in a <a>directional metadata field</a>: omitting the direction is preferred when the content direction is not known.</p>
 </div>
 
 <p>The value <code>ltr</code> indicates a base direction of left-to-right, in exactly the same manner indicated by <a href="https://www.w3.org/TR/css-writing-modes/#direction">CSS writing modes</a> [[CSS-WRITING-MODES-4]]</p>
