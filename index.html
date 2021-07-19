@@ -365,18 +365,22 @@
 
 <p>There are two common use cases for defining content direction:</p>
 
-<p class="definition">A <dfn data-lt="field direction value|field direction">field direction value</dfn> is a data field stored or exchanged with a natural language string giving its base direction.</p>
-<p class="definition">A <dfn data-lt="">display direction attribute</dfn> is a field or value, usually represented by an attribute in markup languages, that controls the base direction of a span of content.</p>
+<p class="definition"><dfn data-lt="direction value">Direction value</dfn>. A direction value is a <a>metadata</a> field associated with natural language string giving its base direction.</p>
 
-<aside class="example">
-<p><strong>Example of a <a>field direction value</a>.</strong> In this JSON fragment, the <code>title</code> structure has a value <code>direction</code> which represents the <a>field direction</a> of the <code>value</code> field.</p>
+<aside class="example" id="example-direction-value">
+	<p><strong>Example of a <a>direction value</a>.</strong> In this JSON fragment, the <code>title</code> structure has a value <code>direction</code> which represents the <a>base direction</a> to use for the <code>value</code> field.</p>
 <pre class="json">"title": {
 	"value": "HTML و CSS: تصميم و إنشاء مواقع الويب",
 	"direction": "rtl",
 	"language": "ar"
 }</pre>
+</aside>
 
-<p><strong>Example of a <a>display direction attribute</a>.</strong> If the above JSON were received by a process that was assembling a Web page for display, it might be filling in a template similar to the top line in this example to produce markup like the second line. Here the <code>dir</code> attribute from [[HTML]] is an example of a <a>display direction attribute</a>.</p>
+<p class="definition"><dfn data-lt="direction attribute">Direction attribute</dfn>. A direction attribute is a field or value, usually represented by an attribute in markup languages, that controls the base direction of a span of content.</p>
+
+<aside class="example">
+
+<p><strong>Example of a <a>direction attribute</a>.</strong> If the JSON in the <a href="#example-direction-value">above example</a> of a <a>direction value</a> were received by a process that was assembling a Web page for display, it might be filling in a template similar to the top line in this example to produce markup like the second line. Here the <code>dir</code> attribute from [[HTML]] is an example of a <a>direction attribute</a>.</p>
 
 <pre class="html">
 &lt;p dir={$title.direction}>{$title.value}&lt;/p>
@@ -386,27 +390,27 @@
 </aside>
 
 <div class="req" id="bp-define-field-direction-value">
-   <p class="advisement">Use the field name <code>direction</code> when defining a <a>field direction value</a>.</p>
+   <p class="advisement">Use the field name <code>direction</code> when defining a <a>direction value</a>.</p>
 </div>
 
 <p>The name <code>direction</code> is preferred for data values. The name <code>dir</code> is an acceptable alternative.</p>
 
 <div class="req" id="bp-define-display-dir-attribute">
-   <p class="advisement">Use the field name <code>dir</code> when defining a <a>display direction attribute</a>.</p>
+   <p class="advisement">Use the field name <code>dir</code> when defining a <a>direction attribute</a>.</p>
 </div>
 
 <p>The name <code>dir</code> is preferred for an attribute, such as in markup languages. Using <code>direction</code> for an attribute is not recommended, since it is long and relatively uncommon for this use case. Note that both [[HTML]] and [[XML10]] have a built-in <code>dir</code> attribute. A <code>dir</code> attribute should have scope within a document and should be defined to provide bidi isolation.</p>
 
 <div class="req" id="bp-define-direction-values">
-   <p class="advisement">Define the values of a <a>field direction</a> to include and be limited to <code>ltr</code> and <code>rtl</code>.</p>
+   <p class="advisement">Define the values of a <a>direction value</a> to include and be limited to <code>ltr</code> and <code>rtl</code>.</p>
 </div>
 
 <div class="req" id="bp-define-dir-attribute-values">
-   <p class="advisement"> Define the values of any <a>display direction attribute</a> to include and be limited to the values <code>ltr</code>, <code>rtl</code>, and <code>auto</code>.</p>
+   <p class="advisement"> Define the values of any <a>direction attribute</a> to include and be limited to the values <code>ltr</code>, <code>rtl</code>, and <code>auto</code>.</p>
 </div>
 
 <div class="req" id="bp-dir-auto-non-use">
-   <p class="advisement">The value <code>auto</code> SHOULD NOT be used as <a>field direction value</a>: omitting the direction is preferred when the content direction is not known.</p>
+   <p class="advisement">The value <code>auto</code> SHOULD NOT be used in a <a>direction value</a>: omitting the direction is preferred when the content direction is not known.</p>
 </div>
 
 <p>The value <code>ltr</code> indicates a base direction of left-to-right, in exactly the same manner indicated by <a href="https://www.w3.org/TR/css-writing-modes/#direction">CSS writing modes</a> [[CSS-WRITING-MODES-4]]</p>
