@@ -85,9 +85,9 @@
 
 <p class="definition"><dfn data-lt="unicode bidirectional algorithm|uba|bidi algorithm">Unicode Bidirectional Algorithm</dfn> (<q>UBA</q>) or <em>Bidi algorithm</em>. This is the name for the rules described in <a href="http://www.unicode.org/reports/tr9/"><cite>Unicode Standard Annex #9: <q>Unicode Bidirectional Algorithm</q></cite></a> [[UAX9]]. Those rules describe how inline bidirectional text should be rendered. The effects of the bidi algorithm depend on the <a>base direction</a> and the directional properties of the characters to which it is applied.</p>
 
-<p class="definition"><dfn data-lt="starting base direction|base direction">Starting base direction</dfn> (or <em>base direction</em> in this document). The initial base direction applied to a given string. The starting base direction represents the directional context in which the associated string is expected to be rendered.</p>
+<p class="definition"><dfn data-lt="paragraph direction|paragraph base direction|base direction">Paragraph direction</dfn>. The initial base direction of a paragraph or string, which resolves to either <em>left-to-right</em> or <em>right-to-left</em>. The paragraph direction may be overridden by nested, embedding controls that change the direction for an inline range of text, but the paragraph direction sets the starting point which the <cite>Unicode Bidirectional Algorithm</cite> [[UAX9]] uses to calculate the direction of the embedded levels. [[I18N-GLOSSARY]]</p>
 
-<p>In this document we are concerned with identifying the starting base direction of a whole string and how to transmit and apply that base direction when displaying strings in various contexts. We do not talk about how to determine the direction or display of runs of text within a string.</p>
+<p>In this document we are concerned with identifying the paragraph base direction of a whole string and how to transmit and apply that base direction when displaying strings in various contexts. We do not talk about how to determine the direction or display of runs of text within a string.</p>
 
 <p>The <a>bidi algorithm</a> is primarily focused on arranging adjacent characters, based on character properties. The base direction dictates (a) the visual order and direction in which runs of strongly-typed LTR and RTL character are displayed, and (b) where there are weakly-directional or neutral characters such as punctuation, the placement of those items relative to the other content.</p>
  
@@ -105,7 +105,7 @@
   
  <p class="definition"><dfn data-lt="natural language">Natural Language</dfn>. The spoken, written, or signed communications used by human beings. [[I18N-GLOSSARY]]</p>
 	
- <p class="definition"><dfn data-lt="syntactic content">Syntactic Content</dfn>. Any text in a document format or protocol that belongs to the structure of the format or protocol.[[I18N-GLOSSARY]]</p>
+ <p class="definition"><dfn data-lt="syntactic content">Syntactic Content</dfn>. Any text in a document format or protocol that belongs to the structure of the format or protocol. [[I18N-GLOSSARY]]</p>
 	
  <p class="definition"><dfn data-lt="user-supplied value|user-supplied values">User-Supplied Value</dfn>. Unreserved <a>syntactic content</a> in a vocabulary that is assigned by users, as distinct from reserved keywords in a given format or protocol. [[I18N-GLOSSARY]]</p>
 	
@@ -363,9 +363,9 @@
 
 <p>A specification for a document format or protocol that includes natural language text will need to define a data field or attribute to store the direction of that natural language content. These definitions need to be consistent across the Web in order to ensure interoperability, as <a>consumers</a> of one document format will need to map the base direction to fields in documents that they produce or control the base direction in text fields for display. This section describes how to provide such a definition along with the specific content to use.</p>
 
-<p>There are two common use cases for defining content direction: (i) defining a <a>directional metadata field</a> for storing and transmitting <a>starting base direction</a> as a field in a data structure or (ii) defining a <a>direction attribute</a> to associate a <a>starting base direction</a> with a given piece of natural language content.</p>
+<p>There are two common use cases for defining content direction: (i) defining a <a>directional metadata field</a> for storing and transmitting the <a>paragraph base direction</a> as a field in a data structure or (ii) defining a <a>direction attribute</a> to associate a <a>paragraph base direction</a> with a given piece of natural language content.</p>
 
-<p class="definition"><dfn data-lt="directional metadata field|direction field">Directional metadata field</dfn>. A directional metadata field (or <em>direction field</em> for short) is a field in a data structure used to associate a starting base direction with a given natural language string field or data value.</p>
+<p class="definition"><dfn data-lt="directional metadata field|direction field">Directional metadata field</dfn>. A directional metadata field (or <em>direction field</em> for short) is a field in a data structure used to associate a paragraph base direction with a given natural language string field or data value.</p>
 
 <aside class="example" id="example-direction-metadata">
 	<p><strong>Example of a <a>direction field</a>.</strong> In this JSON fragment, the <code>title</code> structure has a value <code>direction</code> which represents the <a>base direction</a> to use for the <code>value</code> field.</p>
@@ -376,7 +376,7 @@
 }</pre>
 </aside>
 
-<p class="definition"><dfn data-lt="direction attribute">Direction attribute</dfn>. A direction attribute is a field or value, usually represented by an attribute in markup languages, that provides the starting base direction of the associated natural language string content.</p>
+<p class="definition"><dfn data-lt="direction attribute">Direction attribute</dfn>. A direction attribute is a field or value, usually represented by an attribute in markup languages, that provides the paragraph base direction of the associated natural language string content.</p>
 
 <aside class="example">
 
