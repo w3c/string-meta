@@ -69,7 +69,7 @@
 	<h3>Terminology</h3>
 	<p>This section defines terminology necessary to understand the contents of this document. Most of the terms defined here are specific to this document. Terminology borrowed from other Internationalization documents have a link to the original definition.</p>
 
-<p class="definition"><dfn data-lt="metadata">Metadata</dfn> is data <em>about</em> data: it is information included in a data structure that provides additional context, meaning, or presentation. In this document, the function of metadata is to express information about direction and language.</p>
+<p class="definition"><dfn data-lt="metadata" class="lint-ignore">Metadata</dfn> is data <em>about</em> data: it is information included in a data structure that provides additional context, meaning, or presentation. In this document, the function of metadata is to express information about direction and language.</p>
 
 <p class="definition">A <dfn data-lt="producer|producers">producer</dfn> is any process where natural language string data is created for later storage, processing, or interchange.</p>
 
@@ -79,9 +79,9 @@
 
 <p class="definition"><dfn data-lt="language negotiation">Language negotiation</dfn> is any process which selects or filters content based on language. Usually this implies selecting content in a single language (or falling back to some meaningful default language that is available) by finding the best matching values when several languages or locales [[LTLI]] are present in the content. Some common language negotiation algorithms include the Lookup algorithm in [[BCP47]] or the BestFitMatcher in [[ECMA-402]].</p>
   
-<p class="definition"><dfn>LTR</dfn> stands for "left-to-right" and refers to the inline base direction of left-to-right [[UAX9]]. This is the base text direction used by languages whose starting character progression begins on the left side of the page in horizontal text. It's used for scripts such as Latin, Cyrillic, Devanagari, and many others.</p>
+<p class="definition"><dfn class="lint-ignore">LTR</dfn> stands for "left-to-right" and refers to the inline base direction of left-to-right [[UAX9]]. This is the base text direction used by languages whose starting character progression begins on the left side of the page in horizontal text. It's used for scripts such as Latin, Cyrillic, Devanagari, and many others.</p>
   
-<p class="definition"><dfn>RTL</dfn> stands for "right-to-left" and refers to the inline base direction of right-to-left [[UAX9]]. This is the base text direction used by languages whose starting character progression begins on the right side of the page in horizontal text. It's used for a variety of scripts which include Arabic, Hebrew, N'Ko, Adlam, Thaana, and Syriac among others.</p>
+<p class="definition"><dfn class="lint-ignore">RTL</dfn> stands for "right-to-left" and refers to the inline base direction of right-to-left [[UAX9]]. This is the base text direction used by languages whose starting character progression begins on the right side of the page in horizontal text. It's used for a variety of scripts which include Arabic, Hebrew, N'Ko, Adlam, Thaana, and Syriac among others.</p>
 
 <p class="definition"><dfn data-lt="unicode bidirectional algorithm|uba|bidi algorithm">Unicode Bidirectional Algorithm</dfn> (<q>UBA</q>) or <em>Bidi algorithm</em>. This is the name for the rules described in <a href="http://www.unicode.org/reports/tr9/"><cite>Unicode Standard Annex #9: <q>Unicode Bidirectional Algorithm</q></cite></a> [[UAX9]]. Those rules describe how inline bidirectional text should be rendered. The effects of the bidi algorithm depend on the <a>base direction</a> and the directional properties of the characters to which it is applied.</p>
 
@@ -91,13 +91,13 @@
 
 <p>The <a>bidi algorithm</a> is primarily focused on arranging adjacent characters, based on character properties. The base direction dictates (a) the visual order and direction in which runs of strongly-typed LTR and RTL character are displayed, and (b) where there are weakly-directional or neutral characters such as punctuation, the placement of those items relative to the other content.</p>
  
-<p class="definition"><dfn>Bidi isolation</dfn>. Bidi isolation is the treatment of a section of text within a paragraph as its own embedded bidirectional context. An isolated run of text is treated internally as if it were its own paragraph, while the enclosing paragraph of text treats the whole run as if it were a single neutral character. Isolated runs of text thus have their own <a>base direction</a>.</p>
+<p class="definition"><dfn class="lint-ignore">Bidi isolation</dfn>. Bidi isolation is the treatment of a section of text within a paragraph as its own embedded bidirectional context. An isolated run of text is treated internally as if it were its own paragraph, while the enclosing paragraph of text treats the whole run as if it were a single neutral character. Isolated runs of text thus have their own <a>base direction</a>.</p>
 
 <p><a>Bidi isolation</a> often needs to be applied to string data being inserted into a document in order to prevent the automatic rules of the Unicode Bidirectional Algorithm incorrectly ordering that content in relation to the surrounding text.</p>
 
 <p>For example, numbers following right-to-left text in memory are automatically positioned to the left of that text by the Bidi Algorithm, but sometimes need to appear to the right. Another example occurs when lists of LTR items occur in a RTL sentence: the Bidi Algorithm will automatically assume that the order of items in the list should be <q dir="rtl">1, 2, 3</q>, but actually what's needed is <q dir="ltr">1, 2, 3</q>. In HTML, bidi isolation can be applied to a range of text by enclosing it in an element with a <code class="kw" translate="no">dir</code> attribute. In plain text there are Unicode formatting characters that can do the job. These mechanisms remove unwanted 'spillover effects'.</p>
 
-<p class="definition"><dfn>First-strong detection</dfn>. An algorithm that looks for the first strongly-directional character in a string and then uses that character to guess at the appropriate <a>base direction</a> for the string as a whole.</p>
+<p class="definition"><dfn class="lint-ignore">First-strong detection</dfn>. An algorithm that looks for the first strongly-directional character in a string and then uses that character to guess at the appropriate <a>base direction</a> for the string as a whole.</p>
 
 <p>Unicode code points are associated with properties relating to text direction: generally, letters in right-to-left scripts such as Arabic and Hebrew have a strong RTL direction, whereas Latin and Han characters have a strong LTR direction. Other characters, such as punctuation, only have a weak intrinsic directionality, and the actual directionality is determined according to the context in which they are found.</p>
 
@@ -1270,16 +1270,16 @@ myDataString:          "978-0-123-4567-X^ltr"          // language-neutral strin
     <span class="idlMember" id="idl-def-localizable-dir" data-idl="" data-title="dir" data-dfn-for="localizable"><span class="idlMemberType"><a href="#dom-textdirection" class="internalDFN" data-link-type="dfn"><code>TextDirection</code></a></span> <span class="idlMemberName"><a data-lt="dir" href="#dom-localizable-dir" class="internalDFN" data-link-type="dfn" data-for="Localizable"><code>dir</code></a></span> = <span class="idlMemberValue">"auto"</span>;</span>
 };</span>
 </pre><dl>
-	<dt><dfn data-dfn-for="localizable" data-dfn-type="dfn" id="dom-localizable-value" data-idl="" data-title="value">
+	<dt><dfn data-dfn-for="localizable" data-dfn-type="dfn" id="dom-localizable-value" data-idl="" data-title="value" class="lint-ignore">
 	
 	<code>value</code></dfn> member</dt>
 	<dd>The string containing the data value of this field.</dd>
-	<dt><dfn data-dfn-for="localizable" data-dfn-type="dfn" id="dom-localizable-lang" data-idl="" data-title="lang">
+	<dt><dfn data-dfn-for="localizable" data-dfn-type="dfn" id="dom-localizable-lang" data-idl="" data-title="lang" class="lint-ignore">
 	
 	<code>lang</code></dfn> member</dt>
 	<dd>A [[BCP47]] language tag that specifies the primary language for the values of the human-readable
 members of the inheriting dictionary.</dd>
-<dt><dfn data-dfn-for="localizable" data-dfn-type="dfn" id="dom-localizable-dir" data-idl="" data-title="dir"><code>
+<dt><dfn data-dfn-for="localizable" data-dfn-type="dfn" id="dom-localizable-dir" data-idl="" data-title="dir" class="lint-ignore"><code>
 dir</code></dfn> member</dt>
 <dd>Specifies the base direction for the human-readable members of an inheriting dictionary.</dd></dl>
 <div data-dfn-for="TextDirection" data-link-for="TextDirection" id="textdirection-enum" typeof="bibo:Chapter" resource="#textdirection-enum" property="bibo:hasPart">
@@ -1293,11 +1293,11 @@ dir</code></dfn> member</dt>
 };</span>
 </pre>
 <p>The text-direction values are the following, implying that the value of the human-readable members is by default:</p>
-<dl><dt><dfn data-dfn-for="textdirection" data-dfn-type="dfn" id="dom-textdirection-auto" data-idl="" data-title="auto">
+<dl><dt><dfn data-dfn-for="textdirection" data-dfn-type="dfn" id="dom-textdirection-auto" data-idl="" data-title="auto" class="lint-ignore">
 	<code>auto</code></dfn></dt><dd> Directionality is determined by the Unicode Bidirectional Algorithm [[UAX9]] algorithm.</dd>
-<dt><dfn data-dfn-for="textdirection" data-dfn-type="dfn" id="dom-textdirection-ltr" data-idl="" data-title="ltr">
+<dt><dfn data-dfn-for="textdirection" data-dfn-type="dfn" id="dom-textdirection-ltr" data-idl="" data-title="ltr" class="lint-ignore">
 	<code>ltr</code></dfn></dt><dd>Left-to-right text.</dd>
-<dt><dfn data-dfn-for="textdirection" data-dfn-type="dfn" id="dom-textdirection-rtl" data-idl="" data-title="rtl">
+<dt><dfn data-dfn-for="textdirection" data-dfn-type="dfn" id="dom-textdirection-rtl" data-idl="" data-title="rtl" class="lint-ignore">
 	<code>rtl</code></dfn></dt><dd>Right-to-left text.</dd></dl>
 </div>
 </aside>
