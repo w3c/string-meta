@@ -27,6 +27,7 @@
          
           group: "i18n",
 		  github: "w3c/string-meta",
+		  xref: ["i18n-glossary"],
 		  
           
         localBiblio: {
@@ -66,53 +67,27 @@
 <p>Markup formats, such as HTML and XML, as well as related styling languages, such as CSS and XSL, are reasonably mature and provide support for the interchange and presentation of the world's languages via built-in features. Strings and string-based data formats need similar mechanisms in order to ensure complete and consistent support for the world's languages and cultures.</p>
 
 <section id="terminology">
-	<h3>Terminology</h3>
-	<p>This section defines terminology necessary to understand the contents of this document. Most of the terms defined here are specific to this document. Terminology borrowed from other Internationalization documents have a link to the original definition.</p>
+<h3>Terminology</h3>
 
-<p class="definition"><dfn data-lt="metadata" class="lint-ignore">Metadata</dfn> is data <em>about</em> data: it is information included in a data structure that provides additional context, meaning, or presentation. In this document, the function of metadata is to express information about direction and language.</p>
-
-<p class="definition">A <dfn data-lt="producer|producers">producer</dfn> is any process where natural language string data is created for later storage, processing, or interchange.</p>
-
-<p class="definition">A <dfn data-lt="consumer|consumers">consumer</dfn> is any process that receives natural language strings, either for display or processing.</p>
-
-<p class="definition">A <dfn data-lt="agreement|agreements|serialization agreement|serialization agreements|serialization">serialization agreement</dfn> (or "agreement" for short) is the common understanding between a producer and consumer about the serialization of string metadata: how it is to be understood, serialized, read, transmitted, removed, etc.</p>
-
-<p class="definition"><dfn data-lt="language negotiation">Language negotiation</dfn> is any process which selects or filters content based on language. Usually this implies selecting content in a single language (or falling back to some meaningful default language that is available) by finding the best matching values when several languages or locales [[LTLI]] are present in the content. Some common language negotiation algorithms include the Lookup algorithm in [[BCP47]] or the BestFitMatcher in [[ECMA-402]].</p>
-  
-<p class="definition"><dfn class="lint-ignore">LTR</dfn> stands for "left-to-right" and refers to the inline base direction of left-to-right [[UAX9]]. This is the base text direction used by languages whose starting character progression begins on the left side of the page in horizontal text. It's used for scripts such as Latin, Cyrillic, Devanagari, and many others.</p>
-  
-<p class="definition"><dfn class="lint-ignore">RTL</dfn> stands for "right-to-left" and refers to the inline base direction of right-to-left [[UAX9]]. This is the base text direction used by languages whose starting character progression begins on the right side of the page in horizontal text. It's used for a variety of scripts which include Arabic, Hebrew, N'Ko, Adlam, Thaana, and Syriac among others.</p>
-
-<p class="definition"><dfn data-lt="unicode bidirectional algorithm|uba|bidi algorithm">Unicode Bidirectional Algorithm</dfn> (<q>UBA</q>) or <em>Bidi algorithm</em>. This is the name for the rules described in <a href="http://www.unicode.org/reports/tr9/"><cite>Unicode Standard Annex #9: <q>Unicode Bidirectional Algorithm</q></cite></a> [[UAX9]]. Those rules describe how inline bidirectional text should be rendered. The effects of the bidi algorithm depend on the <a>base direction</a> and the directional properties of the characters to which it is applied.</p>
-
-<p class="definition"><dfn data-lt="paragraph direction|paragraph base direction|base direction">Paragraph direction</dfn>. The initial base direction of a paragraph or string, which resolves to either <em>left-to-right</em> or <em>right-to-left</em>. The paragraph direction may be overridden by nested, embedding controls that change the direction for an inline range of text, but the paragraph direction sets the starting point which the <cite>Unicode Bidirectional Algorithm</cite> [[UAX9]] uses to calculate the direction of the embedded levels. [[I18N-GLOSSARY]]</p>
-
-<p>In this document we are concerned with identifying the paragraph base direction of a whole string and how to transmit and apply that base direction when displaying strings in various contexts. We do not talk about how to determine the direction or display of runs of text within a string.</p>
-
-<p>The <a>bidi algorithm</a> is primarily focused on arranging adjacent characters, based on character properties. The base direction dictates (a) the visual order and direction in which runs of strongly-typed LTR and RTL character are displayed, and (b) where there are weakly-directional or neutral characters such as punctuation, the placement of those items relative to the other content.</p>
- 
-<p class="definition"><dfn class="lint-ignore">Bidi isolation</dfn>. Bidi isolation is the treatment of a section of text within a paragraph as its own embedded bidirectional context. An isolated run of text is treated internally as if it were its own paragraph, while the enclosing paragraph of text treats the whole run as if it were a single neutral character. Isolated runs of text thus have their own <a>base direction</a>.</p>
-
-<p><a>Bidi isolation</a> often needs to be applied to string data being inserted into a document in order to prevent the automatic rules of the Unicode Bidirectional Algorithm incorrectly ordering that content in relation to the surrounding text.</p>
-
-<p>For example, numbers following right-to-left text in memory are automatically positioned to the left of that text by the Bidi Algorithm, but sometimes need to appear to the right. Another example occurs when lists of LTR items occur in a RTL sentence: the Bidi Algorithm will automatically assume that the order of items in the list should be <q dir="rtl">1, 2, 3</q>, but actually what's needed is <q dir="ltr">1, 2, 3</q>. In HTML, bidi isolation can be applied to a range of text by enclosing it in an element with a <code class="kw" translate="no">dir</code> attribute. In plain text there are Unicode formatting characters that can do the job. These mechanisms remove unwanted 'spillover effects'.</p>
-
-<p class="definition"><dfn class="lint-ignore">First-strong detection</dfn>. An algorithm that looks for the first strongly-directional character in a string and then uses that character to guess at the appropriate <a>base direction</a> for the string as a whole.</p>
-
-<p>Unicode code points are associated with properties relating to text direction: generally, letters in right-to-left scripts such as Arabic and Hebrew have a strong RTL direction, whereas Latin and Han characters have a strong LTR direction. Other characters, such as punctuation, only have a weak intrinsic directionality, and the actual directionality is determined according to the context in which they are found.</p>
+<p>This section provides short definitions of key terminology necessary to understand the contents of this document. Most of the terms found here are taken from the [[I18N-GLOSSARY]]: they are repeated here for convenience.</p>
 
 <p class="note">If you are unfamiliar with bidirectional or right-to-left text, there is a basic introduction <a href="https://www.w3.org/International/articles/inline-bidi-markup/uba-basics">here</a>. This will give you a basic grasp of how the <a>Unicode Bidirectional Algorithm</a> works and the interplay between it and the base direction, which will stand you in good stead for reading this document. Additional materials can be found in the Internationalization Working Group's <a href="https://www.w3.org/International/techniques/developing-specs.en?open=text_direction#text_direction">Techniques Index</a>.</p>
-  
- <p class="definition"><dfn data-lt="natural language">Natural Language</dfn>. The spoken, written, or signed communications used by human beings. [[I18N-GLOSSARY]]</p>
-	
- <p class="definition"><dfn data-lt="syntactic content">Syntactic Content</dfn>. Any text in a document format or protocol that belongs to the structure of the format or protocol. [[I18N-GLOSSARY]]</p>
-	
- <p class="definition"><dfn data-lt="user-supplied value|user-supplied values">User-Supplied Value</dfn>. Unreserved <a>syntactic content</a> in a vocabulary that is assigned by users, as distinct from reserved keywords in a given format or protocol. [[I18N-GLOSSARY]]</p>
-	
- <p class="definition"><dfn data-lt="localizable|localizable content|localizable contents">Localizable Content</dfn>. Document contents intended as human-readable text and <b>not</b> to any of the surrounding or embedded syntactic content that form part of the document structure. Note that syntactic content can have localizable content embedded in it, such as when an [[HTML]] <code class="kw">img</code> element has an <code class="kw">alt</code> attribute containing a description of the image. [[I18N-GLOSSARY]]</p>
-		
- <p class="note">In this document, the term <a>natural language</a> is usually used to refer to the portions of a document or protocol intended for human consumption. The term <a>localizable content</a> is used to refer to the natural language content of formal languages, protocol syntaxes and the like, as distinct from <a>syntactic content</a> or <a>user-supplied values</a>.</p>
- </section>
+
+<p class="definition"><a>Metadata</a> is data <em>about</em> data: it is information included in a data structure that provides additional context, meaning, or presentation. In this document, the function of metadata is to express information about direction and language. [[I18N-GLOSSARY]]</p>
+
+<p class="definition">A <a>producer</a> is any process where natural language string data is created for later storage, processing, or interchange. [[I18N-GLOSSARY]]</p>
+
+<p class="definition">A <a>consumer</a> is any process that receives natural language strings, either for display or processing. [[I18N-GLOSSARY]]</p>
+
+<p class="definition">A <a>serialization agreement</a> (or "agreement" for short) is the common understanding between a producer and consumer about the serialization of string metadata: how it is to be understood, serialized, read, transmitted, removed, etc. [[I18N-GLOSSARY]]</p>
+
+<p class="definition"><a>Paragraph direction</a>. The initial base direction of a paragraph or string, which resolves to either <em>left-to-right</em> or <em>right-to-left</em>. The paragraph direction may be overridden by nested, embedding controls that change the direction for an inline range of text, but the paragraph direction sets the starting point which the <cite>Unicode Bidirectional Algorithm</cite> [[UAX9]] uses to calculate the direction of the embedded levels. [[I18N-GLOSSARY]]</p>
+
+<p>In this document we are concerned with identifying the <a>paragraph direction</a> of a whole string and how to transmit and apply the paragraph direction when displaying strings in various contexts. We do not talk about how to determine the direction or display of runs of text within a string.</p>
+
+<p>The <a>bidi algorithm</a> is primarily focused on arranging adjacent characters, based on character properties. The base direction dictates (a) the visual order and direction in which runs of strongly-typed <a>LTR</a> and <a>RTL</a> character are displayed, and (b) where there are weakly-directional or neutral characters such as punctuation, the placement of those items relative to the other content.</p>
+
+</section>
  
  <section id="producers_consumers">
   <h3>The String Lifecycle</h3>
@@ -146,15 +121,15 @@
 </section>
 
 <section id="syntactic-content">
-<h3>Strings that are not <a>localizable content</a></h3>
+<h3>Strings that are not <a>localizable text</a></h3>
 
-<p>The Web uses strings and character sequences to encode most data. Leaving aside different data types (such as numbers, time values, or binary data serializations such as <code>base64</code>), there are still values that are defined as using a string data type but which are not intended for use as <a>natural language</a> data values. For example, the <a>syntactic content</a> defined by a specification, such as the reserved keywords in CSS or the names of the various definitions in a WebIDL document, are not part of the <a>localizable content</a> of their respective document formats or protocols.</p>
+<p>The Web uses strings and character sequences to encode most data. Leaving aside different data types (such as numbers, time values, or binary data serializations such as <code>base64</code>), there are still values that are defined as using a string data type but which are not intended for use as <a>natural language</a> data values. For example, the <a>syntactic content</a> defined by a specification, such as the reserved keywords in CSS or the names of the various definitions in a WebIDL document, are not part of the <a>localizable text</a> of their respective document formats or protocols.</p>
 
-<p>Many specifications also allow users to provide <a>user-supplied values</a> inside of a given namespace or document format. For example, SSIDs on a Wifi network are user-defined. So too are class names in a CSS stylesheet. Most specifications allow (and are encouraged to allow) a wide range of Unicode characters in these names. Most users choose values that are recognizable as words in one or another natural language, as doing so makes the values easier to work with. However, even though these strings consist of words in a natural language, these types of strings are not considered <a>localizable content</a> and do not need to be encumbered with additional metadata related to language or base direction. Usually they are merely identifiers that enable a computer to match the values.</p>
+<p>Many specifications also allow users to provide <a>user-supplied values</a> inside of a given namespace or document format. For example, SSIDs on a Wifi network are user-defined. So too are class names in a CSS stylesheet. Most specifications allow (and are encouraged to allow) a wide range of Unicode characters in these names. Most users choose values that are recognizable as words in one or another natural language, as doing so makes the values easier to work with. However, even though these strings consist of words in a natural language, these types of strings are not considered <a>localizable text</a> and do not need to be encumbered with additional metadata related to language or base direction. Usually they are merely identifiers that enable a computer to match the values.</p>
 
-<p>A sometimes-useful test is that if replacing the identifier with an arbitrary string such as <code>tK0001.37B</code> would still be allowed, functional, and "normal", then it's not <a>localizable content</a>.</p>
+<p>A sometimes-useful test is that if replacing the identifier with an arbitrary string such as <code>tK0001.37B</code> would still be allowed, functional, and "normal", then it's not <a>localizable text</a>.</p>
 
-<p>For example, in the <a href="#base_example">base example</a> below, all of the keys in the JSON document (<code>id</code>, <code>title</code>, <code>authors</code>, <code>language</code>, <code>publisher</code>, and  so on) are syntactic content. The data values, such as the ISBN, the language tag, and the publication date are also syntactic content. Only the actual book title, the author's name, and the publisher's name are natural language data values and thus <a>localizable content</a>.</p>
+<p>For example, in the <a href="#base_example">base example</a> below, all of the keys in the JSON document (<code>id</code>, <code>title</code>, <code>authors</code>, <code>language</code>, <code>publisher</code>, and  so on) are syntactic content. The data values, such as the ISBN, the language tag, and the publication date are also syntactic content. Only the actual book title, the author's name, and the publisher's name are natural language data values and thus <a>localizable text</a>.</p>
 </section>
 </section>
 
@@ -187,7 +162,7 @@
 <h3 id="general_bps">General best practices</h3>
 
 <div class="req" id="bp_separate_localizable">
-<p class="advisement">Specifications SHOULD be careful to distinguish <a>syntactic content</a>, including <a>user-supplied values</a>, from <a>localizable content</a>.</p>
+<p class="advisement">Specifications SHOULD be careful to distinguish <a>syntactic content</a>, including <a>user-supplied values</a>, from <a>localizable text</a>.</p>
 </div>
 
 <div class="req" id="bp_non_displayable_syntactic">
@@ -198,7 +173,7 @@
 <p>While the value of a syntactic content item or user-supplied value will often be meaningful, implementers should be reminded that in most instances these values must be wrapped with localizable display strings for presentation to the user, particularly in cases where the values are enumerated in advance.</p>
 
 <aside class="note">
-   <p>Error messages are not syntactic content. They consist of and should be treated as <a>localizable content</a>.</p>
+   <p>Error messages are not syntactic content. They consist of and should be treated as <a>localizable text</a>.</p>
 </aside>
 
 <div class="req" id="bp_unicode_tag_chars_nonuse">
@@ -248,7 +223,7 @@
 <h3 id="string_specific_language">String-specific language information</h3>
 
 <div class="req" id="bp_lang_field_based_metadata">
-<p class="advisement">Use field-based metadata or string datatypes to indicate the language and the base direction for individual <a>localizable content</a> values.</p>
+<p class="advisement">Use field-based metadata or string datatypes to indicate the language and the base direction for individual <a>localizable text</a> values.</p>
 </div>
 
 <p> Low-level support for <a>natural language</a> string metadata is widespread because the use of metadata for storage and interchange of the language of data values is long-established and widely supported in the basic infrastructure of the Web. This includes language attributes in [[XML]] and [[HTML]]; string types in schema languages (e.g. [[xmlschema11-2]]) or the various RDF specifications including [[JSON-LD]]; or protocol- or document format-specific provisions for language.</p>
@@ -316,7 +291,7 @@
 <h3 id="other_approaches">Other approaches</h3>
 
 <div class="req" id="bp_localizable">
-<p class="advisement">For [[WebIDL]]-defined data structures, define each <a>localizable content</a> (natural language text) field as a <q><a>Localizable</a></q>.</p>
+<p class="advisement">For [[WebIDL]]-defined data structures, define each <a>localizable text</a> (natural language text) field as a <q><a>Localizable</a></q>.</p>
 </div>
 
 <p> This combines both language and direction metadata and, if consistently adopted, makes interchange between different formats easier. Consistency between different specifications and document formats allows for the easy interchange of string data. By naming field attributes in the same way and adopting the same semantics, different specifications can more easily extract values from or add values into resources from other data sources.</p>
@@ -363,9 +338,9 @@
 
 <p>A specification for a document format or protocol that includes natural language text will need to define a data field or attribute to store the direction of that natural language content. These definitions need to be consistent across the Web in order to ensure interoperability, as <a>consumers</a> of one document format will need to map the base direction to fields in documents that they produce or control the base direction in text fields for display. This section describes how to provide such a definition along with the specific content to use.</p>
 
-<p>There are two common use cases for defining content direction: (i) defining a <a>directional metadata field</a> for storing and transmitting the <a>paragraph base direction</a> as a field in a data structure or (ii) defining a <a>direction attribute</a> to associate a <a>paragraph base direction</a> with a given piece of natural language content.</p>
+<p>There are two common use cases for defining content direction: (i) defining a <a>directional metadata field</a> for storing and transmitting the <a>paragraph direction</a> as a field in a data structure or (ii) defining a <a>direction attribute</a> to associate a <a>paragraph direction</a> with a given piece of natural language content.</p>
 
-<p class="definition"><dfn data-lt="directional metadata field|direction field">Directional metadata field</dfn>. A directional metadata field (or <em>direction field</em> for short) is a field in a data structure used to associate a paragraph base direction with a given natural language string field or data value.</p>
+<p class="definition"><dfn data-lt="directional metadata field|direction field">Directional metadata field</dfn>. A directional metadata field (or <em>direction field</em> for short) is a field in a data structure used to associate a paragraph direction with a given natural language string field or data value.</p>
 
 <aside class="example" id="example-direction-metadata">
 	<p><strong>Example of a <a>direction field</a>.</strong> In this JSON fragment, the <code>title</code> structure has a value <code>direction</code> which represents the <a>base direction</a> to use for the <code>value</code> field.</p>
@@ -376,7 +351,7 @@
 }</pre>
 </aside>
 
-<p class="definition"><dfn data-lt="direction attribute">Direction attribute</dfn>. A direction attribute is a field or value, usually represented by an attribute in markup languages, that provides the paragraph base direction of the associated natural language string content.</p>
+<p class="definition"><dfn data-lt="direction attribute">Direction attribute</dfn>. A direction attribute is a field or value, usually represented by an attribute in markup languages, that provides the paragraph direction of the associated natural language string content.</p>
 
 <aside class="example">
 
@@ -435,7 +410,7 @@
 <section>
 <h3 id="problem_statement">Why is this important?</h3>
 
-<p>Information about the language of content is important when processing and presenting <a>localizable content</a> for a variety of reasons. When language information is not present, the resulting degradation in appearance or functionality can frustrate users, render the content unintelligible, or disable important features. Some of the affected processes include:</p> 
+<p>Information about the language of content is important when processing and presenting <a>localizable text</a> for a variety of reasons. When language information is not present, the resulting degradation in appearance or functionality can frustrate users, render the content unintelligible, or disable important features. Some of the affected processes include:</p> 
 
 <ul>
 	<li>Selection of fonts and configuration of rendering options to enable the proper display of different languages. This includes 
@@ -510,7 +485,7 @@ might look something like:</p>
 
 <p>Each of the above is a data field in a database somewhere. There is even information about what language the book is in: (<samp>"language": "ar"</samp>).</p>
 
-<p>A well-internationalized catalog would include additional metadata to what is shown above. That is, for each of the fields containing <a>localizable content</a>, such as the <samp>title</samp> and <samp>authors</samp> fields, there should be language and base direction information stored as metadata. (There may be other values as well, such as pronunciation metadata for sorting East Asian language information.) These metadata values are used by consumers of the data to influence the processing and enable the display of the items in a variety of ways. As the JSON data structure 
+<p>A well-internationalized catalog would include additional metadata to what is shown above. That is, for each of the fields containing <a>localizable text</a>, such as the <samp>title</samp> and <samp>authors</samp> fields, there should be language and base direction information stored as metadata. (There may be other values as well, such as pronunciation metadata for sorting East Asian language information.) These metadata values are used by consumers of the data to influence the processing and enable the display of the items in a variety of ways. As the JSON data structure 
 provides no place to store or exchange these values, it is more difficult to construct internationalized applications.</p>
 
 <p>One work-around might be to encode the values using a mix of HTML and Unicode bidi controls, so that a data value might look like one of the following:</p>
@@ -943,7 +918,7 @@ access, to the original context of the string. Many document formats are generat
 	
 	<h4 id="dir-approach-new-datatype-how">How it works</h4>
     <p>This is similar to the idea of sending metadata with a string as discussed previously, however the metadata is not stored in a completely separate field (as in  <a href="#metadata"></a>), or inserted into the string itself (as in <a href="#rlm"></a>), but is associated with the string as part of the string format itself.</p>
-<p>Some datatypes, such as [[RDF-PLAIN-LITERAL]], already exist that allow for <em>language</em> metadata to be serialized as part of a string value. However, these do not include a consideration for base direction. This might be addressed by defining a new datatype (or extending an existing one) that document formats could then use to serialize natural language strings (<a>localizable content</a>) that includes both language and direction metadata.</p>
+<p>Some datatypes, such as [[RDF-PLAIN-LITERAL]], already exist that allow for <em>language</em> metadata to be serialized as part of a string value. However, these do not include a consideration for base direction. This might be addressed by defining a new datatype (or extending an existing one) that document formats could then use to serialize natural language strings (<a>localizable text</a>) that includes both language and direction metadata.</p>
   
 <aside class="example">  
 	<p>Using RDF plain string literals as a model, here is what a serialization <em>might</em> look like. (The RTL text is shown in the order in which characters are stored in memory, rather than the display order.)</p>
