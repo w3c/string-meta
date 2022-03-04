@@ -228,8 +228,12 @@
 
 <p> Low-level support for <a>natural language</a> string metadata is widespread because the use of metadata for storage and interchange of the language of data values is long-established and widely supported in the basic infrastructure of the Web. This includes language attributes in [[XML]] and [[HTML]]; string types in schema languages (e.g. [[xmlschema11-2]]) or the various RDF specifications including [[JSON-LD]]; or protocol- or document format-specific provisions for language.</p>
 
+<div class="req" id="bp-use_jsonld_i18n_namespace">
+	<p class="advisement">Specifications SHOULD use the <code>i18n</code> Namespace feature for RDF literals, as defined in [[JSON-LD]] 1.1.</p>
+</div>
+
 <div class="req" id="bp_use_jsonld_atsign">
-<p class="advisement">Use of [[JSON-LD]]  plain string literals are RECOMMENDED as a way to provide string-specific language information.</p>
+<p class="advisement">Where the <code>i18n</code> Namespace is not available or is inappropriate to use, specifications SHOULD require [[JSON-LD]] plain string literals for natural language values to provide string-specific language information.</p>
 </div>
 
 <p>Some datatypes, such as [[RDF-PLAIN-LITERAL]], already exist that allow for <em>language</em> metadata to be serialized as part of a string value. Examples include:</p>
@@ -238,6 +242,22 @@
 <p> &quot;tags&quot;: [ &quot;HTML@en&quot;, &quot;CSS@en&quot;, &quot;تصميم المواقع@ar&quot; ]</p>
 <p>&quot;id&quot;: &quot;978-111887164-5@und&quot;</p>
 </div>
+
+<div class="req" id="bp-do_not_use_language_non_data">
+	<p class="advisement">Specifications SHOULD NOT specify or require the use of language metadata for fields that cannot contain natural language text.</p>
+</div>
+<aside class="example">
+    <p>For example, in the example above, the <code>id</code> field contains an ISBN used as a book identifier. The value is not and can never be natural language text (even though identifier fields can contain non-ASCII characters or be somewhat human readable). Language and direction metadata should not be applied to these values, although presentation of the values may require special handling for base direction. If a language value must be applied, the language tag <code>zxx</code> should be used.</p>
+    <p><strong>Recommended:</strong></p>
+	<pre>
+		&quot;id&quot;: &quot;978-111887164-5&quot;
+	</pre>
+	<p><strong>Not Recommended:</strong></p>
+	<pre>
+		&quot;id&quot;: &quot;978-111887164-5@en-US&quot;,
+		&quot;id&quot;: &quot;978-111887164-5&quot;^^i18n:en_ltr
+	</pre>
+</aside>
 </section>
 
 
@@ -254,8 +274,11 @@
 
 <p>First-strong heuristics are ineffective when a default direction has been set for all strings, since  metadata overrides (intentionally) the value of the first-strong character. Therefore it is necessary to use explicitly provided field data to override the default. Even if an RLM character has been prepended to a string, the default metadata overrides it.</p>
 <p>The use of <a href="#metadata">metadata</a> for indicating base direction is also preferred, because it avoids requiring the consumer to interpolate the direction using methods such as <a href="#firststrong">first strong</a> or use of methods which require modification of the data itself (such as the <a href="#rlm">insertion of RLM/LRM markers</a> or <a href="#paired">bidirectional controls</a>).</p>
-<p class="issue">Schema languages, such as the RDF suite of specifications, have no in-built mechanism for associating base direction metadata with natural language string values.</p>
-<p class="issue">There is no built-in attribute for base direction in [[JSON-LD]]. There needs to be a corresponding built-in attribute (e.g. a <code class="kw" translate="no">dir</code>) or de facto convention for indicating document-level base direction.</p>
+
+<div class="note">
+    <p>Some schema languages, such as the RDF suite of specifications, have no built-in mechanism for associating base direction metadata with natural language string values. It is up to specifications that use these specifications to define structures and adopt best practices that result in clean interchange of language and direction metadata.</p>
+    <p>For example, [[JSON-LD]] provides a document-level base direction using the <code>@context</code> mechanism and defines the <code>i18n</code> namespace as an extension of existing RDF datatypes which can be used to set the language and/or base direction of string values.</p>
+</div>
 
 <div class="req" id="bp_use_heuristics_1">
 <p class="advisement">For the case where the resource-wide setting is not available, specify that consumers should use first-strong heuristics to identify the base direction of strings.</p>
@@ -308,9 +331,9 @@
 
 <p><a>Producers</a> sometimes need to supply multiple language values (see <a href="#localization-considerations">Localization Considerations</a>) for the same content item or data record. One use for this <a>language negotiation</a> by the <a>consumer</a>.</p>
 
-<p class="issue">[[JSON-LD]] language indexing should be modified to support the use of  <a>Localizable</a> values in <a>language indexing</a>.</p>
-
-
+<aside class="note">
+	<p>[[JSON-LD]] <a>language indexing</a> does not support the use of  <a>Localizable</a> values or identification of language metadata, such as using <code>i18n</code> namespace additions to values.</p>
+</aside>
 
 
 <aside class="example">
@@ -319,13 +342,32 @@
 {
     "@context": { 
         "@language": "ar",
-        "@dir": "rtl"
+        "@direction": "rtl"
     },
     "id": {"978-111887164-5"},
     "title": "<span dir="rtl">HTML &#x0648; CSS: &#x062A;&#x0635;&#x0645;&#x064A;&#x0645; &#x0648; &#x0625;&#x0646;&#x0634;&#x0627;&#x0621; &#x0645;&#x0648;&#x0627;&#x0642;&#x0639; &#x0627;&#x0644;&#x0648;&#x064A;&#x0628;</span>",
     "authors": [ {"value": "Jon Duckett", "lang": "en", "dir": "ltr"} ],
     "pubDate": "2008-01-01",
     "publisher": "&#x0645;&#x0643;&#x062A;&#x0628;&#x0629;",
+    "language": "ar",  // recall that this is data about the language of the book's content!
+    "coverImage": "https://example.com/images/html_and_css_cover.jpg",
+    // etc.
+},
+</pre>
+
+<p>Here's a different rendition using [[JSON-LD]]'s <code>i18n</code> Namespace:</p>
+<pre>
+{
+    "@context": { 
+        "@language": "ar",
+        "@direction": "rtl"
+    },
+    "id": {"978-111887164-5"},
+    "title": "<span dir="rtl">HTML &#x0648; CSS: &#x062A;&#x0635;&#x0645;&#x064A;&#x0645; &#x0648; &#x0625;&#x0646;&#x0634;&#x0627;&#x0621; &#x0645;&#x0648;&#x0627;&#x0642;&#x0639; &#x0627;&#x0644;&#x0648;&#x064A;&#x0628;</span>"^^i18n:ar_rtl,
+    "authors": [ "Jon Duckett"^^i18n:en-US_ltr ],
+    "pubDate": "2008-01-01",
+    "publisher": "&#x0645;&#x0643;&#x062A;&#x0628;&#x0629;"^^i18n:ar-eg_rtl,
+    "language": "ar",  // recall that this is data about the book content's language!
     "coverImage": "https://example.com/images/html_and_css_cover.jpg",
     // etc.
 },
@@ -912,22 +954,24 @@ access, to the original context of the string. Many document formats are generat
   <section id="dir-approach-new-datatype">
     <h3>Create a new bidi datatype</h3>
     
-    <p><strong>This approach is not currently available.</strong></p>
+    <p><strong>This approach was added to [[JSON-LD]] 1.1.</strong></p>
     
     <section>
 	
 	<h4 id="dir-approach-new-datatype-how">How it works</h4>
     <p>This is similar to the idea of sending metadata with a string as discussed previously, however the metadata is not stored in a completely separate field (as in  <a href="#metadata"></a>), or inserted into the string itself (as in <a href="#rlm"></a>), but is associated with the string as part of the string format itself.</p>
-<p>Some datatypes, such as [[RDF-PLAIN-LITERAL]], already exist that allow for <em>language</em> metadata to be serialized as part of a string value. However, these do not include a consideration for base direction. This might be addressed by defining a new datatype (or extending an existing one) that document formats could then use to serialize natural language strings (<a>localizable text</a>) that includes both language and direction metadata.</p>
+    <p>Some datatypes, such as [[RDF-PLAIN-LITERAL]], already exist that allow for <em>language</em> metadata to be serialized as part of a string value. However, these do not include a consideration for base direction. This might be addressed by defining a new datatype (or extending an existing one) that document formats could then use to serialize natural language strings that includes both language and direction metadata.</p>
+    <p>[[JSON-LD]] 1.1. added the <code>i18n</code> Namespace to permit JSON documents to serialize language and direction metadata directly with a string value. It provides a deserialization to RDF for specifications that need it.</p>
   
 <aside class="example">  
 	<p>Using RDF plain string literals as a model, here is what a serialization <em>might</em> look like. (The RTL text is shown in the order in which characters are stored in memory, rather than the display order.)</p>
 <pre>
-myLocalizedString:     "Hello World!@en^ltr"           // language and direction
-myLocalizedString_ar:  "<bdo dir="ltr">مرحبا بالعالم</bdo>!@ar-EG^rtl"      // right-to-left example
-myLocalizedString_fr:  "Bonjour monde !@fr"            // language only
-myLocalizedString_und: "<bdo dir="ltr">שלום עולם</bdo>!^rtl"                // direction information only
-myDataString:          "978-0-123-4567-X^ltr"          // language-neutral string</pre>
+myLocalizedString:     "Hello World!"^^i18n:en_ltr            // language and direction
+myLocalizedString_ar:  "<bdo dir="ltr">مرحبا بالعالم</bdo>!"^^i18n:ar_rtl          // right-to-left example
+myLocalizedString_fr:  "Bonjour monde !"^^i18n:fr             // language only
+myLocalizedString_und: "<bdo dir="ltr">שלום עולם</bdo>!"^^i18n:_rtl                // direction information only
+myDataString:          "978-0-123-4567-X"^^i18n:_ltr          // language-neutral string
+</pre>
 </aside>
 
 <p>Note that the last string does not include language information  because it is an internal data value, but <em>does</em> include direction information because strings of this kind <em>must</em> be presented in the LTR order.</p>
