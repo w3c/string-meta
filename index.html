@@ -7,7 +7,7 @@
 <script class="remove">
       var respecConfig = {
           // specification status (e.g. WD, LCWD, WG-NOTE, etc.). If in doubt use ED.
-          specStatus:           "ED",
+          specStatus:           "DNOTE",
           //publishDate:  		"2019-04-16",
           //previousPublishDate:  "2019-04-16",
           //previousMaturity:  	"WD",
@@ -629,7 +629,7 @@ data in an interchange format is not a good idea. These include:</p>
 
 <p class=issue>It's not clear where the example with the broken link in the following paragraph is or used to be.</p>
 
-<p>If, however, there is angle bracket content that is intended to be an <em>example</em> of markup, rather than actual markup, the markup must not be skipped – trying to display markup source code in a RTL context yields <a href="#withMarkup">very confusing results</a>! It isn't clear, however, how a consumer of the string would always know the difference between examples and parseable strings.</p>
+<p>If, however, there is angle bracket content that is intended to be an <em>example</em> of markup, rather than actual markup, the markup must not be skipped – trying to display markup source code in a RTL context yields very confusing results! It isn't clear, however, how a consumer of the string would always know the difference between examples and parseable strings.</p>
 </section>
 
 
@@ -1285,39 +1285,39 @@ myDataString:          "978-0-123-4567-X"^^i18n:_ltr          // language-neutra
 <p><code><dfn id="Localizable">Localizable</dfn></code> dictionary</p>
 <pre class="def idl" data-dfn-for="Localizable" data-link-for="Localizable">
 <span class="idlDictionary" data-idl="" data-title="Localizable">dictionary <span class="idlDictionaryID"><code>Localizable</code></span> {
-    <span class="idlMember" id="idl-def-localizable-value" data-idl="" data-title="value" data-dfn-for="localizable"><span class="idlMemberType"><a href="https://www.w3.org/TR/WebIDL-1/#idl-DOMString">DOMString</a></span> <span class="idlMemberName"><a data-lt="value" href="#dom-localizable-value" class="internalDFN" data-link-type="dfn" data-for="Localizable"><code>value</code></a></span>;</span>
-    <span class="idlMember" id="idl-def-localizable-lang" data-idl="" data-title="lang" data-dfn-for="localizable"><span class="idlMemberType"><a href="https://www.w3.org/TR/WebIDL-1/#idl-DOMString">DOMString</a></span> <span class="idlMemberName"><a data-lt="lang" href="#dom-localizable-lang" class="internalDFN" data-link-type="dfn" data-for="Localizable"><code>lang</code></a></span>;</span>
-    <span class="idlMember" id="idl-def-localizable-dir" data-idl="" data-title="dir" data-dfn-for="localizable"><span class="idlMemberType"><a href="#dom-textdirection" class="internalDFN" data-link-type="dfn"><code>TextDirection</code></a></span> <span class="idlMemberName"><a data-lt="dir" href="#dom-localizable-dir" class="internalDFN" data-link-type="dfn" data-for="Localizable"><code>dir</code></a></span> = <span class="idlMemberValue">"auto"</span>;</span>
+    <span class="idlMember" id="idl-def-localizable-value" data-idl="" data-title="value" data-dfn-for="localizable"><span class="idlMemberType"><a href="https://www.w3.org/TR/WebIDL-1/#idl-DOMString">DOMString</a></span> <span class="idlMemberName"><a data-lt="value" href="#localizable-value" class="internalDFN" data-link-type="dfn" data-for="Localizable"><code>value</code></a></span>;</span>
+    <span class="idlMember" id="idl-def-localizable-lang" data-idl="" data-title="lang" data-dfn-for="localizable"><span class="idlMemberType"><a href="https://www.w3.org/TR/WebIDL-1/#idl-DOMString">DOMString</a></span> <span class="idlMemberName"><a data-lt="lang" href="#localizable-lang" class="internalDFN" data-link-type="dfn" data-for="Localizable"><code>lang</code></a></span>;</span>
+    <span class="idlMember" id="idl-def-localizable-dir" data-idl="" data-title="dir" data-dfn-for="localizable"><span class="idlMemberType"><a href="#textdirection" class="internalDFN" data-link-type="dfn"><code>TextDirection</code></a></span> <span class="idlMemberName"><a data-lt="dir" href="#localizable-dir" class="internalDFN" data-link-type="dfn" data-for="Localizable"><code>dir</code></a></span> = <span class="idlMemberValue">"auto"</span>;</span>
 };</span>
 </pre><dl>
-	<dt><dfn data-dfn-for="localizable" data-dfn-type="dfn" id="dom-localizable-value" data-idl="" data-title="value" class="lint-ignore">
+	<dt><dfn data-dfn-for="localizable" data-dfn-type="dfn" id="localizable-value" data-idl="" data-title="value" class="lint-ignore">
 	
 	<code>value</code></dfn> member</dt>
 	<dd>The string containing the data value of this field.</dd>
-	<dt><dfn data-dfn-for="localizable" data-dfn-type="dfn" id="dom-localizable-lang" data-idl="" data-title="lang" class="lint-ignore">
+	<dt><dfn data-dfn-for="localizable" data-dfn-type="dfn" id="localizable-lang" data-idl="" data-title="lang" class="lint-ignore">
 	
 	<code>lang</code></dfn> member</dt>
 	<dd>A [[BCP47]] language tag that specifies the primary language for the values of the human-readable
 members of the inheriting dictionary.</dd>
-<dt><dfn data-dfn-for="localizable" data-dfn-type="dfn" id="dom-localizable-dir" data-idl="" data-title="dir" class="lint-ignore"><code>
+<dt><dfn data-dfn-for="localizable" data-dfn-type="dfn" id="localizable-dir" data-idl="" data-title="dir" class="lint-ignore"><code>
 dir</code></dfn> member</dt>
 <dd>Specifies the base direction for the human-readable members of an inheriting dictionary.</dd></dl>
 <div data-dfn-for="TextDirection" data-link-for="TextDirection" id="textdirection-enum" typeof="bibo:Chapter" resource="#textdirection-enum" property="bibo:hasPart">
-	<p id="h-textdirection-enum" resource="#h-textdirection-enum"><dfn data-dfn-for="" data-dfn-type="dfn" id="dom-textdirection" data-idl="" data-title="TextDirection">
+	<p id="h-textdirection-enum" resource="#h-textdirection-enum"><dfn data-dfn-for="" data-dfn-type="dfn" id="textdirection" data-idl="" data-title="TextDirection">
 <code>TextDirection</code></dfn> enum</p>
 <pre class="def idl">
-<span class="idlEnum" id="idl-def-textdirection" data-idl="" data-title="TextDirection">enum <span class="idlEnumID"><a data-lt="TextDirection" href="#dom-textdirection" class="internalDFN" data-link-type="dfn" data-for=""><code>TextDirection</code></a></span> {    
-    <a href="#dom-textdirection-auto" class="idlEnumItem">"auto"</a>,
-    <a href="#dom-textdirection-ltr" class="idlEnumItem">"ltr"</a>,    
-    <a href="#dom-textdirection-rtl" class="idlEnumItem">"rtl"</a>
+<span class="idlEnum" id="idl-def-textdirection" data-idl="" data-title="TextDirection">enum <span class="idlEnumID"><a data-lt="TextDirection" href="#textdirection" class="internalDFN" data-link-type="dfn" data-for=""><code>TextDirection</code></a></span> {    
+    <a href="#textdirection-auto" class="idlEnumItem">"auto"</a>,
+    <a href="#textdirection-ltr" class="idlEnumItem">"ltr"</a>,    
+    <a href="#textdirection-rtl" class="idlEnumItem">"rtl"</a>
 };</span>
 </pre>
 <p>The text-direction values are the following, implying that the value of the human-readable members is by default:</p>
-<dl><dt><dfn data-dfn-for="textdirection" data-dfn-type="dfn" id="dom-textdirection-auto" data-idl="" data-title="auto" class="lint-ignore">
+<dl><dt><dfn data-dfn-for="textdirection" data-dfn-type="dfn" id="textdirection-auto" data-idl="" data-title="auto" class="lint-ignore">
 	<code>auto</code></dfn></dt><dd> Directionality is determined by the Unicode Bidirectional Algorithm [[UAX9]] algorithm.</dd>
-<dt><dfn data-dfn-for="textdirection" data-dfn-type="dfn" id="dom-textdirection-ltr" data-idl="" data-title="ltr" class="lint-ignore">
+<dt><dfn data-dfn-for="textdirection" data-dfn-type="dfn" id="textdirection-ltr" data-idl="" data-title="ltr" class="lint-ignore">
 	<code>ltr</code></dfn></dt><dd>Left-to-right text.</dd>
-<dt><dfn data-dfn-for="textdirection" data-dfn-type="dfn" id="dom-textdirection-rtl" data-idl="" data-title="rtl" class="lint-ignore">
+<dt><dfn data-dfn-for="textdirection" data-dfn-type="dfn" id="textdirection-rtl" data-idl="" data-title="rtl" class="lint-ignore">
 	<code>rtl</code></dfn></dt><dd>Right-to-left text.</dd></dl>
 </div>
 </aside>
@@ -1344,8 +1344,8 @@ the following contributors to this document:
 <p>The following pages formed the initial basis of this document:</p>
 <ul>
   <li><a href="https://w3c.github.io/i18n-discuss/notes/annotation-language-use-cases.html">Use cases for language information in web annotations</a></li>
-  <li><a href="http://w3c.github.io/i18n-discuss/notes/string-base-direction.html">Support for bidi text in strings</a></li>
-  <li><a href="http://w3c.github.io/i18n-discuss/notes/json-bidi.html">Notes on JSON strings and text direction</a></li>
+  <li><a href="https://w3c.github.io/i18n-discuss/notes/string-base-direction.html">Support for bidi text in strings</a></li>
+  <li><a href="https://w3c.github.io/i18n-discuss/notes/json-bidi.html">Notes on JSON strings and text direction</a></li>
 </ul>
 
 </section>
