@@ -63,17 +63,6 @@ p.cjk-demo {
     color: #63F;;
 }
 
-.gap {
-    background-color: #FCF;
-    font-style: italic;
-}
-
-.gap::before {
-    content: "\2757 \fe0f \00A0 ";
-    font-style: normal;
-    color: #63F;;
-}
-
 kbd {
    font-family: Menlo, Consolas, "DejaVu Sans Mono", Monaco, monospace;
    font-size: .95em;
