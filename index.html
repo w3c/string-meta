@@ -19,8 +19,8 @@
           edDraftURI:   		"https://w3c.github.io/string-meta/",
 
           editors:  [
-              { name: "Addison Phillips", mailto: "addison@amazon.com",
-                company: "Amazon.com", w3cid: 33573 },
+              { name: "Addison Phillips", mailto: "addisonI18N@gmail.com",
+                company: "Invited Expert", w3cid: 33573 },
               { name: "Richard Ishida", mailto: "ishida@w3.org",
                 company: "W3C", w3cid: 3439 },
 			     ],
@@ -142,8 +142,9 @@
 <p>In this section [[RFC2119]] keywords in uppercase italics have their usual meaning. We differentiate <em>best practices</em>, which should be adopted by all specifications and <em>recommendations</em>, which require additional standardization or which are speculative prior to adoption.</p>
 
 <div class="req" id="example_req">
-    <p class="advisement">Best practices appear with a different background color and decoration like this.</p>
-    <p class="gap">Gaps or recommendations for future work are listed as issues or displayed like this.</p>
+   <p class="advisement">Best practices appear with a different background color and decoration like this.</p>
+   <p class="definition">Definitions appear with a different background color and decoration like this.</p>
+   <p class="issue-example">Gaps or recommendations for future work appear with a different background color and decoration like this.</p>
 </div>
 </aside>
 
@@ -237,12 +238,12 @@
 <p class="advisement">Where the <code>i18n</code> Namespace is not available or is inappropriate to use, specifications SHOULD require [[JSON-LD]] plain string literals for natural language values to provide string-specific language information.</p>
 </div>
 
-<p>Some datatypes, such as [[RDF-PLAIN-LITERAL]], already exist that allow for <em>language</em> metadata to be serialized as part of a string value. Examples include:</p>
-<div class="example">
-<p>&quot;title&quot;: &quot;تصميم و إنشاء مواقع الويب@ar&quot;,</p>
-<p> &quot;tags&quot;: [ &quot;HTML@en&quot;, &quot;CSS@en&quot;, &quot;تصميم المواقع@ar&quot; ]</p>
-<p>&quot;id&quot;: &quot;978-111887164-5@und&quot;</p>
-</div>
+<p>Some datatypes, such as [[RDF-PLAIN-LITERAL]], already exist that allow for <em>language</em> metadata to be serialized as part of a string value.</p>
+<aside class="example" title="Examples of RDF plain literals">
+<pre>&quot;title&quot;: &quot;تصميم و إنشاء مواقع الويب@ar&quot;,
+&quot;tags&quot;: [ &quot;HTML@en&quot;, &quot;CSS@en&quot;, &quot;تصميم المواقع@ar&quot; ],
+&quot;id&quot;: &quot;978-111887164-5@und&quot;</pre>
+</aside>
 
 <div class="req" id="bp-do_not_use_language_non_data">
 	<p class="advisement">Specifications SHOULD NOT specify or require the use of language metadata for fields that cannot contain natural language text.</p>

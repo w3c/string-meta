@@ -131,6 +131,16 @@ a.self:hover {
     margin: 1em auto;
 }
 
+.issue-example {
+    position: relative;
+    background: #FBE9E9;
+    padding: 0.5em;
+    border: 0.5em;
+    border-left: 6pt solid #E05252;
+    border-right: 6pt solid #E05252;
+    margin: 1em auto;
+}
+
 .uname {
    font-size: 75%;
    letter-spacing: 0.05em;
