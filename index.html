@@ -172,7 +172,7 @@
 </div>
 
 
-<p>Use of heuristics to determine language and direction will always fail for certain  cases, and there needs to be a way to override the outcome for those cases. Assignment of <a href="#metadata">metadata</a> (either as a resource-wide default, or in a string-specific label) is an intentional act that overrides the need to  guess the outcome by applying heuristics.</p>
+<p>Use of heuristics to determine language or base direction will always fail for certain cases, and there needs to be a way to provide the correct outcome for those cases. Assignment of <a href="#metadata">metadata</a> (either as a resource-wide default, or in a string-specific label) is an intentional act that removes the need to guess the outcome by applying heuristics.</p>
 
 <p>The use of <a href="#metadata">metadata</a> for indicating base direction is  preferred because it avoids requiring the consumer to interpolate the direction using methods such as <a href="#firststrong">first strong</a> or use of methods which require modification of the data itself (such as the <a href="#rlm">insertion of RLM/LRM markers</a> or <a href="#paired">bidirectional controls</a>).</p>
 
@@ -186,14 +186,14 @@
 
 
 <div class="req" id="bp_default_setting">
-<p class="advisement">Specifications MAY define a rule or a field to provide the default language and base direction for all strings in a given resource. However, specifications MUST NOT assume that a resource-wide default is sufficient.  Even if a resource-wide setting is available, it must be possible to use string-specific metadata  to override that default.</p>
+<p class="advisement">Specifications MAY define a mechanism to provide the default language and the default base direction for all strings in a given resource. However, specifications MUST NOT assume that a resource-wide default is sufficient.  Even if a resource-wide setting is available, it must be possible to use string-specific metadata  to override that default.</p>
 </div>
 
-<p>Resource-wide defaults are particularly useful for increasing efficiency for any resources that use only a single language and have a consistent base text direction. It also reduces the overall complexity of a given document instance, since the language and direction values don't have to be repeated across many fields.</p>
+<p>Resource-wide defaults are particularly useful for increasing efficiency for any resources that use only a single language or have a consistent base text direction. It also reduces the overall complexity of a given document instance, since the language and direction values don't have to be repeated across many fields.</p>
 
 <p>However, there will always be exceptions to the default, and so it must be possible to override the default on a string-by-string basis, where necessary.</p>
 
-<p> First-strong heuristics are not applied to strings when the direction has been set externally using metadata. Even if an RLM character has been prepended to a string, the default metadata overrides it. Therefore it is necessary to use explicitly provided field data to override the default for strings whose base direction does not match the resource-wide default.</p>
+<p>First-strong heuristics are not applied to strings when the direction has been set externally using metadata. Even if an RLM character has been prepended to a string, the default metadata overrides it when determining the base direction of the string. Therefore it is necessary to use explicitly provided field data to override the default for strings whose base direction does not match the resource-wide default.</p>
 
 
 
