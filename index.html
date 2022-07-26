@@ -8,9 +8,9 @@
       var respecConfig = {
           // specification status (e.g. WD, LCWD, WG-NOTE, etc.). If in doubt use ED.
           specStatus:           "ED",
-          //publishDate:  	"2019-04-16",
-          //previousPublishDate: "2019-04-16",
-          //previousMaturity:  	"WD",
+          //publishDate:  		"2019-04-16",
+          //previousPublishDate:  "2019-04-16",
+          //previousMaturity:  	 "WD",
 
 
           noRecTrack:           true,
@@ -174,13 +174,13 @@
 
 
 <div class="req" id="bp_not_only_default">
-<p class="advisement">Specifications MUST NOT assume that a document-level default is sufficient.  Even If a resource-wide setting is available, specify field-based metadata to override the default.</p>
+<p class="advisement">Specifications MUST NOT assume that a resource-wide default is sufficient.  Even if a resource-wide setting is available, it must be possible to use string-specific metadata  to override that default.</p>
 </div>
 
 
 <p>Document level defaults, when combined with per-field metadata, can reduce the overall complexity of a given document instance, since the language and direction values don't have to be repeated across many fields. However, they do not solve all language or directionality problems, and so it must be possible to override the default on a string-by-string basis, where necessary.</p>
 
-<p>First-strong heuristics are ineffective when a default direction has been set for all strings, since  metadata overrides (intentionally) the value of the first-strong character. Therefore it is necessary to use explicitly provided field data to override the default. Even if an RLM character has been prepended to a string, the default metadata overrides it.</p>
+<p>First-strong heuristics are ineffective when a default direction has been set for all strings, since metadata overrides (intentionally) the value of the first-strong character. Therefore it is necessary to use explicitly provided field data to override the default. Even if an RLM character has been prepended to a string, the default metadata overrides it.</p>
 
 
 <div class="req" id="bp_lang_field_based_metadata">
@@ -194,7 +194,7 @@
     <p>For example, [[JSON-LD]] provides a document-level base direction using the <code>@context</code> mechanism and defines the <code>i18n</code> namespace as an extension of existing RDF datatypes which can be used to set the language and/or base direction of string values.</p>
 </aside>
 
-<p> Low-level support for <a>natural language</a> string metadata is widespread because the use of metadata for storage and interchange of the language of data values is long-established and widely supported in the basic infrastructure of the Web. This includes language attributes in [[XML]] and [[HTML]]; string types in schema languages (e.g. [[xmlschema11-2]]) or the various RDF specifications including [[JSON-LD]]; or protocol- or document format-specific provisions for language.</p>
+<p>Low-level support for <a>natural language</a> string metadata is widespread because the use of metadata for storage and interchange of the language of data values is long-established and widely supported in the basic infrastructure of the Web. This includes language attributes in [[XML]] and [[HTML]]; string types in schema languages (e.g. [[xmlschema11-2]]) or the various RDF specifications including [[JSON-LD]]; or protocol- or document format-specific provisions for language.</p>
 
 
 <div class="req" id="bp_default_fallback">
