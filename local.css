@@ -120,7 +120,24 @@ a.self:hover {
     margin: 1em auto;
 }
 
+.definition-example {
+    /* Used to style the example of a definition so that
+     * it doesn't participate in linking, etc.
+     */
+    position: relative;
+    background-color: #efefef;
+    padding: 0.5em;
+    border: 0.5em;
+    border-left: 6pt solid green;
+    border-right: 6pt solid green;
+    margin: 1em auto;
+}
+
 .issue-example {
+    /* Used to style the example of an issue so that
+     * it doesn't participate in linking, or auto-increment
+     * the counter
+     */
     position: relative;
     background: #FBE9E9;
     padding: 0.5em;
