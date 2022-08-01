@@ -63,17 +63,6 @@ p.cjk-demo {
     color: #63F;;
 }
 
-.gap {
-    background-color: #FCF;
-    font-style: italic;
-}
-
-.gap::before {
-    content: "\2757 \fe0f \00A0 ";
-    font-style: normal;
-    color: #63F;;
-}
-
 kbd {
    font-family: Menlo, Consolas, "DejaVu Sans Mono", Monaco, monospace;
    font-size: .95em;
@@ -128,6 +117,33 @@ a.self:hover {
     border: 0.5em;
     border-left: 6pt solid green;
     border-right: 6pt solid green;
+    margin: 1em auto;
+}
+
+.definition-example {
+    /* Used to style the example of a definition so that
+     * it doesn't participate in linking, etc.
+     */
+    position: relative;
+    background-color: #efefef;
+    padding: 0.5em;
+    border: 0.5em;
+    border-left: 6pt solid green;
+    border-right: 6pt solid green;
+    margin: 1em auto;
+}
+
+.issue-example {
+    /* Used to style the example of an issue so that
+     * it doesn't participate in linking, or auto-increment
+     * the counter
+     */
+    position: relative;
+    background: #FBE9E9;
+    padding: 0.5em;
+    border: 0.5em;
+    border-left: 6pt solid #E05252;
+    border-right: 6pt solid #E05252;
     margin: 1em auto;
 }
 
