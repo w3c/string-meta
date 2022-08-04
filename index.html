@@ -232,9 +232,6 @@
 </section>
 
 
-
-
-
 <section>
 <h3 id="string_specific_direction">String-specific directional information</h3>
 
@@ -383,7 +380,7 @@
 <p class="definition"><dfn data-lt="directional metadata field|direction field">Directional metadata field</dfn>. A directional metadata field (or <em>direction field</em> for short) is a field in a data structure used to associate a paragraph direction with a given natural language string field or data value.</p>
 
 <aside class="example" id="example-direction-metadata">
-	<p><strong>Example of a <a>direction field</a>.</strong> In this JSON fragment, the <code>title</code> structure has a value <code>direction</code> which represents the <a>base direction</a> to use for the <code>value</code> field.</p>
+	<p><strong>Example of a <a>direction field</a>.</strong> In this JSON fragment, the <code>title</code> structure has a field <code>direction</code> which represents the <a>base direction</a> to use for the field <code>value</code>.</p>
 <pre class="json">"title": {
 	"value": "HTML و CSS: تصميم و إنشاء مواقع الويب",
 	"direction": "rtl",
@@ -398,7 +395,7 @@
 <p><strong>Example of a <a>direction attribute</a>.</strong> If the JSON in the <a href="#example-direction-metadata">above example</a> of a <a>directional metadata field</a> were received by a process that was assembling a Web page for display, it might fill in a template similar to the top line in this example to produce markup like the second line. Here the <code>dir</code> attribute from [[HTML]] is an example of a <a>direction attribute</a>.</p>
 
 <pre class="html">
-&lt;p dir={$title.direction}>{$title.value}&lt;/p>
+&lt;p dir="{$title.direction}">{$title.value}&lt;/p>
 &lt;p dir="rtl">HTML و CSS: تصميم و إنشاء مواقع الويب&lt;/p>
 </pre>
 	
@@ -417,24 +414,16 @@
 <p>The name <code>dir</code> is preferred for an attribute, such as in markup languages. Using <code>direction</code> for an attribute is not recommended, since it is long and relatively uncommon for this use case. Note that both [[HTML]] and [[XML10]] have a built-in <code>dir</code> attribute. A <code>dir</code> attribute should have scope within a document and should be defined to provide bidi isolation.</p>
 
 <div class="req" id="bp-define-direction-values">
-   <p class="advisement">Define the values of a <a>directional metadata field</a> to include and be limited to <code>ltr</code> and <code>rtl</code>.</p>
-</div>
-
-<div class="req" id="bp-define-dir-attribute-values">
-   <p class="advisement"> Define the values of any <a>direction attribute</a> to include and be limited to the values <code>ltr</code>, <code>rtl</code>, and <code>auto</code>.</p>
-</div>
-
-<div class="req" id="bp-dir-auto-non-use">
-   <p class="advisement">The value <code>auto</code> SHOULD NOT be used in a <a>directional metadata field</a>: omitting the direction is preferred when the content direction is not known.</p>
+   <p class="advisement">Define the values of a <a>directional metadata field</a> or a <a>direction attribute</a> to include and be limited to the values <code>ltr</code>, <code>rtl</code>, and <code>auto</code>.</p>
 </div>
 
 <p>The value <code>ltr</code> indicates a base direction of left-to-right, in exactly the same manner indicated by <a href="https://www.w3.org/TR/css-writing-modes/#direction">CSS writing modes</a> [[CSS-WRITING-MODES-4]]</p>
 
 <p>The value <code>rtl</code> indicates a base direction of right-to-left, in exactly the same manner indicated by <a href="https://www.w3.org/TR/css-writing-modes/#direction">CSS writing modes</a> [[CSS-WRITING-MODES-4]]</p>
 
-<p>The value <code>auto</code> indicates that the user agent uses the first strong character of the content to determine the base direction using the <a href="https://html.spec.whatwg.org/multipage/dom.html#the-dir-attribute">algorithm</a> for <code>auto</code> found in [[HTML]].</p>
+<p>The value <code>auto</code> indicates that the user agent uses the <a href="https://html.spec.whatwg.org/multipage/dom.html#the-dir-attribute">algorithm</a> for <code>auto</code> defined by [[HTML]] to determine the base paragraph direction.</p>
 
-<p class="note">The heuristic used by <code>auto</code> just looks at the first character with a strong directionality, in a manner analogous to the Paragraph Level determination in the bidirectional algorithm [[UAX9]]. Authors are urged to only use this value as a last resort when the direction of the text is truly unknown and no better server-side heuristic can be applied.</p>
+<p>The heuristic used by <code>auto</code> looks for the first character with a strong directionality, in a manner analogous to the Paragraph Level determination in the bidirectional algorithm [[UAX9]]. When applied to multiple fields or to a document as a whole, it can mean that the direction should be individually derived for each field (with string-local metadata providing an override for cases that cannot be determined automatically). Then again, this value might mean that the base direction of the associated content is not known. Whenever possible, the actual base direction (<code>ltr</code> or <code>rtl</code>) should be stored or exchanged instead of <code>auto</code>. Omitting the <a>direction field</a> is preferable when the value is truly unknown.</p>
 
 </section>
 
