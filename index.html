@@ -91,7 +91,7 @@
 
 <p class="definition">A <a>consumer</a> is any process that receives natural language strings, either for display or processing. [[I18N-GLOSSARY]]</p>
 
-<p class="definition">A <a>serialization agreement</a> (or "agreement" for short) is the common understanding between a producer and consumer about the serialization of string metadata: how it is to be understood, serialized, read, transmitted, removed, etc. [[I18N-GLOSSARY]]</p>
+<p class="definition">A <a>serialization agreement</a> is the common understanding between a producer and consumer about the serialization of string metadata: how it is to be understood, serialized, read, transmitted, removed, etc. [[I18N-GLOSSARY]]</p>
 
 <p class="definition"><a>Paragraph direction</a>. The initial base direction of a paragraph or string, which resolves to either <em>left-to-right</em> or <em>right-to-left</em>. The paragraph direction may be overridden by nested, embedding controls that change the direction for an inline range of text, but the paragraph direction sets the starting point which the <cite>Unicode Bidirectional Algorithm</cite> [[UAX9]] uses to calculate the direction of the embedded levels. [[I18N-GLOSSARY]]</p>
 
@@ -504,7 +504,7 @@ standardized formats do not address the resulting issues, the result
 can be that, while the data arrives intact, its processing or 
 presentation cannot be wholly recovered.</p>
 
-<p>In a distributed Web, any <a>consumer</a> can also be a <a>producer</a> for some other process or system. Thus, a given consumer might need to pass language and direction metadata from one document format (and using one <a>agreement</a>) to another consumer using a different document format. Lack of consistency in representing language and direction metadata in serialization agreements poses a threat to interoperability and a barrier to consistent implementation.</p>
+<p>In a distributed Web, any <a>consumer</a> can also be a <a>producer</a> for some other process or system. Thus, a given consumer might need to pass language and direction metadata from one document format (and using one <a>serialization agreement</a>) to another consumer using a different document format. Lack of consistency in representing language and direction metadata in serialization agreements poses a threat to interoperability and a barrier to consistent implementation.</p>
 </section>
 
 
@@ -576,7 +576,7 @@ data in an interchange format is not a good idea. These include:</p>
 <ul>
   <li>Most of the data sources used to assemble the documents on the Web will not contain 
   these characters; producers, in the process of assembling or serializing the data, 
-  will need to introspect and insert the characters as needed&mdash;changing the data from the original source. Consumers must then deserialize and introspect the information using an identical <a>agreement</a>. The consumer has no way of knowing if the characters found in the data were inserted by the producer (and should be removed) or if the characters were part of the source data. Overzealous producers might introduce additional and unnecessary characters, for example adding an additional layer of bidi control codes to a string that would not otherwise require it. Equally, an overzealous consumer might remove characters that are needed by or intended for downstream processes.</li>
+  will need to introspect and insert the characters as needed&mdash;changing the data from the original source. Consumers must then deserialize and introspect the information using an identical <a>serialization agreement</a>. The consumer has no way of knowing if the characters found in the data were inserted by the producer (and should be removed) or if the characters were part of the source data. Overzealous producers might introduce additional and unnecessary characters, for example adding an additional layer of bidi control codes to a string that would not otherwise require it. Equally, an overzealous consumer might remove characters that are needed by or intended for downstream processes.</li>
   <li>Another challenge is that many applications that use these data formats have limitations on 
   content, such as length limits or character set restrictions. Inserting additional characters into 
   the data may violate these externally applied requirements, and interfere 
@@ -931,7 +931,7 @@ access, to the original context of the string. Many document formats are generat
 <section>
     <h3 id="html-content">Require bidi markup for content</h3>
     
-    <p><strong>This approach is NOT recommended, except under <a>agreements</a> that expect to exclusively interchange HTML or XML markup data.</strong></p>
+    <p><strong>This approach is NOT recommended, except under <a>serialization agreements</a> that expect to exclusively interchange HTML or XML markup data.</strong></p>
     
     <section>
     <h4 id="html-content-how">How it works</h4>
