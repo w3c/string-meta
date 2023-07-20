@@ -91,7 +91,7 @@
 
 <p class="definition">A <a>consumer</a> is any process that receives natural language strings, either for display or processing. [[I18N-GLOSSARY]]</p>
 
-<p class="definition">A <a>serialization agreement</a> (or "agreement" for short) is the common understanding between a producer and consumer about the serialization of string metadata: how it is to be understood, serialized, read, transmitted, removed, etc. [[I18N-GLOSSARY]]</p>
+<p class="definition">A <a>serialization agreement</a> is the common understanding between a producer and consumer about the serialization of string metadata: how it is to be understood, serialized, read, transmitted, removed, etc. [[I18N-GLOSSARY]]</p>
 
 <p class="definition"><a>Paragraph direction</a>. The initial base direction of a paragraph or string, which resolves to either <em>left-to-right</em> or <em>right-to-left</em>. The paragraph direction may be overridden by nested, embedding controls that change the direction for an inline range of text, but the paragraph direction sets the starting point which the <cite>Unicode Bidirectional Algorithm</cite> [[UAX9]] uses to calculate the direction of the embedded levels. [[I18N-GLOSSARY]]</p>
 
@@ -126,7 +126,7 @@
 
 <section id="agreements">
   <h4>Serialization Agreements</h4>
-  <p>Between any <a>producer</a> and <a>consumer</a>, there needs to be an <a>agreement</a> about what the document format contains and what the data in each field or attribute means. Any time a producer of a string takes special steps to collect and communicate information about the base direction or language of that string, it must do so with the expectation that the consumer of the string will understand how the producer encoded this information. </p>
+  <p>Between any <a>producer</a> and <a>consumer</a>, there needs to be an <dfn data-lt="agreement|serialization agreement">agreement</dfn> about what the document format contains and what the data in each field or attribute means. Any time a producer of a string takes special steps to collect and communicate information about the base direction or language of that string, it must do so with the expectation that the consumer of the string will understand how the producer encoded this information. </p>
 <p>If no action is taken by the producer, the consumer must still decide what rules to follow in order to decide on the appropriate base direction and language, even if it is only to provide some form of default value.</p>
   <p>In some systems or document formats, the necessary behaviour of the producers and consumers of a string are fully specified. In others, such agreements are not available; it is up to users to provide an agreement for how to encode, transmit, and later decode the necessary language or direction information. Low level specifications, such as JSON, do not provide a string metadata structure by default, so any document formats based on these need to provide the "agreement" themselves.</p>
 </section>
@@ -504,7 +504,7 @@ standardized formats do not address the resulting issues, the result
 can be that, while the data arrives intact, its processing or 
 presentation cannot be wholly recovered.</p>
 
-<p>In a distributed Web, any <a>consumer</a> can also be a <a>producer</a> for some other process or system. Thus, a given consumer might need to pass language and direction metadata from one document format (and using one <a>agreement</a>) to another consumer using a different document format. Lack of consistency in representing language and direction metadata in serialization agreements poses a threat to interoperability and a barrier to consistent implementation.</p>
+<p>In a distributed Web, any <a>consumer</a> can also be a <a>producer</a> for some other process or system. Thus, a given consumer might need to pass language and direction metadata from one document format (and using one <a>serialization agreement</a>) to another consumer using a different document format. Lack of consistency in representing language and direction metadata in serialization agreements poses a threat to interoperability and a barrier to consistent implementation.</p>
 </section>
 
 
@@ -576,7 +576,7 @@ data in an interchange format is not a good idea. These include:</p>
 <ul>
   <li>Most of the data sources used to assemble the documents on the Web will not contain 
   these characters; producers, in the process of assembling or serializing the data, 
-  will need to introspect and insert the characters as needed&mdash;changing the data from the original source. Consumers must then deserialize and introspect the information using an identical <a>agreement</a>. The consumer has no way of knowing if the characters found in the data were inserted by the producer (and should be removed) or if the characters were part of the source data. Overzealous producers might introduce additional and unnecessary characters, for example adding an additional layer of bidi control codes to a string that would not otherwise require it. Equally, an overzealous consumer might remove characters that are needed by or intended for downstream processes.</li>
+  will need to introspect and insert the characters as needed&mdash;changing the data from the original source. Consumers must then deserialize and introspect the information using an identical <a>serialization agreement</a>. The consumer has no way of knowing if the characters found in the data were inserted by the producer (and should be removed) or if the characters were part of the source data. Overzealous producers might introduce additional and unnecessary characters, for example adding an additional layer of bidi control codes to a string that would not otherwise require it. Equally, an overzealous consumer might remove characters that are needed by or intended for downstream processes.</li>
   <li>Another challenge is that many applications that use these data formats have limitations on 
   content, such as length limits or character set restrictions. Inserting additional characters into 
   the data may violate these externally applied requirements, and interfere 
@@ -931,7 +931,7 @@ access, to the original context of the string. Many document formats are generat
 <section>
     <h3 id="html-content">Require bidi markup for content</h3>
     
-    <p><strong>This approach is NOT recommended, except under <a>agreements</a> that expect to exclusively interchange HTML or XML markup data.</strong></p>
+    <p><strong>This approach is NOT recommended, except under <a>serialization agreements</a> that expect to exclusively interchange HTML or XML markup data.</strong></p>
     
     <section>
     <h4 id="html-content-how">How it works</h4>
@@ -1163,9 +1163,13 @@ myDataString:          "978-0-123-4567-X"^^i18n:_ltr          // language-neutra
 <section>
 	<h2 id="localization-considerations">Localization Considerations</h2>
 	
-	<p>Many specifications need to allow multiple different language values to be returned for a given field. This might be to support runtime localization or because the <a>producer</a> has multiple different language values and cannot select or distinguish them appropriately. There are several ways that multiple language values could be organized. For speed and ease of access, the use of <dfn data-lt="language indexing">language indexing</dfn> is a useful strategy.</p>
+	<p>Sometimes a <a>producer</a> can supply localized values for a given content item or data record by performing some type of <a>language negotiation</a> between the <a>producer</a> and the <a>consumer</a>. Localization then takes place in the <a>producer</a> using the negotiated language to select the content returned. Such an approach can save on file size, which affects latency, and complexity, since only the language or languages needed by the <a>consumer</a> need be returned.</p>
 	
-	<p>In language indexing, a given field's value is an array of key-value pairs. The keys in the array are language tags. The values of each language tag are strings or, ideally, <a>Localizable</a> objects. Here's an example of what a language indexed field <kbd>title</kbd> might look like:</p>
+	<p>However, since this is not always possible, specifications sometimes allow multiple different language values to be returned for a given field. This might be to support runtime localization or because the <a>producer</a> has multiple different language values and cannot pre-select them appropriately.</p>
+	
+	<p>In these cases, localization of a content item is done by having the <a>producer</a> return multiple language representations for the item and letting the <a>consumer</a> choose the value to display. Such an approach is helpful when the <a>producer</a> cannot negotiate the language (such as when the resulting file is cached for multiple users) and when the number of languages is relatively small. Large collections of languages can result in overly large documents that are cumbersome to work with.</p>
+	
+	<p>One approach a specification might provide for returning mulitple language of a given field is called <dfn>language indexing</dfn>. In language indexing, a given field's value is an array of key-value pairs. The keys in the array are language tags. The values of each language tag are strings or, ideally, <a>Localizable</a> objects. Here's an example of what a language indexed field <kbd>title</kbd> might look like:</p>
 
 <aside class=example>
 <pre>
