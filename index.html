@@ -667,6 +667,7 @@ data in an interchange format is not a good idea. These include:</p>
 <pre id="example1Data2">
 {
     "title": "<span dir=rtl>HTML &#x0648; CSS: &#x062A;&#x0635;&#x0645;&#x064A;&#x0645; &#x0648; &#x0625;&#x0646;&#x0634;&#x0627;&#x0621; &#x0645;&#x0648;&#x0627;&#x0642;&#x0639; &#x0627;&#x0644;&#x0648;&#x064A;&#x0628;</span>",
+    "direction": "rtl",
     "language": "ar",
 },
 </pre>
@@ -675,12 +676,13 @@ data in an interchange format is not a good idea. These include:</p>
 <section>
 <h4>How it works</h4>
 <p>A producer ascertains the  base direction of the string and adds that to a metadata field that accompanies the string when it is stored or transmitted.</p>
-<p>There are a couple of possible approaches:</p>
+<p>There are several approaches to using metadata:</p>
 <ol>
 <li>Label every string for base direction.</li>
-<li>Rely on the consumer to do <a href="#firststrong">first-strong detection</a>, and label only those strings which would produce the wrong result (ie. a RTL string that starts with LTR strong characters).</li>
+<li>Provide a document-level default for base direction and only include metadata for strings whose value is different. The value <code>auto</code> is used when the direction of a string is not known.</li>
+<li>Rely on the consumer to do <a href="#firststrong">first-strong detection</a>, and label only those strings which would produce the wrong result (that is, a right-to-left string that starts with left-to-right strong characters).</li>
 </ol>
-<p>If storing or transmitting a set of strings at a time, it helps to have a  field for the resource as a whole that sets a global, default base direction which can be inherited by all strings in the resource. Note that  in addition to a global field, you still need the possibility of attaching string-specific metadata fields in cases where a string's base direction is not that of the default. The base direction set on an individual string must override the default.</p>
+<p>If storing or transmitting a set of strings at a time, it helps to have a field for the resource as a whole that sets a global, default base direction which can be inherited by all strings in the resource. Note that in addition to a global field, you still need the possibility of attaching string-specific metadata fields in cases where a string's base direction is not that of the default. The base direction set on an individual string must override the default.</p>
 <p>Consumers would need to understand how to read the metadata sent with a string, and would need to apply first-strong heuristics in the absence of metadata.</p>
 
 <p>The use of the <a href="#use-the-localizable-data-structure">Localizable</a> dictionary structure is RECOMMENDED for individual values in JSON-based document formats, as it combines both language and direction metadata and, if consistently adopted, makes interchange between different formats easier.</p>
@@ -1169,7 +1171,7 @@ myDataString:          "978-0-123-4567-X"^^i18n:_ltr          // language-neutra
 	
 	<p>In these cases, localization of a content item is done by having the <a>producer</a> return multiple language representations for the item and letting the <a>consumer</a> choose the value to display. Such an approach is helpful when the <a>producer</a> cannot negotiate the language (such as when the resulting file is cached for multiple users) and when the number of languages is relatively small. Large collections of languages can result in overly large documents that are cumbersome to work with.</p>
 	
-	<p>One approach a specification might provide for returning mulitple language of a given field is called <dfn>language indexing</dfn>. In language indexing, a given field's value is an array of key-value pairs. The keys in the array are language tags. The values of each language tag are strings or, ideally, <a>Localizable</a> objects. Here's an example of what a language indexed field <kbd>title</kbd> might look like:</p>
+	<p>One approach a specification might provide for returning multiple languages of a given field is called <dfn>language indexing</dfn>. In language indexing, a given field's value is an array of key-value pairs. The keys in the array are language tags. The values of each language tag are strings or, ideally, <a>Localizable</a> objects. Here's an example of what a language indexed field <kbd>title</kbd> might look like:</p>
 
 <aside class=example>
 <pre>
