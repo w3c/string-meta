@@ -143,6 +143,7 @@
 
 <p>For example, in the <a href="#base_example">base example</a> below, all of the keys in the JSON document (<code>id</code>, <code>title</code>, <code>authors</code>, <code>language</code>, <code>publisher</code>, and  so on) are syntactic content. The data values, such as the ISBN, the language tag, and the publication date are also syntactic content. Only the actual book title, the author's name, and the publisher's name are natural language data values and thus <a>localizable text</a>.</p>
 </section>
+</section> <!-- Introduction -->
 
 <section>
 <h2 id="bp_and-reco">Best Practices, Recommendations, and Gaps</h2>
@@ -151,12 +152,75 @@
 <p>The main issue is how to establish a common <a>serialization agreement</a> between producers and consumers of data values so that each knows how to encode, find, and interpret the language and base direction of each data field. The use of metadata for supplying both the language and base direction of natural language string fields ensures that the necessary information is present, can be supplied and extracted with the minimal amount of processing, and does not require producers or consumers to scan or alter the data.</p>
 
 <section>
-<h3 id="resource_wide_defaults">Provide metadata</h3>
+	<h3 id="serialization-best-practices">Recommended Serializations</h3>
 
+		  <p>This section describes four approaches to serialization for string values. Specifications are intended to use these together to form a complete solution to managing language and direction metadata in document formats and protocols.</p>
+		  
+		  <section id="non-linguistic">
+		  <h4 id="string-specific-language">Non-Linguistic Fields</h4>
+		  
+		  <p>Avoid assigning or requiring language or direction metadata for <a>non-linguistic fields</a> (that is, strings that contain data that is not human language). Note that this includes <a data-cite="international-specs/#application_internal">application-internal data values</a> [[INTERNATIONAL-SPECS]].</p>
+			  
+          <div class="req" id="bp_separate_localizable">
+             <p class="advisement">Specifications SHOULD be careful to distinguish <a>syntactic content</a>, including <a>user-supplied values</a>, from <a>localizable text</a>.</p>
+          </div>
+
+          <div class="req" id="bp_non_displayable_syntactic">
+             <p class="advisement">Specifications MUST NOT treat syntactic content values as "displayable".</p>
+          </div>
+
+
+          <p>While the value of a syntactic content item or user-supplied value will often be meaningful, implementers should be reminded that in most instances these values must be wrapped with localizable display strings for presentation to the user, particularly in cases where the values are enumerated in advance.</p>
+
+          <aside class="note">
+             <p>Error messages are not syntactic content. They consist of and should be treated as <a>localizable text</a>.</p>
+          </aside>
+
+           <div class="req" id="bp-do_not_use_language_non_data">
+	          <p class="advisement">Specifications SHOULD NOT specify or require the use of language metadata for fields that cannot contain natural language text.</p>
+          </div>
+			  
+		  <div class="req" id="bp-non-linguistic-defaults">
+		     <p class="advisement">If a <a>consumer</a> is required to assign a language tag to the data, the value <code>zxx</code> (Non-Linguistic) SHOULD be used. If a <a>consumer</a> is required to assign a <a>base direction</a> to the data, the value <code>auto</code> SHOULD be used.</p>
+		  </div>
+		  
+  
+		  <aside class="example" title="Examples of non-linguistic string values">
+			  <pre class="javascript">
+"isbn": "978-123456789-X",
+"part-number": "&#xa7;ABC-123-0094"
+			  </pre>
+			  
+			  <p>Note that non-linguistic values are sometimes <em>localized</em>, even though they are not <em>translated</em>.</p>
+			  <pre class="javascript">
+"gaining-value-color": "green", // perhaps "red" in another locale?
+"background-color": "#ffebdd",  // or something else?
+"default-level": "medium",      // perhaps "large" or "small" in another locale?
+"help-file-url": "https://example.org/en-US/help.html"
+			  </pre>
+		  </aside>
+		  
+
+		  </section>
+		  
+		  <section id="single-linguistic-field">
+			  <h4>Single-Language Localizable Text Field</h4>
+			  
 <div class="req" id="bp_lang_field_based_metadata">
 <p class="advisement">Use field-based metadata or string datatypes to indicate the language and the base direction for individual <a>localizable text</a> values.</p>
 </div>
 
+		  <p>For <a>localizable text</a> fields that appear in a single language, use a data structure to represent the value. The recommended representation is an object with three fields. The field <code>value</code> contains the actual string. The field <code>lang</code> contains a <a>valid</a> [[BCP47]] language tag. The field <code>dir</code> contains the string's <a>base direction</a> (one of the values <code>ltr</code>, <code>rtl</code>, or <code>auto</code>).</p>
+		  
+		  <aside class="example" title="Example of a localizable text field">
+		  <pre class="json" id="localizable-text-field">
+"field-name-goes-here": {
+    "value": "This is the string value",
+    "lang": "en-US",
+    "dir": "ltr"
+}
+		  </pre>
+		  </aside>
 
 <p>Use of heuristics to determine language or base direction will always fail for certain cases, and there needs to be a way to provide the correct outcome for those strings. Assignment of <a href="#metadata">metadata</a> (either as a resource-wide default, or in a string-specific label) is an intentional act that removes the need to guess the outcome by applying heuristics.</p>
 
@@ -169,19 +233,101 @@
 
 <p>Low-level support for <a>natural language</a> string metadata is widespread because the use of metadata for storage and interchange of the language of data values is long-established and widely supported in the basic infrastructure of the Web. This includes language attributes in [[XML]] and [[HTML]]; string types in schema languages (e.g. [[xmlschema11-2]]) or the various RDF specifications including [[JSON-LD]]; or protocol- or document format-specific provisions for language.</p>
 
+			  
+		  </section>
+		  
+		  <section id="language-defaults">
+			  <h4 id="resource_wide_default">Resource-wide Defaults</h4>
+			  
+			  <p>Single-language localizable text fields are at their best if there are only a few natural language strings in a given document. When a document contains many natural language strings, this becomes inefficient. To reduce the complexity of encoding these strings, one workaround is to establish a document-level default for language and base direction. These are separate values, as language does not imply direction. There should still be the ability to override either value on any given string value by using the single-language <a>localizable text</a> field representation found <a href="#single-linguistic-field">above</a>.</p>
+			  
+			  <div class="req" id="bp_default_setting">
+                 <p class="advisement">Specifications MAY define a mechanism to provide the default language and the default base direction for all strings in a given resource. However, specifications MUST NOT assume that a resource-wide default is sufficient.  Even if a resource-wide setting is available, it must be possible to use string-specific metadata  to override that default.</p>
+              </div>
 
+			  <p>If your specification defines its own document level defaults, provide two optional fields:</p>
+			  
+			  <div class="req" id="bp-document-language-default">
+				  <p class="advisement">A document-level default language field SHOULD be called <code>language</code> and SHOULD be specified to contain a <a>valid</a> [[BCP47]] language tag. Specifications SHOULD specify that implementations are only require to check if a [[BCP47]] language tag is <a>well-formed</a>.</p>
+			  </div>
+              <div class="req" id="bp-document-direction-default">
+				  <p class="advisement">A document-level default <a>base direction</a> field SHOULD be called <code>direction</code> and support the values <code>ltr</code>, <code>rtl</code>, or <code>auto</code>.</p>
+		      </div>
 
-<div class="req" id="bp_default_setting">
-<p class="advisement">Specifications MAY define a mechanism to provide the default language and the default base direction for all strings in a given resource. However, specifications MUST NOT assume that a resource-wide default is sufficient.  Even if a resource-wide setting is available, it must be possible to use string-specific metadata  to override that default.</p>
-</div>
+              <aside class="example" title="Example of document level defaults">
+              <pre class="json">
+"language": "en-US",
+"direction": "ltr",
+//...
+"some-field-name": "This string is in U.S. English, thanks to the default",
+// the following field overrides the language but not the direction:
+"another-field-name": {
+   "value": "Diese Zeichenfolge ist auf Deutsch",
+   "lang": "de"
+}
+              </pre>
+              </aside>
+              
+              <p>Resource-wide defaults are particularly useful for increasing efficiency for any resources that use only a single language or have a consistent base text direction. It also reduces the overall complexity of a given document instance, since the language and direction values don't have to be repeated across many fields.</p>
 
-<p>Resource-wide defaults are particularly useful for increasing efficiency for any resources that use only a single language or have a consistent base text direction. It also reduces the overall complexity of a given document instance, since the language and direction values don't have to be repeated across many fields.</p>
+              <p>However, there will always be exceptions to the default, and so it must be possible to override the default on a string-by-string basis, where necessary.</p>
 
-<p>However, there will always be exceptions to the default, and so it must be possible to override the default on a string-by-string basis, where necessary.</p>
+              <p>First-strong heuristics are not applied to strings when the direction has been set externally using metadata. Even if a strongly directional character, such <span class="codepoint" translate="no"><img alt="RLM" src="images/200F.png"><code class="uname">U+200F RIGHT-TO-LEFT MARK</code></span>, has been prepended to a string, the default metadata can override the presentation of the string, resuling in <a>spillover</a> effects. Therefore content needs to be able to provide string-level metadata to override the default for strings whose base direction does not match the resource-wide default.</p>
 
-<p>First-strong heuristics are not applied to strings when the direction has been set externally using metadata. Even if an RLM character has been prepended to a string, the default metadata overrides it when determining the base direction of the string. Therefore it is necessary to use explicitly provided field data to override the default for strings whose base direction does not match the resource-wide default.</p>
+		  
+			  <p>For specifications that can make use of the [[JSON-LD]] <code>@context</code> mechanism, use the <code>@language</code> and <code>@direction</code> fields to supply the document level defaults.</p>
+              
+              <aside class="note">
+				  <p><strong>Document level defaults are not a complete solution on their own.</strong> Specifications can define a document-level defaulting mechanism to assist users who often create monolingual documents. However, specifications should only use document-level defaults to augment the ability for users to provide string-specific metadata.</p>
+              </aside>
+		  </section>
+		  
+		  
+		  <section id="language-maps">
+		  <h4>Language Maps</h4>
+		  
+		  <p>The world is not monolingual. Having documents that contain only a single language would mean providing many iterations of the document, one for each language, in order to localize the manifest. This also might require language negotiation when requesting the manifest.</p>
+		  
+		  <p>One way to address this is to allow multilingual values for each <a>localizable text</a> field inside the manifest document.</p>
+		  
+		  <p>Language selection is not merely the exact matching of language tag string values to the user's preferred locale. The usual <a href="#localizable-text-field">object representation</a> of a <a>localizable text</a> field requires that the object be deserialized in order to discover the language tag associated with the value. This can be inefficient when there are many values in a given manifest file. In these cases, the best practice is to use a language map to organize <a>localizable text</a> values. Such a map exposes the language tag for the purposes of selection, but still uses an object representation on the value side of the map, since both language and direction might need to be overridden for a given string value.</p>
+		  
+		  <aside class="note">
+			  <p>The language map structure presented in this section is not the same as the language maps found in <a data-cite="JSON-LD#string-internationalization">JSON-LD String Internationalization</a> [[JSON-LD]].</p>
+		  </aside>
+		  
+		  
+		  <aside class="example" title="A localizable language map">
+		  <pre class="json">
+"field-name-goes-here": {
+    "en":    {"value": "This is English"},
+    "en-GB": {"value": "This is UK English", "dir": "ltr"},
+    "fr":    {"value": "C'est français", "lang": "fr-CA", "dir": "ltr"},
+    "ar":    {"value": "هذه عربية", "dir": "rtl"}
+}
+		  </pre>
+		  </aside>
+		  
+		  <aside class="note">
+			  <p>This structure permits a language tag as the key and also as part of the value. These two values do not have to match. The value of the key indicates the <a>locale</a> of the intended audience, while the language tag of the value represents information about the actual language of the string.</p>
+			  <p>These values might not match in cases where additional specificity is needed to get the correct rendering or processing of the value or, occasionally, when a foreign language value <strong><em>is</em></strong> the intended localization (and the language needs to be overridden, such as to select voices or dictionaries in assistive technology):</p>
+			  <pre class="json">
+"extra-rendering-help": {
+	"zh": {"value": "你好世界！", "lang": "zh-Hans"}
+}
+				  
+"hello-in-french": {
+	"en": {"value": "Bonjour!", "lang": "fr"},
+	"de": {"value": "Bonjour!", "lang": "fr"}
+}
+			  </pre>
+		  </aside>
+		  </section>
+		  
+      </section>
 
-
+<section>
+<h3 id="bp-lang-dir-unknown">When Language and Direction are Unknown</h3>
 
 <div class="req" id="bp_default_fallback">
 <p class="advisement">Specify that, in the absence of other information, the default direction and default language are unknown.</p>
@@ -191,47 +337,6 @@
 </p>
 <p>It is essential for a consumer to know that language and direction are unknown quantities in order for them to know when to apply fallback strategies to the data (this could include language-detection, or first-strong heuristics for direction).  In particular, the default direction should not be set to LTR, since that would override the need for first-strong detection, which is more appropriate for strings written in a RTL script.</p>
 </section>
-
-
-<section>
-<h3 id="string_specific_language">String-specific language information</h3>
-
-<div class="req" id="bp_separate_localizable">
-<p class="advisement">Specifications SHOULD be careful to distinguish <a>syntactic content</a>, including <a>user-supplied values</a>, from <a>localizable text</a>.</p>
-</div>
-
-<div class="req" id="bp_non_displayable_syntactic">
-<p class="advisement">Specifications MUST NOT treat syntactic content values as "displayable".</p>
-</div>
-
-
-<p>While the value of a syntactic content item or user-supplied value will often be meaningful, implementers should be reminded that in most instances these values must be wrapped with localizable display strings for presentation to the user, particularly in cases where the values are enumerated in advance.</p>
-
-<aside class="note">
-   <p>Error messages are not syntactic content. They consist of and should be treated as <a>localizable text</a>.</p>
-</aside>
-
-
-<div class="req" id="bp-do_not_use_language_non_data">
-	<p class="advisement">Specifications SHOULD NOT specify or require the use of language metadata for fields that cannot contain natural language text.</p>
-</div>
-<aside class="example">
-    <p>For example, in the example above, the <code>id</code> field contains an ISBN used as a book identifier. The value is not and can never be natural language text (even though identifier fields can contain non-ASCII characters or be somewhat human readable). Language and direction metadata should not be applied to these values, although presentation of the values may require special handling for base direction. If a language value must be applied, the language tag <code>zxx</code> should be used.</p>
-    <p><strong>Recommended:</strong></p>
-	<pre>
-		&quot;id&quot;: &quot;978-111887164-5&quot;
-	</pre>
-	<p><strong>Not Recommended:</strong></p>
-	<pre>
-		&quot;id&quot;: &quot;978-111887164-5@en-US&quot;,
-		&quot;id&quot;: &quot;978-111887164-5&quot;^^i18n:en_ltr
-	</pre>
-</aside>
-</section>
-
-
-<section>
-<h3 id="string_specific_direction">String-specific directional information</h3>
 
 <div class="req" id="bp_use_heuristics_1">
 <p class="advisement">For the case where the direction is not known, specify that consumers should use first-strong heuristics to identify the base direction of strings.</p>
@@ -249,7 +354,13 @@
 </div>
 
 <p>If string data is being provided by users or content developers in web forms or other simple environments, users may not be able to enter these formatting characters.  In fact, most users will probably be unaware that such characters exist, or how to use them.  A web form can render their use unnecessary for immediate inspection if it sets the base direction for the input (which it should).</p>
-</section>
+
+
+<div class="req" id="bp_inferring_from_language">
+<p class="advisement">Specifications SHOULD NOT allow a base direction to be <a href="#script_subtag">interpolated from available language metadata</a> unless direction metadata is not available and cannot otherwise be provided.</p>
+</div>
+
+<p>Not all resources make use of the available metadata mechanisms. The script subtag of a language tag (or the "likely" script subtag based on [[BCP47]] and [[LDML]]) can sometimes be used to provide a base direction when other data is not available. Note that using language information is a "last resort" and specifications SHOULD NOT use it as the primary way of indicating direction: make the effort to provide for metadata.</p>
 
 
 <section>
@@ -317,12 +428,9 @@
 </aside>
 
 </section>
-</section>
-
-
 
 <section>
-<h3 id="other_approaches">Other approaches</h3>
+<h3 id="other_approaches">Additional Best Practices</h3>
 
 <div class="req" id="bp_unicode_tag_chars_nonuse">
 <p class="advisement">Specifications SHOULD NOT use the Unicode "language tag" characters (code points <code>U+E0000</code> to <code>U+E007F</code>) for language identification.</p>
@@ -331,20 +439,11 @@
 <p>[[Unicode]] says that the <q>... use of tag characters to convey language tags is strongly discouraged</q> and that the use of the character <span class="uname">U+E0001 LANGUAGE TAG</span> is <em>strongly discouraged</em>.</p>
 
 
-
 <div class="req" id="bp_no_paired_bidi">
 <p class="advisement">Specifications MUST NOT require the production or use of <a href="#paired">paired bidi controls</a>.</p>
 </div>
 
 <p>Another way to say this is: <strong><em>do not require implementations to modify data passing through them</em></strong>. Unicode bidi control characters might be found in a particular piece of string content, where the producer or data source has used them to make the text display properly. That is, they might already be part of the data. Implementations should not disturb any controls that they find&mdash;but they shouldn't be required to produce additional controls on their own.</p>
-
-
-
-<div class="req" id="bp_inferring_from_language">
-<p class="advisement">Specifications SHOULD NOT allow a base direction to be <a href="#script_subtag">interpolated from available language metadata</a> unless direction metadata is not available and cannot otherwise be provided.</p>
-</div>
-
-<p>Not all resources make use of the available metadata mechanisms. The script subtag of a language tag (or the "likely" script subtag based on [[BCP47]] and [[LDML]]) can sometimes be used to provide a base direction when other data is not available. Note that using language information is a "last resort" and specifications SHOULD NOT use it as the primary way of indicating direction: make the effort to provide for metadata.</p>
 
 
 <div class="req" id="bp_language_indexing">
@@ -453,7 +552,6 @@
 <p>When <code class="kw" translate="no">auto</code> is applied to multiple fields or to a document as a whole, it means that the direction should be individually derived for each field (with string-specific metadata providing an override for cases that cannot be determined automatically). It can be useful for labelling a group of mixed direction strings, when the base direction of most strings can be reliably determined using the first-strong heuristics. Whenever possible, the actual base direction (<code class="kw" translate="no">ltr</code> or <code class="kw" translate="no">rtl</code>) of individual strings should be stored or exchanged instead of <code class="kw" translate="no">auto</code>. Omitting the <a>direction field</a> is preferable when the value is truly unknown.</p>
 
 </section>
-
 </section>
 
 <section>
