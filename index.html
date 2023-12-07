@@ -151,6 +151,12 @@
 
 <p>The main issue is how to establish a common <a>serialization agreement</a> between producers and consumers of data values so that each knows how to encode, find, and interpret the language and base direction of each data field. The use of metadata for supplying both the language and base direction of natural language string fields ensures that the necessary information is present, can be supplied and extracted with the minimal amount of processing, and does not require producers or consumers to scan or alter the data.</p>
 
+<p>The most basic best practice, which the Internationalization Working Group looks for in every specification, is:</p>
+
+<div class="req">
+	<p class="advisement" id="bp-determine">For any string field containing natural language text, it MUST be possible to determine the language and <a>base direction</a> of that specific string. Such determination SHOULD use metadata at the string or document level and SHOULD NOT depend on heuristics.</p>
+</div>
+
 <section>
 	<h3 id="serialization-best-practices">Recommended Serializations</h3>
 
@@ -203,12 +209,12 @@
 
 		  </section>
 		  
-		  <section id="single-linguistic-field">
-			  <h4>Single-Language Localizable Text Field</h4>
+<section id="single-linguistic-field">
+		   <h4>Single-Language Localizable Text Field</h4>
 			  
-<div class="req" id="bp_lang_field_based_metadata">
-<p class="advisement">Use field-based metadata or string datatypes to indicate the language and the base direction for individual <a>localizable text</a> values.</p>
-</div>
+           <div class="req" id="bp_lang_field_based_metadata">
+              <p class="advisement">Use field-based metadata or string datatypes to indicate the language and the base direction for individual <a>localizable text</a> values.</p>
+           </div>
 
 		  <p>For <a>localizable text</a> fields that appear in a single language, use a data structure to represent the value. The recommended representation is an object with three fields. The field <code>value</code> contains the actual string. The field <code>lang</code> contains a <a>valid</a> [[BCP47]] language tag. The field <code>dir</code> contains the string's <a>base direction</a> (one of the values <code>ltr</code>, <code>rtl</code>, or <code>auto</code>).</p>
 		  
@@ -222,18 +228,22 @@
 		  </pre>
 		  </aside>
 
-<p>Use of heuristics to determine language or base direction will always fail for certain cases, and there needs to be a way to provide the correct outcome for those strings. Assignment of <a href="#metadata">metadata</a> (either as a resource-wide default, or in a string-specific label) is an intentional act that removes the need to guess the outcome by applying heuristics.</p>
+          <p>Use of heuristics to determine language or base direction will always fail for certain cases, and there needs to be a way to provide the correct outcome for those strings. Assignment of <a href="#metadata">metadata</a> (either as a resource-wide default, or in a string-specific label) is an intentional act that removes the need to guess the outcome by applying heuristics.</p>
 
-<p>The use of <a href="#metadata">metadata</a> for indicating base direction is  preferred because it avoids requiring the consumer to interpolate the direction using methods such as <a href="#firststrong">first strong</a> or use of methods which require modification of the data itself (such as the <a href="#rlm">insertion of RLM/LRM markers</a> or <a href="#paired">bidirectional controls</a>).</p>
+          <p>The use of <a href="#metadata">metadata</a> for indicating base direction is  preferred because it avoids requiring the consumer to interpolate the direction using methods such as <a href="#firststrong">first strong</a> or use of methods which require modification of the data itself (such as the <a href="#rlm">insertion of RLM/LRM markers</a> or <a href="#paired">bidirectional controls</a>).</p>
 
 <aside class="note">
     <p>Some schema languages, such as the RDF suite of specifications, have no built-in mechanism for associating base direction metadata with natural language string values. It is up to specifications that use these specifications to define structures and adopt best practices that result in clean interchange of language and direction metadata.</p>
     <p>For example, [[JSON-LD]] provides a document-level base direction using the <code class="kw" translate="no">@context</code> mechanism and defines the <code class="kw" translate="no">i18n</code> namespace as an extension of existing RDF datatypes which can be used to set the language and/or base direction of string values.</p>
 </aside>
 
-<p>Low-level support for <a>natural language</a> string metadata is widespread because the use of metadata for storage and interchange of the language of data values is long-established and widely supported in the basic infrastructure of the Web. This includes language attributes in [[XML]] and [[HTML]]; string types in schema languages (e.g. [[xmlschema11-2]]) or the various RDF specifications including [[JSON-LD]]; or protocol- or document format-specific provisions for language.</p>
 
-			  
+<div class="req" id="bp_localizable">
+<p class="advisement">For [[WebIDL]]-defined data structures, define each <a>localizable text</a> (natural language text) field as a <q><a>Localizable</a></q>.</p>
+</div>
+
+<p> This combines both language and direction metadata and, if consistently adopted, makes interchange between different formats easier. Consistency between different specifications and document formats allows for the easy interchange of string data. By naming field attributes in the same way and adopting the same semantics, different specifications can more easily extract values from or add values into resources from other data sources.</p>
+
 		  </section>
 		  
 		  <section id="language-defaults">
@@ -363,8 +373,8 @@
 <p>Not all resources make use of the available metadata mechanisms. The script subtag of a language tag (or the "likely" script subtag based on [[BCP47]] and [[LDML]]) can sometimes be used to provide a base direction when other data is not available. Note that using language information is a "last resort" and specifications SHOULD NOT use it as the primary way of indicating direction: make the effort to provide for metadata.</p>
 
 
-<section>
-<h3 id="technology_specific_solutions">Technology-specific solutions</h3>
+<section id="technology_specific_solutions">
+<h3 id="bp-json-ld">JSON-LD</h3>
 
 <div class="req" id="bp_use_jsonld_language_context">
 <p class="advisement">Use of [[JSON-LD]] <code class="kw" translate="no">@context</code> and the built-in <code class="kw" translate="no">@language</code> attribute is RECOMMENDED as a document level default.</p>
@@ -391,12 +401,6 @@
 </pre>
 </aside>
 
-
-<div class="req" id="bp_localizable">
-<p class="advisement">For [[WebIDL]]-defined data structures, define each <a>localizable text</a> (natural language text) field as a <q><a>Localizable</a></q>.</p>
-</div>
-
-<p> This combines both language and direction metadata and, if consistently adopted, makes interchange between different formats easier. Consistency between different specifications and document formats allows for the easy interchange of string data. By naming field attributes in the same way and adopting the same semantics, different specifications can more easily extract values from or add values into resources from other data sources.</p>
 </section>
 
 <section id="protocol-strings">
@@ -426,6 +430,63 @@
 
 <p>Although the field <samp translate="no">reason</samp> is expected to contain a descriptive string, it is defined as an array of bytes (with an expected encoding of UTF-8). Since the underlying protocol does not provide fields for language or direction metadata, it is not possible to accurately derive the values when reading data from the wire and any values generated by producers implementing WebTransport would be dropped when the structure is eventually serialized to the wire format. As a result, consumers cannot know the direction of the string. Using the first-strong heuristic (such as assigning the value <code class="kw" translate="no">auto</code> to an HTML <code class="kw" translate="no">dir</code> attribute when adding the reason message to a text element) is preferred to assigning an arbitrarily computed value. In addition, while the actual language of the field <samp translate="no">reason</samp> cannot be known from the data structure, <a>consumers</a> should assign a value of <code class="kw" translate="no">und</code> (or the empty value) as the language of the field for display and processing purposes.</p>
 </aside>
+
+</section>
+
+<section>
+<h2 id="defining_bidi_keywords">Defining Bidirectional Keywords in Specifications</h2>
+
+<p>A specification for a document format or protocol that includes natural language text will need to define a data field or attribute to store the direction of that natural language content. These definitions need to be consistent across the Web in order to ensure interoperability, as <a>consumers</a> of one document format will need to map the base direction to fields in documents that they produce or control the base direction in text fields for display. This section describes how to provide such a definition along with the specific content to use.</p>
+
+<p>There are two common use cases for defining content direction: (i) defining a <a>directional metadata field</a> for storing and transmitting the <a>paragraph direction</a> as a field in a data structure or (ii) defining a <a>direction attribute</a> to associate a <a>paragraph direction</a> with a given piece of natural language content.</p>
+
+<p class="definition"><dfn data-lt="directional metadata field|direction field">Directional metadata field</dfn>. A directional metadata field (or <strong>direction field</strong> for short) is a field in a data structure used to associate a paragraph direction with a given natural language string field or data value.</p>
+
+<aside class="example" id="example-direction-metadata">
+	<p><strong>Example of a <a>direction field</a>.</strong> In this JSON fragment, the <code>title</code> structure has a field <code>direction</code> which represents the <a>base direction</a> to use for the field <code>value</code>.</p>
+<pre class="json">"title": {
+	"value": "HTML و CSS: تصميم و إنشاء مواقع الويب",
+	"direction": "rtl",
+	"language": "ar"
+}</pre>
+</aside>
+
+<p class="definition"><dfn data-lt="direction attribute">Direction attribute</dfn>. A direction attribute is a field or value, usually represented by an attribute in markup languages, that provides the paragraph direction of the associated natural language string content.</p>
+
+<aside class="example">
+
+<p><strong>Example of a <a>direction attribute</a>.</strong> If the JSON in the <a href="#example-direction-metadata">above example</a> of a <a>directional metadata field</a> were received by a process that was assembling a Web page for display, it might fill in a template similar to the top line in this example to produce markup like the second line. Here the <code class="kw" translate="no">dir</code> attribute from [[HTML]] is an example of a <a>direction attribute</a>.</p>
+
+<pre class="html">
+&lt;p dir="{$title.direction}">{$title.value}&lt;/p>
+&lt;p dir="rtl">HTML و CSS: تصميم و إنشاء مواقع الويب&lt;/p>
+</pre>
+	
+</aside>
+
+<div class="req" id="bp-define-field-direction-value">
+   <p class="advisement">Use the field name <code class="kw" translate="no">direction</code> when defining a <a>directional metadata field</a> in a data structure or protocol.</p>
+</div>
+
+<p>The name <code class="kw" translate="no">direction</code> is preferred for data values. The name <code class="kw" translate="no">dir</code> is an acceptable alternative.</p>
+
+<div class="req" id="bp-define-display-dir-attribute">
+   <p class="advisement">Use the field name <code class="kw" translate="no">dir</code> when defining a <a>direction attribute</a>.</p>
+</div>
+
+<p>The name <code class="kw" translate="no">dir</code> is preferred for an attribute, such as in markup languages. Using <code class="kw" translate="no">direction</code> for an attribute is not recommended, since it is long and relatively uncommon for this use case. Note that both [[HTML]] and [[XML10]] have a built-in <code class="kw" translate="no">dir</code> attribute. A <code class="kw" translate="no">dir</code> attribute should have scope within a document and should be defined to provide bidi isolation.</p>
+
+<div class="req" id="bp-define-direction-values">
+   <p class="advisement">Define the values of a <a>directional metadata field</a> or a <a>direction attribute</a> to include and be limited to the values <code class="kw" translate="no">ltr</code>, <code class="kw" translate="no">rtl</code>, and <code class="kw" translate="no">auto</code>.</p>
+</div>
+
+<p>The value <code class="kw" translate="no">ltr</code> indicates a base direction of left-to-right, in exactly the same manner indicated by <a href="https://www.w3.org/TR/css-writing-modes/#direction">CSS writing modes</a> [[CSS-WRITING-MODES-4]]</p>
+
+<p>The value <code class="kw" translate="no">rtl</code> indicates a base direction of right-to-left, in exactly the same manner indicated by <a href="https://www.w3.org/TR/css-writing-modes/#direction">CSS writing modes</a> [[CSS-WRITING-MODES-4]]</p>
+
+<p>The value <code class="kw" translate="no">auto</code> indicates that the user agent uses the <a href="https://html.spec.whatwg.org/multipage/dom.html#the-dir-attribute">algorithm</a> for <code class="kw" translate="no">auto</code> defined by [[HTML]] to determine the base paragraph direction. This heuristic looks for the first character with a strong directionality, in a manner analogous to the Paragraph Level determination in the bidirectional algorithm [[UAX9]].</p>
+
+<p>When <code class="kw" translate="no">auto</code> is applied to multiple fields or to a document as a whole, it means that the direction should be individually derived for each field (with string-specific metadata providing an override for cases that cannot be determined automatically). It can be useful for labelling a group of mixed direction strings, when the base direction of most strings can be reliably determined using the first-strong heuristics. Whenever possible, the actual base direction (<code class="kw" translate="no">ltr</code> or <code class="kw" translate="no">rtl</code>) of individual strings should be stored or exchanged instead of <code class="kw" translate="no">auto</code>. Omitting the <a>direction field</a> is preferable when the value is truly unknown.</p>
 
 </section>
 
@@ -496,63 +557,7 @@
 </aside>
 </section>
 
-<section>
-<h2 id="defining_bidi_keywords">Defining Bidirectional Keywords in Specifications</h2>
-
-<p>A specification for a document format or protocol that includes natural language text will need to define a data field or attribute to store the direction of that natural language content. These definitions need to be consistent across the Web in order to ensure interoperability, as <a>consumers</a> of one document format will need to map the base direction to fields in documents that they produce or control the base direction in text fields for display. This section describes how to provide such a definition along with the specific content to use.</p>
-
-<p>There are two common use cases for defining content direction: (i) defining a <a>directional metadata field</a> for storing and transmitting the <a>paragraph direction</a> as a field in a data structure or (ii) defining a <a>direction attribute</a> to associate a <a>paragraph direction</a> with a given piece of natural language content.</p>
-
-<p class="definition"><dfn data-lt="directional metadata field|direction field">Directional metadata field</dfn>. A directional metadata field (or <strong>direction field</strong> for short) is a field in a data structure used to associate a paragraph direction with a given natural language string field or data value.</p>
-
-<aside class="example" id="example-direction-metadata">
-	<p><strong>Example of a <a>direction field</a>.</strong> In this JSON fragment, the <code>title</code> structure has a field <code>direction</code> which represents the <a>base direction</a> to use for the field <code>value</code>.</p>
-<pre class="json">"title": {
-	"value": "HTML و CSS: تصميم و إنشاء مواقع الويب",
-	"direction": "rtl",
-	"language": "ar"
-}</pre>
-</aside>
-
-<p class="definition"><dfn data-lt="direction attribute">Direction attribute</dfn>. A direction attribute is a field or value, usually represented by an attribute in markup languages, that provides the paragraph direction of the associated natural language string content.</p>
-
-<aside class="example">
-
-<p><strong>Example of a <a>direction attribute</a>.</strong> If the JSON in the <a href="#example-direction-metadata">above example</a> of a <a>directional metadata field</a> were received by a process that was assembling a Web page for display, it might fill in a template similar to the top line in this example to produce markup like the second line. Here the <code class="kw" translate="no">dir</code> attribute from [[HTML]] is an example of a <a>direction attribute</a>.</p>
-
-<pre class="html">
-&lt;p dir="{$title.direction}">{$title.value}&lt;/p>
-&lt;p dir="rtl">HTML و CSS: تصميم و إنشاء مواقع الويب&lt;/p>
-</pre>
-	
-</aside>
-
-<div class="req" id="bp-define-field-direction-value">
-   <p class="advisement">Use the field name <code class="kw" translate="no">direction</code> when defining a <a>directional metadata field</a> in a data structure or protocol.</p>
-</div>
-
-<p>The name <code class="kw" translate="no">direction</code> is preferred for data values. The name <code class="kw" translate="no">dir</code> is an acceptable alternative.</p>
-
-<div class="req" id="bp-define-display-dir-attribute">
-   <p class="advisement">Use the field name <code class="kw" translate="no">dir</code> when defining a <a>direction attribute</a>.</p>
-</div>
-
-<p>The name <code class="kw" translate="no">dir</code> is preferred for an attribute, such as in markup languages. Using <code class="kw" translate="no">direction</code> for an attribute is not recommended, since it is long and relatively uncommon for this use case. Note that both [[HTML]] and [[XML10]] have a built-in <code class="kw" translate="no">dir</code> attribute. A <code class="kw" translate="no">dir</code> attribute should have scope within a document and should be defined to provide bidi isolation.</p>
-
-<div class="req" id="bp-define-direction-values">
-   <p class="advisement">Define the values of a <a>directional metadata field</a> or a <a>direction attribute</a> to include and be limited to the values <code class="kw" translate="no">ltr</code>, <code class="kw" translate="no">rtl</code>, and <code class="kw" translate="no">auto</code>.</p>
-</div>
-
-<p>The value <code class="kw" translate="no">ltr</code> indicates a base direction of left-to-right, in exactly the same manner indicated by <a href="https://www.w3.org/TR/css-writing-modes/#direction">CSS writing modes</a> [[CSS-WRITING-MODES-4]]</p>
-
-<p>The value <code class="kw" translate="no">rtl</code> indicates a base direction of right-to-left, in exactly the same manner indicated by <a href="https://www.w3.org/TR/css-writing-modes/#direction">CSS writing modes</a> [[CSS-WRITING-MODES-4]]</p>
-
-<p>The value <code class="kw" translate="no">auto</code> indicates that the user agent uses the <a href="https://html.spec.whatwg.org/multipage/dom.html#the-dir-attribute">algorithm</a> for <code class="kw" translate="no">auto</code> defined by [[HTML]] to determine the base paragraph direction. This heuristic looks for the first character with a strong directionality, in a manner analogous to the Paragraph Level determination in the bidirectional algorithm [[UAX9]].</p>
-
-<p>When <code class="kw" translate="no">auto</code> is applied to multiple fields or to a document as a whole, it means that the direction should be individually derived for each field (with string-specific metadata providing an override for cases that cannot be determined automatically). It can be useful for labelling a group of mixed direction strings, when the base direction of most strings can be reliably determined using the first-strong heuristics. Whenever possible, the actual base direction (<code class="kw" translate="no">ltr</code> or <code class="kw" translate="no">rtl</code>) of individual strings should be stored or exchanged instead of <code class="kw" translate="no">auto</code>. Omitting the <a>direction field</a> is preferable when the value is truly unknown.</p>
-
-</section>
-</section>
+</section> <!-- best practices -->
 
 <section>
 <h2 id="use_cases">Requirements and Use Cases</h2>
