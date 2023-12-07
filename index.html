@@ -295,11 +295,11 @@
 		  <section id="language-maps">
 		  <h4>Language Maps</h4>
 		  
-		  <p>The world is not monolingual. Having documents that contain only a single language would mean providing many iterations of the document, one for each language, in order to localize the manifest. This also might require language negotiation when requesting the manifest.</p>
+		  <p>The world is not monolingual. Having documents that contain only a single language would mean providing many iterations of the document, one for each language, in order to localize the content. This also might require language negotiation when requesting the content.</p>
 		  
-		  <p>One way to address this is to allow multilingual values for each <a>localizable text</a> field inside the manifest document.</p>
+		  <p>One way to address this is to allow multilingual values for each <a>localizable text</a> field inside the document.</p>
 		  
-		  <p>Language selection is not merely the exact matching of language tag string values to the user's preferred locale. The usual <a href="#localizable-text-field">object representation</a> of a <a>localizable text</a> field requires that the object be deserialized in order to discover the language tag associated with the value. This can be inefficient when there are many values in a given manifest file. In these cases, the best practice is to use a language map to organize <a>localizable text</a> values. Such a map exposes the language tag for the purposes of selection, but still uses an object representation on the value side of the map, since both language and direction might need to be overridden for a given string value.</p>
+		  <p>Language selection is not merely the exact matching of language tag string values to the user's preferred locale. The usual <a href="#localizable-text-field">object representation</a> of a <a>localizable text</a> field requires that the object be deserialized in order to discover the language tag associated with the value. This can be inefficient when there are many values in a given file. In these cases, the best practice is to use a language map to organize <a>localizable text</a> values. Such a map exposes the language tag for the purposes of selection, but still uses an object representation on the value side of the map, since both language and direction might need to be overridden for a given string value.</p>
 		  
 		  <aside class="note">
 			  <p>The language map structure presented in this section is not the same as the language maps found in <a data-cite="JSON-LD#string-internationalization">JSON-LD String Internationalization</a> [[JSON-LD]].</p>
