@@ -67,7 +67,7 @@ kbd {
    font-family: Menlo, Consolas, "DejaVu Sans Mono", Monaco, monospace;
    font-size: .95em;
    color: blue;
-   page-break-inside: avoid;
+   break-inside: avoid;
    hyphens: none;
    text-transform: none;
    text-align: left;
