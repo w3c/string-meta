@@ -167,7 +167,7 @@
 		  
 		  <p>Avoid assigning or requiring language or direction metadata for <a>non-linguistic fields</a> (that is, strings that contain data that is not human language). Note that this includes <a data-cite="international-specs/#application_internal">application-internal data values</a> [[INTERNATIONAL-SPECS]].</p>
 		  
-          <p>While the value of a syntactic content item or user-supplied value will often be meaningful, implementers should be reminded that in most instances these values must be wrapped with localizable display strings for presentation to the user, particularly in cases where the values are enumerated in advance.</p>
+          <p>While the value of a <a>syntactic content</a> item or <a>user-supplied value</a> will often use a word-like token that conveys meaning to humans (as an aid in debugging, for example), the values need to consistently be wrapped with localizable display strings for presentation to the user.</p>
 
            <div class="req" id="bp-do_not_use_language_non_data">
 	          <p class="advisement">Specifications SHOULD NOT specify or require the use of language metadata for <a>syntactic content</a> or for the value of fields that cannot contain natural language text.</p>
