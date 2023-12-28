@@ -243,28 +243,28 @@
 
 <p> This combines both language and direction metadata and, if consistently adopted, makes interchange between different formats easier. Consistency between different specifications and document formats allows for the easy interchange of string data. By naming field attributes in the same way and adopting the same semantics, different specifications can more easily extract values from or add values into resources from other data sources.</p>
 
-		  </section>
+	</section>
 		  
-		  <section id="language-defaults">
-			  <h4 id="resource_wide_default">Resource-wide Defaults</h4>
+	<section id="language-defaults">
+	<h4 id="resource_wide_default">Resource-wide Defaults</h4>
 			  
-			  <p>Single-language localizable text fields are at their best if there are only a few natural language strings in a given document. When a document contains many natural language strings, this becomes inefficient. To reduce the complexity of encoding these strings, one workaround is to establish a document-level default for language and base direction. These are separate values, as language does not imply direction. There should still be the ability to override either value on any given string value by using the single-language <a>localizable text</a> field representation found <a href="#single-linguistic-field">above</a>.</p>
+	<p>When a document contains a number of natural language strings (and particularly if those string are all in the same language), using the localized string representation described above can become inefficient. To reduce the complexity of encoding these strings, specifications can establish a document-level default for language and base paragraph direction. These are separate values, as language does not imply direction. There should still be the ability to override either language or direction on any given string value by using the representation found <a href="#single-linguistic-field">above</a>.</p>
 			  
-			  <div class="req" id="bp_default_setting">
-                 <p class="advisement">Specifications MAY define a mechanism to provide the default language and the default base direction for all strings in a given resource. However, specifications MUST NOT assume that a resource-wide default is sufficient.  Even if a resource-wide setting is available, it must be possible to use string-specific metadata  to override that default.</p>
-              </div>
+	 <div class="req" id="bp_default_setting">
+        <p class="advisement">Specifications MAY define a mechanism to provide the default language and the default base direction for all strings in a given resource. However, specifications MUST NOT assume that a resource-wide default is sufficient.  Even if a resource-wide setting is available, it must be possible to use string-specific metadata to override that default.</p>
+     </div>
 
-			  <p>If your specification defines its own document level defaults, provide two optional fields:</p>
+	 <p>If your specification defines its own document level defaults, provide two optional fields:</p>
 			  
-			  <div class="req" id="bp-document-language-default">
-				  <p class="advisement">A document-level default language field SHOULD be called <code>language</code> and SHOULD be specified to contain a <a>valid</a> [[BCP47]] language tag. Specifications SHOULD specify that implementations are only require to check if a [[BCP47]] language tag is <a>well-formed</a>.</p>
-			  </div>
-              <div class="req" id="bp-document-direction-default">
-				  <p class="advisement">A document-level default <a>base direction</a> field SHOULD be called <code>direction</code> and support the values <code>ltr</code>, <code>rtl</code>, or <code>auto</code>.</p>
-		      </div>
+	 <div class="req" id="bp-document-language-default">
+		<p class="advisement">A document-level default language field SHOULD be called <code>language</code> and SHOULD be specified to contain a <a>valid</a> [[BCP47]] language tag. Specifications SHOULD specify that implementations are only require to check if a [[BCP47]] language tag is <a>well-formed</a>.</p>
+	 </div>
+     <div class="req" id="bp-document-direction-default">
+		<p class="advisement">A document-level default <a>base direction</a> field SHOULD be called <code>direction</code> and support the values <code>ltr</code>, <code>rtl</code>, or <code>auto</code>.</p>
+	</div>
 
-              <aside class="example" title="Example of document level defaults">
-              <pre class="json">
+    <aside class="example" title="Example of document level defaults">
+    <pre class="json">
 "language": "en-US",
 "direction": "ltr",
 //...
@@ -274,22 +274,19 @@
    "value": "Diese Zeichenfolge ist auf Deutsch",
    "lang": "de"
 }
-              </pre>
-              </aside>
-              
-              <p>Resource-wide defaults are particularly useful for increasing efficiency for any resources that use only a single language or have a consistent base text direction. It also reduces the overall complexity of a given document instance, since the language and direction values don't have to be repeated across many fields.</p>
+    </pre>
+    </aside>
 
-              <p>However, there will always be exceptions to the default, and so it must be possible to override the default on a string-by-string basis, where necessary.</p>
+    <p>Exceptions to the default are always a possibility, so it needs to be possible for users to override the default on a string-by-string basis.</p>
 
-              <p>First-strong heuristics are not applied to strings when the direction has been set externally using metadata. Even if a strongly directional character, such as <span class="codepoint" translate="no"><img alt="RLM" src="images/200F.png"><code class="uname">U+200F RIGHT-TO-LEFT MARK</code></span>, has been prepended to a string, the default metadata can override the presentation of the string, resuling in <a>spillover</a> effects. Therefore content needs to be able to provide string-level metadata to override the default for strings whose base direction does not match the resource-wide default.</p>
-
+    <p>First-strong heuristics are not applied to strings when the direction has been set externally using metadata. Even if a strongly directional character, such as <span class="codepoint" translate="no"><img alt="RLM" src="images/200F.png"><code class="uname">U+200F RIGHT-TO-LEFT MARK</code></span>, has been prepended to a string, resource-wide default metadata can override the presentation of the string in ways that result in <a>spillover</a> effects. Therefore content needs to be able to provide string-level metadata to override the default for strings whose base direction does not match the resource-wide default.</p>
 		  
-			  <p>For specifications that can make use of the [[JSON-LD]] <code>@context</code> mechanism, use the <code>@language</code> and <code>@direction</code> fields to supply the document level defaults.</p>
+	<p>For specifications that can make use of the [[JSON-LD]] <code>@context</code> mechanism, use the <code>@language</code> and <code>@direction</code> fields to supply the document level defaults.</p>
               
-              <aside class="note">
-				  <p><strong>Document level defaults are not a complete solution on their own.</strong> Specifications can define a document-level defaulting mechanism to assist users who often create monolingual documents. However, specifications should only use document-level defaults to augment the ability for users to provide string-specific metadata.</p>
-              </aside>
-		  </section>
+    <aside class="note">
+		<p><strong>Document level defaults are not a complete solution on their own.</strong> Specifications can define a document-level defaulting mechanism to assist users who often create monolingual documents. However, specifications should only use document-level defaults to augment the ability for users to provide string-specific metadata.</p>
+    </aside>
+	</section>
 		  
 		  
 		  <section id="language-maps">
