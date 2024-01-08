@@ -414,9 +414,15 @@
 	<p class="advisement">For string values and string fields that are known to contain <a>localizable text</a> but for which there is no possibility of language metadata from the underlying format, specifications SHOULD specify that the language of the content is unknown and recommend the language tag <code class="kw" translate="no">und</code> ("Undetermined") be associated with each string. Specifications MAY also allow the use of heuristics or the inference of the language from other field values where appropriate.</p>
 </div>
 
-<p>Some string values depend on or are defined by existing protocols or formats. Often these strings are not associated with or do not provide language or direction metadata. For example, many HTTP headers define their contents as if they were not <a>localizable text</a>, even when, in some cases, they contain natural language text. Consuming specifications sometimes need to take a dependency on strings of this nature or define a format that describes one of these strings. In these cases there will be no language or direction metadata for <a>consumers</a> to associate with the string in the specification's data structure or document format, and any metadata that the specification's data structure or document format provides (when functioning as a <a>producer</a>) will not be serialized through the underlying format.</p>
+<div class="note" id="language-like-tokens">
+	<p>Many protocols or formats make use of values that are meant to be human-decipherable tokens, while not being intended as natural language text. This allows people to make use of the value, such as using it for debugging. These can include common protocol elements where which humans expect to view and interact with the values.</p>
+	
+	<p>Common examples of these include domain names and email addresses. With greater availability of Unicode in these sorts of value spaces, display of these values might vary between systems and environments. For example, font selection, which can vary depending on language, might be different on systems with different default locales.</p>
+</div>
 
-<aside class="example">
+<p>Some specifications interact with string values defined by existing protocols or formats. Often these strings are not associated with or do not provide language or direction metadata. For example, many HTTP headers define their contents as if their contents were not <a>localizable text</a>, even when those contents are expected to be natural language text. Specifications that act as <a>consumers</a> or <a>producers</a> of these string values have no way to discover what the language or direction metadata is, nor will they have a mechanism to attach such metadata.</p>
+
+<aside class="example" title="A legacy field that cannot encode language or direction">
 <p>The following <code>dictionary</code> defined in the [[Webtransport]] specification depends on a data structure defined in [[RFC9000]].</p>
 	
 <pre>dictionary WebTransportCloseInfo {
