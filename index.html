@@ -232,8 +232,8 @@
           <p>The use of <a href="#metadata">metadata</a> for indicating <a>paragraph direction</a> is preferred because it avoids requiring the consumer to interpolate the direction using methods such as <a href="#firststrong">first strong</a> or use of methods which require modification of the data itself (such as the <a href="#rlm">insertion of RLM/LRM markers</a> or <a href="#paired">bidirectional controls</a>).</p>
 
 <aside class="note">
-    <p>Some schema languages, such as the RDF suite of specifications, have no built-in mechanism for associating base direction metadata with natural language string values. It is up to specifications that use these specifications to define structures and adopt best practices that result in clean interchange of language and direction metadata.</p>
-    <p>For example, [[JSON-LD]] provides a document-level base direction using the <code class="kw" translate="no">@context</code> mechanism and defines the <code class="kw" translate="no">i18n</code> namespace as an extension of existing RDF datatypes which can be used to set the language and/or base direction of string values.</p>
+    <p>Some schema languages, such as the RDF suite of specifications, have no built-in mechanism for associating [=paragraph direction=] metadata with natural language string values. It is up to specifications that use these specifications to define structures and adopt best practices that result in clean interchange of language and direction metadata.</p>
+    <p>For example, [[JSON-LD]] provides a document-level [=paragraph direction=] using the <code class="kw" translate="no">@context</code> mechanism and defines the <code class="kw" translate="no">i18n</code> namespace as an extension of existing RDF datatypes which can be used to set the language, [=paragraph direction=], or both of string values.</p>
 </aside>
 
 
@@ -251,7 +251,7 @@
 	<p>When a document contains a number of natural language strings (and particularly if those string are all in the same language), using the localized string representation described above can become inefficient. To reduce the complexity of encoding these strings, specifications can establish a document-level default for language and base paragraph direction. These are separate values, as language does not imply direction. There should still be the ability to override either language or direction on any given string value by using the representation found <a href="#single-linguistic-field">above</a>.</p>
 			  
 	 <div class="req" id="bp_default_setting">
-        <p class="advisement">Specifications MAY define a mechanism to provide the default language and the default base direction for all strings in a given resource. However, specifications MUST NOT assume that a resource-wide default is sufficient.  Even if a resource-wide setting is available, it must be possible to use string-specific metadata to override that default.</p>
+        <p class="advisement">Specifications MAY define a mechanism to provide the default language and the default [=paragraph direction=] for all strings in a given resource. However, specifications MUST NOT assume that a resource-wide default is sufficient.  Even if a resource-wide setting is available, it must be possible to use string-specific metadata to override that default.</p>
      </div>
 
 	 <p>If your specification defines its own document level defaults, provide two optional fields:</p>
@@ -260,7 +260,7 @@
 		<p class="advisement">A document-level default language field SHOULD be called <code>language</code> and SHOULD be specified to contain a <a>valid</a> [[BCP47]] language tag. Specifications SHOULD specify that implementations are only require to check if a [[BCP47]] language tag is <a>well-formed</a>.</p>
 	 </div>
      <div class="req" id="bp-document-direction-default">
-		<p class="advisement">A document-level default <a>base direction</a> field SHOULD be called <code>direction</code> and support the values <code>ltr</code>, <code>rtl</code>, or <code>auto</code>.</p>
+		<p class="advisement">A document-level default <a>paragraph direction</a> field SHOULD be called <code>direction</code> and support the values <code>ltr</code>, <code>rtl</code>, or <code>auto</code>.</p>
 	</div>
 
     <aside class="example" title="Example of document level defaults">
@@ -345,11 +345,11 @@
 </section>
 
 <div class="req" id="bp_use_heuristics_1">
-<p class="advisement">For the case where the direction is not known, specify that consumers should use first-strong heuristics to identify the base direction of strings.</p>
+<p class="advisement">For the case where the paragraph direction is not known, specify that consumers should use first-strong heuristics to identify the [=paragraph direction=] of each string.</p>
 </div>
 
 <p>If metadata is not available, consumers of strings should use heuristics, preferably based on the Unicode Standard's first-strong detection algorithm, to detect the base direction of a string.</p>
-<p>The <a href="#firststrong">first-strong algorithm</a> looks for the first strongly-directional character in a string (skipping certain preliminary substrings), and assumes that it represents the <a>paragraph direction</a> of the string as a whole. However, the first strong directional character doesn't always coincide with the actual base direction of the string as a whole, so it should be possible to  provide metadata, where needed, to address this problem.</p>
+<p>The <a href="#firststrong">first-strong algorithm</a> looks for the first strongly-directional character in a string (skipping certain preliminary substrings), and assumes that it represents the <a>paragraph direction</a> of the string as a whole. However, the first strong directional character doesn't always coincide with the actual or desired [=paragraph direction=] of the string as a whole, so it should be possible to  provide metadata, where needed, to address this problem.</p>
 
 <div class="req" id="bp_using_rlm_lrm">
 <p class="advisement">If relying on first-strong heuristics, allow content developers to use RLM/LRM at the beginning of a string where it is necessary to force a particular base direction, but do not prepend one of these characters to existing strings.</p>
@@ -366,7 +366,7 @@
 <p class="advisement">Specifications SHOULD NOT allow a <a>paragraph direction</a> to be <a href="#script_subtag">interpolated from available language metadata</a> unless direction metadata is not available and cannot otherwise be provided.</p>
 </div>
 
-<p>Not all resources make use of the available metadata mechanisms. The script subtag of a language tag (or the "likely" script subtag based on [[BCP47]] and [[LDML]]) can sometimes be used to infer a base direction when other data is not available. Using language information is a "last resort" and specifications SHOULD NOT use it as the primary way of indicating base direction: make the effort to provide for metadata.</p>
+<p>Not all resources make use of the available metadata mechanisms. The script subtag of a language tag (or the "likely" script subtag based on [[BCP47]] and [[LDML]]) can sometimes be used to infer a [=paragraph direction=] when other data is not available. Using language information is a "last resort" and specifications SHOULD NOT use it as the primary way of indicating paragraph direction: make the effort to provide for metadata.</p>
 
 
 <section id="technology_specific_solutions">
@@ -377,7 +377,7 @@
 </div>
 
 
-<p>For document formats that use it, [[JSON-LD]] includes some data structures that are helpful in assigning language (but not base direction) metadata to collections of strings (including entire resources). Notably, it defines what it calls “string internationalization” in the form of a context-scoped <code class="kw" translate="no">@language</code> value which can be associated with blocks of JSON or within individual objects. There is no definition for base direction, so the <code class="kw" translate="no">@context</code> mechanism does not currently address all concerns raised by this document.</p>
+<p>For document formats that use it, [[JSON-LD]] includes some data structures that are helpful in assigning language (but not paragraph direction) metadata to collections of strings (including entire resources). Notably, it defines what it calls "string internationalization" in the form of a context-scoped <code class="kw" translate="no">@language</code> value which can be associated with blocks of JSON or within individual objects. There is no definition for base direction, so the <code class="kw" translate="no">@context</code> mechanism does not currently address all concerns raised by this document.</p>
 
 
 <div class="req" id="bp-use_jsonld_i18n_namespace">
@@ -438,14 +438,14 @@
 <section>
 <h2 id="defining_bidi_keywords">Defining Bidirectional Keywords in Specifications</h2>
 
-<p>A specification for a document format or protocol that includes natural language text values will need to define a data field or attribute to store the <a>paragraph direction</a> for each natural language content value. These definitions need to be consistent across the Web in order to ensure interoperability, because <a>consumers</a> of one document format will need to map the <a>paragraph direction</a> for values they receive to fields that they produce or will need to control the base direction when displaying the content. This section describes how to provide such a definition along with the specific content to use.</p>
+<p>A specification for a document format or protocol that includes natural language text values will need to define a data field or attribute to store the <a>paragraph direction</a> for each natural language content value. These definitions need to be consistent across the Web in order to ensure interoperability, because <a>consumers</a> of one document format will need to map the <a>paragraph direction</a> for values they receive to fields that they produce or will need to control the <a>paragraph direction</a> of each string when displaying the content. This section describes how to provide such a definition along with the specific content to use.</p>
 
 <p>There are two common use cases for defining content direction: (i) defining a <a>directional metadata field</a> for storing and transmitting the <a>paragraph direction</a> as a field in a data structure or (ii) defining a <a>direction attribute</a> to associate a <a>paragraph direction</a> with a given piece of natural language content.</p>
 
 <p class="definition"><dfn data-lt="directional metadata field|direction field">Directional metadata field</dfn>. A directional metadata field (or <strong>direction field</strong> for short) is a field in a data structure used to associate a paragraph direction with a given natural language string field or data value.</p>
 
 <aside class="example" id="example-direction-metadata">
-	<p><strong>Example of a <a>direction field</a>.</strong> In this JSON fragment, the <code>title</code> structure has a field <code>direction</code> which represents the <a>base direction</a> to use for the field <code>value</code>.</p>
+	<p><strong>Example of a <a>direction field</a>.</strong> In this JSON fragment, the <code>title</code> structure has a field <code>direction</code> which represents the <a>paragraph direction</a> to use for the field <code>value</code>.</p>
 <pre class="json">"title": {
 	"value": "HTML و CSS: تصميم و إنشاء مواقع الويب",
 	"direction": "rtl",
@@ -482,9 +482,9 @@
    <p class="advisement">Define the values of a <a>directional metadata field</a> or a <a>direction attribute</a> to include and be limited to the values <code class="kw" translate="no">ltr</code>, <code class="kw" translate="no">rtl</code>, and <code class="kw" translate="no">auto</code>.</p>
 </div>
 
-<p>The value <code class="kw" translate="no">ltr</code> indicates a base direction of left-to-right, in exactly the same manner indicated by <a href="https://www.w3.org/TR/css-writing-modes/#direction">CSS writing modes</a> [[CSS-WRITING-MODES-4]]</p>
+<p>The value <code class="kw" translate="no">ltr</code> indicates a direction of left-to-right, in exactly the same manner indicated by <a href="https://www.w3.org/TR/css-writing-modes/#direction">CSS writing modes</a> [[CSS-WRITING-MODES-4]]</p>
 
-<p>The value <code class="kw" translate="no">rtl</code> indicates a base direction of right-to-left, in exactly the same manner indicated by <a href="https://www.w3.org/TR/css-writing-modes/#direction">CSS writing modes</a> [[CSS-WRITING-MODES-4]]</p>
+<p>The value <code class="kw" translate="no">rtl</code> indicates a direction of right-to-left, in exactly the same manner indicated by <a href="https://www.w3.org/TR/css-writing-modes/#direction">CSS writing modes</a> [[CSS-WRITING-MODES-4]]</p>
 
 <p>The value <code class="kw" translate="no">auto</code> indicates that the user agent uses the <a href="https://html.spec.whatwg.org/multipage/dom.html#the-dir-attribute">algorithm</a> for <code class="kw" translate="no">auto</code> defined by [[HTML]] to determine the base paragraph direction. This heuristic looks for the first character with a strong directionality, in a manner analogous to the Paragraph Level determination in the bidirectional algorithm [[UAX9]].</p>
 
@@ -521,7 +521,7 @@
 
 
 <aside class="example">
-<p>Here is the record used in the <a href="#base_example">original example</a> with a record-level default language and base direction added. It also shows the use of a Localizable string to override the document-level defaults for the <code class="kw">author</code> field. Note that this "worked example" is not valid.</p>
+<p>Here is the record used in the <a href="#base_example">original example</a> with a record-level default language and default paragraph direction added. It also shows the use of a Localizable string to override the document-level defaults for the <code class="kw">author</code> field. Note that this "worked example" is not valid.</p>
 <pre>
 {
     "@context": { 
@@ -591,9 +591,9 @@
 <p>Similarly, direction metadata is important to the Web. When a string 
 contains text in a script that runs right-to-left (RTL), it must be 
 possible to eventually display that string correctly when it reaches an 
-end user. For that to happen, it is necessary to establish what <a>base 
+end user. For that to happen, it is necessary to establish what <a>paragraph 
 direction</a> needs to be applied to the string as a whole. The 
-appropriate base direction cannot always be deduced by simply looking 
+appropriate paragraph direction cannot always be deduced by simply looking 
 at the string; even where it is possible, the producer and consumer of 
 the string  need to use the same heuristics to interpret the 
 direction.</p>
@@ -700,15 +700,15 @@ data in an interchange format is not a good idea. These include:</p>
 <section>
 <h3 id="what_consumers_do">What consumers need to do to support direction</h3>
 <p>Given the <a href="">use cases</a> for bidirectional text, it will be clear that a consumer cannot simply insert a string into a target location without some additional work or preparation taking place, first to establish the appropriate <a>paragraph direction</a> for the string being inserted, and secondly to apply bidi isolation around the string.</p>
-<p>This requires the presence of markup or Unicode formatting controls around the string. If the string's base direction is opposite that into which it is being inserted, the markup or control codes need to tightly wrap the string. Strings that are inserted adjacent to each other all need to be individually wrapped in order to avoid the spillover issues we saw in the previous section.</p>
+<p>This requires the presence of markup or Unicode formatting controls around the string. If the string's [=paragraph direction=] is opposite that of the content into which it is being inserted, the markup or control codes need to tightly wrap the string. Strings that are inserted adjacent to each other all need to be individually wrapped in order to avoid the spillover issues we saw in the previous section.</p>
 <p>[[HTML5]] provides base direction controls and isolation for any inline element when the <code class="kw" translate="no">dir</code> attribute is used, or when the <code class="kw" translate="no">bdi</code> element is used. When inserting strings into plain text environments, isolating Unicode formatting characters need to be used. (Unfortunately, support for the isolating characters, which the Unicode Standard recommends as the default for plain text/non-markup applications, is still not universal.)</p>
 <p>The trick is to ensure that the direction information provided by the markup or control characters reflects the <a>paragraph direction</a> of the string.</p>
 </section>
 </section>
 
 <section>
-<h2 id="bidi-approaches">Approaches Considered for Identifying the Base Direction</h2>
-<p>The fundamental problem for bidirectional text values is how a <a>consumer</a> of a string will know what base direction to use for that string when it is eventually displayed to a user. Note that some of these approaches for identifying or estimating the base direction have utility in specific applications and are in use in different specifications such as [[HTML5]]. The issue here is which are appropriate to adopt generally and specify for use as a best practice in document formats.</p>
+<h2 id="bidi-approaches">Approaches Considered for Identifying the Paragraph Direction</h2>
+<p>The fundamental problem for bidirectional text values is how a <a>consumer</a> of a string will know what [=paragraph direction=] to use for that string when it is eventually displayed to a user. Note that some of these approaches for identifying or estimating the paragraph direction have utility in specific applications and are in use in different specifications such as [[HTML5]]. The issue here is which are appropriate to adopt generally and specify for use as a best practice in document formats.</p>
 
 <section id="firststrong">
   <h3>First-strong property detection</h3>
@@ -717,13 +717,13 @@ data in an interchange format is not a good idea. These include:</p>
 <h4>How it works</h4>
 <p>A producer doesn't need to do anything.</p>
 <p>The string is stored as it is.</p>
-<p>Consumers must look for the first character in the string with a strong Unicode directional property, and set the base direction to match it. They then take appropriate action  to ensure that the string will be displayed as needed. This is not quite so simple as it may appear, for the following reasons:</p>
+<p>Consumers must look for the first character in the string with a strong Unicode directional property, and set the paragraph direction to match it. They then take appropriate action  to ensure that the string will be displayed as needed. This is not quite so simple as it may appear, for the following reasons:</p>
 <ol>
 <li>Characters at the start of a string without a strong direction (eg. punctuation, numbers, etc) and isolated sequences (ie. sequences of characters surrounded by RLI/LRI/FSI...PDI formatting characters) within a string must be skipped in order to find the first strong character.</li>
 <li>The detection algorithm needs to be able to handle markup at the start of the string. It needs to be able to tell whether the markup is just string text, or whether the markup needs to be parsed in the target location – in which case it must understand the markup, and understand any direction-related information that is carried in the markup.</li>
 </ol>
-<p>First-strong detection is only needed where the required base direction is not already known. If direction is indicated for a string by metadata, either string-specific or via a resource-wide declaration, then first-strong heuristics should not be invoked. For example, first-strong heuristics would produce the wrong result for a string such as &quot;<span lang="ar" dir="rtl">HTML و CSS: تصميم و إنشاء مواقع الويب</span>&quot;. This can be corrected using metadata, the use of which signifies informed intention, and you would not need or want to apply heuristics that would then make the result incorrect.</p>
-<p>However, if there is no mechanism for the application of metadata, or if there is such a mechanism but the content developer omitted to use it, then first-strong heuristics can be helpful to establish base direction in many, though not all, cases. The application of strongly-directional formatting characters can help produce correct results for plain text strings such as the example just quoted, but it is not always possible to apply those (see [[[#rlm]]]).</p>
+<p>First-strong detection is only needed where the required [=paragraph direction=] is not already known. If direction is indicated for a string by metadata, either string-specific or via a resource-wide declaration, then first-strong heuristics should not be invoked. For example, first-strong heuristics would produce the wrong result for a string such as &quot;<span lang="ar" dir="rtl">HTML و CSS: تصميم و إنشاء مواقع الويب</span>&quot;. This can be corrected using metadata, the use of which signifies informed intention, and you would not need or want to apply heuristics that would then make the result incorrect.</p>
+<p>However, if there is no mechanism for the application of metadata, or if there is such a mechanism but the content developer omitted to use it, then first-strong heuristics can be helpful to establish <a>base direction</a> in many, though not all, cases. The application of strongly-directional formatting characters can help produce correct results for plain text strings such as the example just quoted, but it is not always possible to apply those (see [[[#rlm]]]).</p>
 </section>
 
 <section>
@@ -757,7 +757,7 @@ data in an interchange format is not a good idea. These include:</p>
 <section>
 <h4>Additional notes</h4>
 
-<p>Although first-strong detection is outlined in the Unicode Bidirectional Algorithm (UBA) [[UAX9]], it is not the only possible higher-level protocol mentioned for estimating string direction. For example, Twitter and Facebook currently use different default heuristics for guessing the base direction of text – neither use just simple first-strong detection, and one uses a completely different method.</p>
+<p>Although first-strong detection is outlined in the Unicode Bidirectional Algorithm (UBA) [[UAX9]], it is not the only possible higher-level protocol mentioned for estimating string direction. For example, X (formerly known as Twitter) and Facebook currently use different default heuristics for guessing the base direction of text &mdash; neither use just simple first-strong detection, and one uses a completely different method.</p>
 </section>
 </section>
 
@@ -782,19 +782,19 @@ data in an interchange format is not a good idea. These include:</p>
 <p>Metadata indicating the default direction for all the strings in a resource could also be set using an appropriate field.</p>
 <section>
 <h4>How it works</h4>
-<p>A producer ascertains the base direction of the string and adds that to a metadata field that accompanies the string when it is stored or transmitted.</p>
+<p>A producer ascertains the [=paragraph direction=] of the string and adds that to a metadata field that accompanies the string when it is stored or transmitted.</p>
 <p>There are several approaches to using metadata:</p>
 <ol>
 <li>Label every string with a <a>paragraph direction</a>.</li>
 <li>Provide a document-level default for <a>paragraph direction</a> and only include metadata for strings whose value is different. The value <code>auto</code> is used when the direction of a string is not known.</li>
 <li>Rely on the consumer to do <a href="#firststrong">first-strong detection</a>, and label only those strings which would produce the wrong result (that is, a right-to-left string that starts with left-to-right strong characters).</li>
 </ol>
-<p>If storing or transmitting a set of strings at a time, it helps to have a field for the resource as a whole that sets a global, default <a>paragraph direction</a> which can be inherited by all strings in the resource. Note that in addition to a global field, you still need the possibility of attaching string-specific metadata fields in cases where a string's <a>paragraph direction</a> is not the same as the default value. The base direction set on an individual string must always override the default.</p>
+<p>If storing or transmitting a set of strings at a time, it helps to have a field for the resource as a whole that sets a global, default <a>paragraph direction</a> which can be inherited by all strings in the resource. Note that in addition to a global field, you still need the possibility of attaching string-specific metadata fields in cases where a string's <a>paragraph direction</a> is not the same as the default value. The [=paragraph direction=] set on an individual string must always override the default.</p>
 <p>Consumers would need to understand how to read the metadata sent with a string, and would need to apply first-strong heuristics in the absence of metadata.</p>
 
 <p>The use of the <a href="#use-the-localizable-data-structure">Localizable</a> dictionary structure is RECOMMENDED for individual values in JSON-based document formats, as it combines both language and direction metadata and, if consistently adopted, makes interchange between different formats easier.</p>
 		
-<p class=note>As noted <a href="#localizable-dictionary">here</a>, [[JSON-LD]] includes some data structures that are helpful in assigning language (but not base direction) metadata to collections of strings (including entire resources). These gaps in support for pre-built metadata at the resource or item level are one of the key reasons for this documents development.</p>
+<p class=note>As noted <a href="#localizable-dictionary">here</a>, [[JSON-LD]] includes some data structures that are helpful in assigning language (but not direction) metadata to collections of strings (including entire resources). These gaps in support for pre-built metadata at the resource or item level are one of the key reasons for this documents development.</p>
 </section>
 
 
@@ -802,8 +802,8 @@ data in an interchange format is not a good idea. These include:</p>
 <section>
 <h4>Advantages</h4>
 
-<p>Passing metadata as separate data value from the string provides a simple, effective and efficient method of communicating the intended base direction without affecting the actual content of the string.</p>
-<p>If every string is labelled for direction, or the direction for all strings can be ascertained by applying the global setting and any string-specific deviations, it avoids the need to inspect and run heuristics on the string to determine its base direction.</p>
+<p>Passing metadata as separate data value from the string provides a simple, effective and efficient method of communicating the intended [=paragraph direction=] without affecting the actual content of the string.</p>
+<p>If every string is labelled for direction, or the direction for all strings can be ascertained by applying the global setting and any string-specific deviations, it avoids the need to inspect and run heuristics to determine each separate string's [=paragraph direction=].</p>
 </section>
 
 
@@ -828,14 +828,14 @@ data in an interchange format is not a good idea. These include:</p>
 
 <section>
 <h4>How it works</h4>
-<p>A producer ascertains the  base direction of the string and adds an marker character (either <span class="unicode">U+200F RIGHT-TO-LEFT MARK</span> (RLM) or <span class="unicode">U+200E LEFT-TO-RIGHT MARK</span> (LRM)) to the beginning of the string. The marker is not functional, ie. it will not automatically apply a base direction to the string that can be used by the consumer, it is simply a marker.</p>
+<p>A producer ascertains the  [=paragraph direction=] of the string and adds an marker character (either <span class="unicode">U+200F RIGHT-TO-LEFT MARK</span> (RLM) or <span class="unicode">U+200E LEFT-TO-RIGHT MARK</span> (LRM)) to the beginning of the string. The marker is not functional, ie. it will not automatically apply a base direction to the string that can be used by the consumer, it is simply a marker.</p>
 <p>There are a number of possible approaches:</p>
 <ol>
 <li>Add a marker to every string (not recommended).</li>
 <li>Rely on the consumer to do <a href="#firststrong">first-strong detection</a>, and add a marker to only those strings which would produce the wrong result (eg. a RTL string that starts with LTR strong characters).</li>
 <li>Assume a default of LTR (no marker), and apply only RLM markers.</li>
 </ol>
-<p>Consumers apply first-strong heuristics to detect the base direction for the string. The RLM and LRM characters are strongly typed, directionally, and should therefore indicate the appropriate base direction.</p>
+<p>Consumers apply first-strong heuristics to detect the paragraph direction for the string. The RLM and LRM characters are strongly typed directionally, and should therefore result in detecting the appropriate base direction.</p>
 <p>As described in [[[#firststrong]]], this approach is not relevant if directional information is provided via metadata.</p>
 </section>
 
@@ -859,13 +859,7 @@ data in an interchange format is not a good idea. These include:</p>
 <p>A significant  problem with this, especially on mobile devices, is the 
   availability or inconvenience of inputting an RLM/LRM character. The keyboards of mobile devices generally do not provide keys for RLM/LRM characters. Perhaps more important, because the characters are invisible and because Unicode 
   bidi is complicated, it can be difficult for the user to know how to use the character effectively. In fact, a large percentage of users don't actually know what these characters are or what they do.</p>
-<p>Furthermore, if a person types information into, say, an HTML form in a RTL page or uses shortcut keys to set the direction for the form field, strings will look correct without the need to add 
-  RLM/LRM. However, 
-  used outside of that context the string would look incorrect unless it is associated with information about the required base direction. Similarly, strings 
-  scraped from a web page that has <code class="kw" 
-  translate="no">dir=rtl</code> set in the <code class="kw" 
-  translate="no">html</code> element would not normally have or need an 
-RLM/LRM character at the start of the string in HTML.</p>
+<p>Furthermore, if a person types information into, say, an HTML form in a RTL page or uses shortcut keys to set the direction for the form field, the strings will look correct without the need to add RLM/LRM. However, used outside of that context the string would look incorrect unless it is associated with information about the required [=paragraph direction=]. Similarly, strings scraped from a web page that has <code class="kw" translate="no">dir=rtl</code> set in the <code class="kw" translate="no">html</code> element would not normally have or need an RLM/LRM character at the start of the string in HTML.</p>
 <p>It may be possible for the steps used by a producer  to include an examination of the original context of the string for directional information (for example, by testing the computed direction of an HTML form field), followed by automatic insertion of an RLM/LRM mark into the beginning of the string where necessary. An issue with this approach is that it changes the string value and identity. This may also create problems for working with string length 
 or pointer positions, especially if some producers add markers and others don't.</p>
 <p>If directional information is contained in markup that will be 
@@ -898,7 +892,7 @@ access, to the original context of the string. Many document formats are generat
 
 <section>
 <h4>How it works</h4>
-<p>A producer ascertains the base direction of the string and adds a directional formatting character (one of <span class="unicode">U+2066 LEFT-TO-RIGHT ISOLATE</span> (LRI), <span class="unicode">U+2067 RIGHT-TO-LEFT ISOLATE</span> (RLI),<span class="unicode"> U+2068 FIRST STRONG ISOLATE</span> (FSI),<span class="unicode"> U+202A LEFT-TO-RIGHT EMBEDDING</span> (LRE), or <span class="unicode">U+202B RIGHT-TO-LEFT EMBEDDING</span> (RLE)) to the beginning of the string, and  <span class="unicode">U+2069 POP DIRECTIONAL ISOLATE</span> (PDI) or  <span class="unicode">U+202C POP DIRECTIONAL FORMATTING</span> (PDF) to the end.</p>
+<p>A producer ascertains the [=paragraph direction=] of the string and adds a directional formatting character (one of <span class="unicode">U+2066 LEFT-TO-RIGHT ISOLATE</span> (LRI), <span class="unicode">U+2067 RIGHT-TO-LEFT ISOLATE</span> (RLI),<span class="unicode"> U+2068 FIRST STRONG ISOLATE</span> (FSI),<span class="unicode"> U+202A LEFT-TO-RIGHT EMBEDDING</span> (LRE), or <span class="unicode">U+202B RIGHT-TO-LEFT EMBEDDING</span> (RLE)) to the beginning of the string, and  <span class="unicode">U+2069 POP DIRECTIONAL ISOLATE</span> (PDI) or  <span class="unicode">U+202C POP DIRECTIONAL FORMATTING</span> (PDF) to the end.</p>
 <p>There are a number of possible approaches:</p>
 <ol>
 <li>Add the formatting codes to every string.</li>
@@ -990,12 +984,12 @@ access, to the original context of the string. Many document formats are generat
 <ol>
 <li>Label every string for language, including a script subtag as needed. <a>Consumers</a> may need to compute the script subtag when the <a>producer</a> does not provide one.</li>
 <li>It might be reasonable to assume a default of LTR for all strings unless marked with a language tag whose script subtag (either present or implied) indicates RTL.</li>
-<li>Alternatively, limit the use of script subtag metadata to situations where <a href="#firststrong">first-strong heuristics</a> are expected to fail &mdash; provided that such cases can be identified, and appropriate action taken by the producer (not always reliable). <a>Consumers</a> would then need to use first-strong heuristics in the absence of a script subtag in order to identify the appropriate base direction. The use of script subtags should not, however, be restricted to strings that need to indicate direction; it is perfectly valid to associate a script subtag with any string.</li>
+<li>Alternatively, limit the use of script subtag metadata to situations where <a href="#firststrong">first-strong heuristics</a> are expected to fail &mdash; provided that such cases can be identified, and appropriate action taken by the producer (not always reliable). <a>Consumers</a> would then need to use first-strong heuristics in the absence of a script subtag in order to identify the appropriate [=paragraph direction=]. The use of script subtags should not, however, be restricted to strings that need to indicate direction; it is perfectly valid to associate a script subtag with any string.</li>
 <li>Set a default language for a set of strings at a higher level, but provide a mechanism to override that default for a given string where needed.</li>
 </ol>
-<p><a>Consumers</a> extract the script subtag from the language tag associated with each string, computing the string's base direction as necessary. Script subtags associated with RTL scripts are used to assign a base direction of RTL to their associated strings.</p>
+<p><a>Consumers</a> extract the script subtag from the language tag associated with each string, computing the string's [=paragraph direction=] as necessary. Script subtags associated with RTL scripts are used to assign a direction of RTL to their associated strings.</p>
 
-<p>Language information MUST use [[BCP47]] language tags. The portion of the language tag that carries the information is the script subtag, not the primary language subtag. For example, Azeri may be written LTR (with the Latin or Cyrillic scripts) or RTL (with the Arabic script).  Therefore, the subtag <code class="kw" translate="no">az</code> is insufficient to clarify intended base direction. A language tag such as <code class="kw" translate="no">az-Arab</code> (Azeri as written in the Arabic script), however, can generally be relied upon to indicate that the overall base direction should be RTL. </p>
+<p>Language information MUST use [[BCP47]] language tags. The portion of the language tag that carries the information is the script subtag, not the primary language subtag. For example, Azeri may be written LTR (with the Latin or Cyrillic scripts) or RTL (with the Arabic script).  Thus, the subtag <code class="kw" translate="no">az</code> is insufficient to clarify intended [=paragraph direction=]. A language tag such as <code class="kw" translate="no">az-Arab</code> (Azeri as written in the Arabic script), however, can generally be relied upon to indicate that the [=paragraph direction=] should be RTL. </p>
  
 <aside class="note">
 	
@@ -1011,8 +1005,8 @@ access, to the original context of the string. Many document formats are generat
 <h4>Advantages</h4>
 
 <p>There is no need to inspect or change the string itself.</p>
-<p>This approach avoids the issues associated with first-strong detection when the first-strong character is not indicative of the necessary base direction for the string, and avoids issues relating to the interpretation of markup.</p>
-<p>Note that a string that begins with markup that sets a language for the string text content (eg. <code translate="no">&lt;cite lang="zh-Hans"&gt;</code>) is not problematic here, since that language declaration is not expected to play into the setting of the base direction.</p>
+<p>This approach avoids the issues associated with first-strong detection when the first-strong character is not indicative of the necessary [=paragraph direction=] for the string, and avoids issues relating to the interpretation of markup.</p>
+<p>Note that a string that begins with markup that sets a language for the string text content (eg. <code translate="no">&lt;cite lang="zh-Hans"&gt;</code>) is not problematic here, since that language declaration is not expected to play into the setting of the [=paragraph direction=].</p>
 </section>
 
 
@@ -1020,9 +1014,9 @@ access, to the original context of the string. Many document formats are generat
 <section>
 <h4>Issues</h4>
 <p>The use of metadata as outlined above is a much better approach, if it is available. This script-related approach is only for use where that approach is unavailable, for legacy reasons.</p>
-<p>There are many strings which are not language-specific but which absolutely need to be associated with a particular base direction for correct consumption. For example, MAC addresses inserted into a RTL context need to be displayed with a LTR overall base direction and isolation from the surrounding text. It's not clear how to distinguish these cases from others (in a way that would be feasible when using direction metadata). Special language tags, such as <code class="kw">zxx</code> (Non-Linguistic), exist for identifying this type of content, but usually data fields of this type omit language information altogether, since it is not applicable.</p>
+<p>There are many strings which are not language-specific but which absolutely need to be associated with a particular [=paragraph direction=] for correct consumption. For example, MAC addresses inserted into a RTL context need to be displayed with a LTR overall base direction and also be isolated from the surrounding text. It's not clear how to distinguish these cases from others (in a way that would be feasible when using direction metadata). Special language tags, such as <code class="kw">zxx</code> (Non-Linguistic), exist for identifying this type of content, but usually data fields of this type omit language information altogether, since it is not applicable.</p>
 <p>The list of script subtags may be added to in future. In that case, any subtags that indicate a default RTL direction need to be added to the lists used by the consumers of the strings.</p>
-<p>There are some rare situations where the appropriate base direction cannot be identified from the script subtag, but these are really limited to archaic usage of text.  For example, Japanese and Chinese text prior to World War 2 was often written RTL, rather than LTR. Languages such as those written using Egyptian Hieroglyphs, or the Tifinagh Berber script, could formerly be written either LTR or RTL, however the default for scholastic research tends to LTR.</p>
+<p>There are some rare situations where the appropriate [=paragraph direction=] cannot be identified from the script subtag, but these are really limited to archaic usage of text.  For example, Japanese and Chinese text prior to World War 2 was often written RTL, rather than LTR. Languages such as those written using Egyptian Hieroglyphs, or the Tifinagh Berber script, could formerly be written either LTR or RTL, however the default for scholastic research tends to LTR.</p>
 </section>
 
 
@@ -1083,7 +1077,7 @@ access, to the original context of the string. Many document formats are generat
 	
 	<h4 id="dir-approach-new-datatype-how">How it works</h4>
     <p>This is similar to the idea of sending metadata with a string as discussed previously, however the metadata is not stored in a completely separate field (as in  <a href="#metadata"></a>), or inserted into the string itself (as in <a href="#rlm"></a>), but is associated with the string as part of the string's serialization format.</p>
-    <p>Some datatypes, such as [[RDF-PLAIN-LITERAL]], already exist that allow for <em>language</em> metadata to be serialized as part of a string value. However, these do not include a consideration for base direction. This might be addressed by defining a new datatype (or extending an existing one) that document formats could then use to serialize natural language strings that includes both language and direction metadata.</p>
+    <p>Some datatypes, such as [[RDF-PLAIN-LITERAL]], already exist that allow for <em>language</em> metadata to be serialized as part of a string value. However, these do not include a consideration for direction. This might be addressed by defining a new datatype (or extending an existing one) that document formats could then use to serialize natural language strings that includes both language and direction metadata.</p>
     <p>[[JSON-LD]] 1.1. added the <code class="kw" translate="no">i18n</code> Namespace to permit JSON documents to serialize language and direction metadata directly with a string value. It provides a deserialization to RDF for specifications that need it.</p>
   
 <aside class="example">  
@@ -1100,7 +1094,7 @@ myDataString:          "978-0-123-4567-X"^^i18n:_ltr          // language-neutra
 <p>Note that the last string does not include language information  because it is an internal data value, but <em>does</em> include direction information because strings of this kind <em>must</em> be presented in the LTR order.</p>
 <p>A <a>producer</a> would need to attach the <a>paragraph direction</a> to each string as needed.</p>
 <p>Each <a>consumer</a> should use <a href="#firststrong">first-strong heuristics</a> for those strings that don't use this approach or do not contain <a>paragraph direction</a>. The <a>producer</a> would then only add <a>paragraph direction</a> information if the first-strong approach would otherwise produce the wrong result. This might simplify the management of strings and the amount of data to be transmittted, because the number of strings requiring metadata is relatively small.</p>
-<p>The <a>consumer</a> would look to see whether the string has metadata associated with it, in which case it would set the indicated base direction. Otherwise, it would use first-strong heuristics to determine the base direction of the string.</p>
+<p>The <a>consumer</a> would look to see whether the string has metadata associated with it, in which case it would set the indicated [=paragraph direction=]. Otherwise, it would use first-strong heuristics to determine the paragraph direction of the string.</p>
 
   </section>
 <section>
@@ -1427,7 +1421,7 @@ myDataString:          "978-0-123-4567-X"^^i18n:_ltr          // language-neutra
 members of the inheriting dictionary.</dd>
 <dt><dfn data-dfn-for="localizable" data-dfn-type="dfn" id="localizable-dir" data-idl="" data-title="dir" class="lint-ignore"><code>
 dir</code></dfn> member</dt>
-<dd>Specifies the base direction for the human-readable members of an inheriting dictionary.</dd></dl>
+<dd>Specifies the [=paragraph direction=] for the human-readable members of an inheriting dictionary.</dd></dl>
 <div data-dfn-for="TextDirection" data-link-for="TextDirection" id="textdirection-enum" typeof="bibo:Chapter" resource="#textdirection-enum" property="bibo:hasPart">
 	<p id="h-textdirection-enum" resource="#h-textdirection-enum"><dfn data-dfn-for="" data-dfn-type="dfn" id="textdirection" data-idl="" data-title="TextDirection" class="lint-ignore">
 <code>TextDirection</code></dfn> enum</p>
