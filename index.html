@@ -98,7 +98,7 @@
 
 <p class="definition"><dfn>Block direction</dfn>. The initial base direction of a block of text, which resolves to either <em>left-to-right</em> or <em>right-to-left</em>. A block refers to a unit of text as a whole, such as a paragraph in a document or a string in a data file. The name "block" is chosen as a contrast to <em>inline direction</em>. Unicode calls this value the [=paragraph direction=]. [[I18N-GLOSSARY]]</p>
 
-<p class="definition"><dfn>String direction</dfn>. The [=block direction=] specifically of a string. Strings transmitted inside various data structures are often inserted into a block (such as a paragraph). In such a case, the string direction is needed as part of the [=bidi isolation=] of the string.</p>
+<p class="definition"><dfn>String direction</dfn>. The overall direction of a specific string, which indicates the presentation order of string-internal directional runs. Strings transmitted inside various data structures are often inserted into a block (such as a paragraph). In such a case, the string direction is needed as part of the [=bidi isolation=] of the string.</p>
 
 <p>In this document we are concerned with identifying the <a>string direction</a> of a whole string and how to transmit and apply the string direction when displaying strings in various contexts. We do not talk about how to determine the direction or display of runs of text within a string.</p>
 
@@ -253,7 +253,7 @@
 	<section id="language-defaults">
 	<h4 id="resource_wide_default">Resource-wide Defaults</h4>
 			  
-	<p>When a document contains a number of natural language strings (and particularly if those string are all in the same language), using the localized string representation described above can become inefficient. To reduce the complexity of encoding these strings, specifications can establish a document-level default for language and [=block direction=]. These are separate values, as language does not imply direction. There should still be the ability to override either language or direction on any given string value by using the representation found <a href="#single-linguistic-field">above</a>.</p>
+	<p>When a document contains a number of natural language strings (and particularly if those string are all in the same language), using the localized string representation described above can become inefficient. To reduce the complexity of encoding these strings, specifications can establish a document-level default for language and [=string direction=]. These are separate values, as language does not imply direction. There should still be the ability to override either language or direction on any given string value by using the representation found <a href="#single-linguistic-field">above</a>.</p>
 			  
 	 <div class="req" id="bp_default_setting">
         <p class="advisement">Specifications MAY define a mechanism to provide the default language and the default [=string direction=] for all strings in a given resource. However, specifications MUST NOT assume that a resource-wide default is sufficient.  Even if a resource-wide setting is available, it must be possible to use string-specific metadata to override that default.</p>
