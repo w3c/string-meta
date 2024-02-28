@@ -253,7 +253,7 @@
 	<section id="language-defaults">
 	<h4 id="resource_wide_default">Resource-wide Defaults</h4>
 			  
-	<p>When a document contains a number of natural language strings (and particularly if those string are all in the same language), using the localized string representation described above can become inefficient. To reduce the complexity of encoding these strings, specifications can establish a document-level default for language and [=string direction=]. These are separate values, as language does not imply direction. There should still be the ability to override either language or direction on any given string value by using the representation found <a href="#single-linguistic-field">above</a>.</p>
+	<p>When a resource contains a number of natural language strings (and particularly if those string are all in the same language), using the localized string representation described above can become inefficient. To reduce the complexity of encoding these strings, specifications can establish a resource-level default for language and [=string direction=]. These are separate values, as language does not imply direction. There should still be the ability to override either language or direction on any given string value by using the representation found <a href="#single-linguistic-field">above</a>.</p>
 			  
 	 <div class="req" id="bp_default_setting">
         <p class="advisement">Specifications MAY define a mechanism to provide the default language and the default [=string direction=] for all strings in a given resource. However, specifications MUST NOT assume that a resource-wide default is sufficient.  Even if a resource-wide setting is available, it must be possible to use string-specific metadata to override that default.</p>
