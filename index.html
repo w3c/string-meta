@@ -698,14 +698,14 @@ data in an interchange format is not a good idea. These include:</p>
 <h3 id="what_consumers_do">What consumers need to do to support direction</h3>
 <p>Given the <a href="">use cases</a> for bidirectional text, it will be clear that a consumer cannot simply insert a string into a target location without some additional work or preparation taking place, first to establish the appropriate <a>string direction</a> for the string being inserted, and secondly to apply bidi isolation around the string.</p>
 <p>This requires the presence of markup or Unicode formatting controls around the string. If the string's actual direction is opposite that of the content into which it is being inserted, the markup or control codes need to tightly wrap the string. Strings that are inserted adjacent to each other all need to be individually wrapped in order to avoid the spillover issues we saw in the previous section.</p>
-<p>[[HTML5]] provides base direction controls and isolation for any inline element when the <code class="kw" translate="no">dir</code> attribute is used, or when the <code class="kw" translate="no">bdi</code> element is used. When inserting strings into plain text environments, isolating Unicode formatting characters need to be used. (Unfortunately, support for the isolating characters, which the Unicode Standard recommends as the default for plain text/non-markup applications, is still not universal.)</p>
+<p>[[HTML]] provides base direction controls and isolation for any inline element when the <code class="kw" translate="no">dir</code> attribute is used, or when the <code class="kw" translate="no">bdi</code> element is used. When inserting strings into plain text environments, isolating Unicode formatting characters need to be used. (Unfortunately, support for the isolating characters, which the Unicode Standard recommends as the default for plain text/non-markup applications, is still not universal.)</p>
 <p>The trick is to ensure that the direction information provided by the markup or control characters reflects the <a>string direction</a> of the string.</p>
 </section>
 </section>
 
 <section>
 <h2 id="bidi-approaches">Approaches Considered for Identifying the [=String Direction=]</h2>
-<p>The fundamental problem for bidirectional text values is how a <a>consumer</a> of a string will know what [=string direction=] to use for that string when it is eventually displayed to a user. Note that some of these approaches for identifying or estimating the direction have utility in specific applications and are in use in different specifications such as [[HTML5]]. The issue here is which are appropriate to adopt generally and specify for use as a best practice in document formats.</p>
+<p>The fundamental problem for bidirectional text values is how a <a>consumer</a> of a string will know what [=string direction=] to use for that string when it is eventually displayed to a user. Note that some of these approaches for identifying or estimating the direction have utility in specific applications and are in use in different specifications such as [[HTML]]. The issue here is which are appropriate to adopt generally and specify for use as a best practice in document formats.</p>
 
 <section id="firststrong">
   <h3>First-strong property detection</h3>
@@ -1355,7 +1355,7 @@ myDataString:          "978-0-123-4567-X"^^i18n:_ltr          // language-neutra
     <p><a>Consumers</a> can then insert the string into any bidirectional context that supports isolation and get the intended display.</p>
 	
 
-    <p>HTML5 [[HTML5]] introduced isolation at the element level by default. This allows for text insertion into an HTML context without the need for isolating controls. However, not all strings appear in an HTML context. Use of strings in a plain text or other display context cannot be guaranteed the isolating behavior provided by HTML.</p>
+    <p>HTML [[HTML]] introduced isolation at the element level by default. This allows for text insertion into an HTML context without the need for isolating controls. However, not all strings appear in an HTML context. Use of strings in a plain text or other display context cannot be guaranteed the isolating behavior provided by HTML.</p>
 
     <p>While some strings can certainly benefit from using isolating bidi controls, consistent usage can produce layers of overhead, processing, and validation that are unnecessary. Use of these controls should be reserved for cases in which the assembly and presentation of the text depends on runtime directional determination. For example, isolating controls can be included around a variable name in a string whose contents will be determined at runtime.</p>
 
