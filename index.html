@@ -485,8 +485,14 @@
 </div>
 
 <div class="req" id="bp-producer-more-specific-lang">
-	<p class="advisement">[=Producers=] SHOULD NOT omit the language if the value for a given string is more specific than the [=resource-wide default=]. For example, if the resource-wide default value were <code class="kw" translate="no">fr</code> (French) and the string's associated language were <code class="kw" translate="no">fr-FR</code> (French, France), the more-specific string-level value should be included.</p>
+	<p class="advisement">[=Producers=] SHOULD NOT omit the language if the value for a given string is more specific than the [=resource-wide default=].</p>
 </div>
+
+<p>For example, if the [=resource-wide default=] value were <code class="kw" translate="no">fr</code> (French) and the string's associated language were <code class="kw" translate="no">fr-FR</code> (French, France), the [=producer=] ought to generate string-level metadata with the more specific <code class="kw" translate="no">fr-FR</code> tag.</p>
+
+<aside class="note">
+	<p>This is one reason why the <a href="#language-maps">language maps</a> stucture includes the option of overriding the language tag in the value portion of each entry.</p>
+</aside>
 
 <div class="req" id="bp-producer-include-rtl-dir">
 	<p class="advisement">[=Producers=] SHOULD include string-level direction metadata for any content whose [=string direction=] is opposite that of a provided [=resource-wide default=], even if the string itself is unambiguous.</p>
