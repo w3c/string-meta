@@ -489,8 +489,10 @@
 </div>
 
 <div class="req" id="bp-producer-include-rtl-dir">
-	<p class="advisement">[=Producers=] SHOULD include string-level direction metadata for right-to-left content if the [=resource-wide default=] is present and is not also <code class="kw" translate="no">RTL</code>, even if the string itself is unambiguous.</p>
+	<p class="advisement">[=Producers=] SHOULD include string-level direction metadata for any content whose [=string direction=] is opposite that of a provided [=resource-wide default=], even if the string itself is unambiguous.</p>
 </div>
+
+<p>Many strings consist solely of strongly directional characters that are consistent with the overall [=string direction=]. When this direction does not agree with the [=resource-wide default=] (and the default is present), the [=string direction=] needs to be included so that [=consumers=] do not need to introspect the string to determine direction and so that processes (such as filtering and selection) do not mistake the content's direction.</p>
 
 </section>
 
