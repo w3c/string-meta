@@ -488,7 +488,7 @@
 	<p class="advisement">[=Producers=] SHOULD include string-specific language metadata if the value for a given string is <em>more specific</em> or entirely different from that of the [=resource-wide default=].</p>
 </div>
 
-<p>For example, if the [=resource-wide default=] value were <code class="kw" translate="no">fr</code> (French) and the string's associated language were <code class="kw" translate="no">fr-FR</code> (French, France), the [=producer=] ought to generate string-level metadata with the more specific <code class="kw" translate="no">fr-FR</code> tag. Similarly, the [=producer=] out to generate string-level metadata if the language were entirely different, such as <code class="kw" translate="no">de</code> (German).</p>
+<p>For example, if the [=resource-wide default=] value were <code class="kw" translate="no">fr</code> (French) and the string's associated language were <code class="kw" translate="no">fr-FR</code> (French, France), the [=producer=] ought to generate string-specific metadata with the more specific <code class="kw" translate="no">fr-FR</code> tag. Similarly, the [=producer=] ought to generate string-specific metadata if the language were entirely different, such as <code class="kw" translate="no">de</code> (German).</p>
 
 <p>A [=language tag=] is more-specific if it contains more subtags.</p>
 
