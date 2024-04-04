@@ -220,7 +220,7 @@
               <p class="advisement">Use field-based metadata or string datatypes to indicate the language and the <a>string direction</a> for individual <a>localizable text</a> values.</p>
            </div>
 
-		  <p>For <a>localizable text</a> fields that appear in a single language, use a data structure to represent the value. The recommended representation is an object with three fields. The field <code>value</code> contains the actual string. The field <code>lang</code> contains a <a>valid</a> [[BCP47]] language tag. The field <code>dir</code> contains the string's <a>string direction</a> (one of the values <code>ltr</code>, <code>rtl</code>, or <code>auto</code>).</p>
+		  <p>For <a>localizable text</a> fields that appear in a single language, use a data structure to represent the value. The recommended representation is an object with three fields. The field <code>value</code> contains the actual string. The field <code>lang</code> contains a <a>valid</a> [[BCP47]] language tag. The field <code>dir</code> contains the string's <a>string direction</a> (one of the values <code>ltr</code>, <code>rtl</code>, and <code>auto</code>).</p>
 		  
 		  <aside class="example" title="Example of a localizable text field">
 		  <pre class="json" id="localizable-text-field">
@@ -481,21 +481,23 @@
 <p>For example, if the resource-wide language of a document is <code class="kw" translate="no">en-US</code> (English, United States), then the resource-wide direction of the document should probably be <code class="kw" translate="no">[=LTR=]</code>, because left-to-right is the direction associated with that language.</p>
 
 <div class="req" id="bp-producer-omit-lang-dir">
-	<p class="advisement">[=Producers=] SHOULD omit the language or direction metadata if a [=resource-wide default=] is provided and the specific string value is consistent with that default.</p>
+	<p class="advisement">[=Producers=] SHOULD NOT include string-specific language or direction metadata if a [=resource-wide default=] is provided and the string-specific value is consistent with that default.</p>
 </div>
 
 <div class="req" id="bp-producer-more-specific-lang">
-	<p class="advisement">[=Producers=] SHOULD NOT omit the language if the value for a given string is more specific than the [=resource-wide default=].</p>
+	<p class="advisement">[=Producers=] SHOULD include string-specific language metadata if the value for a given string is <em>more specific</em> or entirely different from that of the [=resource-wide default=].</p>
 </div>
 
-<p>For example, if the [=resource-wide default=] value were <code class="kw" translate="no">fr</code> (French) and the string's associated language were <code class="kw" translate="no">fr-FR</code> (French, France), the [=producer=] ought to generate string-level metadata with the more specific <code class="kw" translate="no">fr-FR</code> tag.</p>
+<p>For example, if the [=resource-wide default=] value were <code class="kw" translate="no">fr</code> (French) and the string's associated language were <code class="kw" translate="no">fr-FR</code> (French, France), the [=producer=] ought to generate string-level metadata with the more specific <code class="kw" translate="no">fr-FR</code> tag. Similarly, the [=producer=] out to generate string-level metadata if the language were entirely different, such as <code class="kw" translate="no">de</code> (German).</p>
+
+<p>A [=language tag=] is more-specific if it contains more subtags.</p>
 
 <aside class="note">
-	<p>This is one reason why the <a href="#language-maps">language maps</a> stucture includes the option of overriding the language tag in the value portion of each entry.</p>
+	<p>Supporting the encoding of more-specific language tags is one reason why the <a href="#language-maps">language maps</a> stucture includes the option of overriding the language tag in the value portion of each entry. The more-specific tags can assist with processing, such as selecting the right voice in a text-to-speech system or the right dictionary when checking spelling.</p>
 </aside>
 
 <div class="req" id="bp-producer-include-rtl-dir">
-	<p class="advisement">[=Producers=] SHOULD include string-level direction metadata for any content whose [=string direction=] is opposite that of a provided [=resource-wide default=], even if the string itself is unambiguous.</p>
+	<p class="advisement">[=Producers=] SHOULD include string-specific direction metadata for any content whose [=string direction=] is opposite that of a provided [=resource-wide default=], even if the string itself is unambiguous.</p>
 </div>
 
 <p>Many strings consist solely of strongly directional characters that are consistent with the overall [=string direction=]. When this direction does not agree with the [=resource-wide default=] (and the default is present), the [=string direction=] needs to be included so that [=consumers=] do not need to introspect the string to determine direction and so that processes (such as filtering and selection) do not mistake the content's direction.</p>
