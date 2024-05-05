@@ -502,6 +502,30 @@
 
 <p>Many strings consist solely of strongly directional characters that are consistent with the overall [=string direction=]. When this direction does not agree with the [=resource-wide default=] (and the default is present), the [=string direction=] needs to be included so that [=consumers=] do not need to introspect the string to determine direction and so that processes (such as filtering and selection) do not mistake the content's direction.</p>
 
+</section>
+
+<section id="guidance-for-consumers">
+<h3 id="bp-consumers">Guidance for [=Consumers=]</h3>
+
+<div class="req" id="bp-consumer-lang-assumption">
+<p class="advisement">Consumers SHOULD consume language metadata provided by document formats or protocols whenever possible. When language metadata is not available, consumers MAY use heuristics to detect the language.</p>
+</div>
+
+<div class="req" id="bp-consumer-dir-assumption">
+<p class="advisement">Consumers SHOULD consume direction metadata provided by document formats or protocols whenever possible. When direction metadata is not available, consumers SHOULD use first-strong detection (possibly by using the value <code>auto</code> for the direction).</p>
+</div>
+
+<div class="req" id="bp-consumer-isolation">
+<p class="advisement">When inserting content into a document, and particularly when inserting that content into existing text, consumers SHOULD apply bidirectional isolation via markup or Unicode isolating characters. Such isolation SHOULD use the direction found in document format or protocol supplied metadata if possible.</p>
+</div>
+
+<div class="req" id="bp-consumer-metadata-normalization">
+<p class="advisement">Consumers MAY normalize language tags or direction metadata to help ensure interoperability.</p>
+</div>
+
+<div class="req" id="bp-consumer-passthru">
+<p class="advisement">Consumers that are also producers SHOULD take care to pass language and direction metadata to their downstream consumers.</p>
+</div>
 
 </section>
 
