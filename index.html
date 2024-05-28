@@ -507,21 +507,41 @@
 <section id="guidance-for-consumers">
 <h3 id="bp-consumers">Guidance for [=Consumers=]</h3>
 
+<p>The purpose of collecting, serializing, and transmitting language and [=string direction=] metadata is so that [=consumers=] can use it to display and process string data correctly.</p>
+
 <div class="req" id="bp-consumer-lang-assumption">
-<p class="advisement">Consumers SHOULD consume language metadata provided by document formats or protocols whenever possible. When language metadata is not available, consumers MAY use heuristics to detect the language.</p>
+<p class="advisement">Consumers SHOULD employ any language metadata provided by document formats or protocols when processing or displaying the associated string value.</p>
 </div>
 
 <div class="req" id="bp-consumer-dir-assumption">
-<p class="advisement">Consumers SHOULD consume direction metadata provided by document formats or protocols whenever possible. When direction metadata is not available, consumers SHOULD use first-strong detection (possibly by using the value <code>auto</code> for the direction).</p>
+<p class="advisement">Consumers SHOULD employ any [=string direction=] metadata provided by document formats or protocols when processing or displaying the associated string value.</p>
 </div>
 
 <div class="req" id="bp-consumer-isolation">
-<p class="advisement">When inserting content into a document, and particularly when inserting that content into existing text, consumers SHOULD apply bidirectional isolation via markup or Unicode isolating characters. Such isolation SHOULD use the direction found in document format or protocol supplied metadata if possible.</p>
+<p class="advisement">When displaying a string or inserting a string into a document, consumers SHOULD apply bidirectional isolation to the string value using the [=string direction=] found in document format or protocol metadata when available or first-strong isolation when it is not.</p>
 </div>
+
+<p>To prevent [=spillover effects=] and get the best results, it is always safe to wrap an inserted string value with bidirectional isolation.</p>
+
+<p>In an [[HTML]] document, for example, this means placing a <code>dir</code> attribute on an element directly around the inserted string value. If the string is inserted inside another string, you can use an inline element such as <code>span</code>, <code>em</code>, or <code>bdi</code> to carry the <code>dir</code> attribute.</p>
+
+<p>In a plain text application, this might mean using Unicode isolating bidirectional controls around the string.</p>
+
+<p>When [=string direction=] metadata is not available, the string should still be isolated and, unless the [=consumer=] knows better, first-strong detection applied. In [[HTML]] this means using the value <code>auto</code> for the attribute <code>dir</code>. In plain text, this might mean wrapping the string with <span class="codepoint" translate="no"><img alt="FSI" src="images/2068.png"><code class="uname">U+2068 FIRST STRONG ISOLATE</code></span> character paired with a closing <span class="codepoint" translate="no"><img alt="PDI" src="images/2069.png"><code class="uname">U+2069 POP DIRECTIONAL ISOLATE</code></span> character at the end of the string.</p>
+
+<div class="req" id="bp-consumer-lang-display">
+<p class="advisement">When displaying a string or inserting a string into a document, consumers SHOULD use relevant document attributes or APIs to apply any available language metadata to the string.</p>
+</div>
+
+<p>To get the best results, particularly with font selection and other text processing, the language of inserted text should be set in the document or in APIs that handle the text. In [[HTML]] or [[XML]] this is done by setting the <code>lang</code> attribute.</p>
+
+<p class="issue">Insert link to list of APIs when the article is published.</p>
 
 <div class="req" id="bp-consumer-metadata-normalization">
 <p class="advisement">Consumers MAY normalize language tags to help ensure interoperability.</p>
 </div>
+
+<p>For example, many implementations will use the normalization found in <a href="http://www.unicode.org/reports/tr35/#BCP_47_Language_Tag_Conversion">Language Tag Conversion</a> in [[CLDR]]. This normalization, among other things, replaces obsolete subtags and alphabetizes variants.</p>
 
 <div class="req" id="bp-consumer-passthru">
 <p class="advisement">Consumers that are also producers SHOULD take care to pass language and direction metadata to their downstream consumers.</p>
