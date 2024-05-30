@@ -530,18 +530,29 @@
 <p>It never causes a problem to wrap an inserted string value with bidirectional isolation, and doing so prevents [=spillover effects=] to produce the best result.</p>
 
 <aside class="example" id="consumer-isolation-example">
-   <p>In an [[HTML]] document, this means placing a <code>dir</code> attribute on an existing element that directly wraps the inserted string value. If no existing markup is available, you can use an inline element such as <code>span</code>, or <code>bdi</code> to carry the <code>dir</code> attribute. Examples can be found in the article <a href="https://www.w3.org/International/articles/inline-bidi-markup/index.en.html#whattodo">Inline markup and bidirectional text in HTML</a> and <a href="https://www.w3.org/International/questions/qa-html-dir.en.html#insertedtext">Structural markup and right-to-left text in HTML</a></p>
+   <p>In an [[HTML]] document, this means placing a <code>dir</code> attribute on an existing element that directly wraps the inserted string value. If no existing markup is available, use an inline element such as <code>span</code>, or <code>bdi</code> to carry the <code>dir</code> attribute. Further examples can be found in the articles <a href="https://www.w3.org/International/articles/inline-bidi-markup/index.en.html#whattodo">Inline markup and bidirectional text in HTML</a> and <a href="https://www.w3.org/International/questions/qa-html-dir.en.html#insertedtext">Structural markup and right-to-left text in HTML</a>. For example:</p>
+   
+   <pre class="html">
+   &lt;!-- Before --&gt;
+   &lt;p&gt;You are reading: {$title}&lt;/p&gt;
+   &lt;!-- After --&gt;
+   &lt;p&gt;You are reading: &lt;span lang="ar" dir="rtl"&gt;&#x2067;HTML و CSS: تصميم و إنشاء مواقع الويب&#x2069;&lt;/span&gt;&lt;/p&gt;
+   </pre>
 
-   <p>In a plain text application, this might mean using Unicode isolating bidirectional controls around the string.</p>
+   <p>In a plain text application, this might mean using Unicode isolating bidirectional controls around the string:</p>
+   
+   <pre>
+You are reading: \u2067&#x2067;HTML و CSS: تصميم و إنشاء مواقع الويب&#x2069;\u2069
+   </pre>
 
    <p>When [=string direction=] metadata is not available, the string should still be isolated and, unless the [=consumer=] knows better, first-strong detection applied. In [[HTML]] this means using the value <code>auto</code> for the attribute <code>dir</code>. In plain text, this might mean wrapping the string with <span class="codepoint" translate="no"><img alt="FSI" src="images/2068.png"><code class="uname">U+2068 FIRST STRONG ISOLATE</code></span> character paired with a closing <span class="codepoint" translate="no"><img alt="PDI" src="images/2069.png"><code class="uname">U+2069 POP DIRECTIONAL ISOLATE</code></span> character at the end of the string.</p>
 </aside>
 
 <div class="req" id="bp-consumer-lang-display">
-<p class="advisement">When displaying a string or inserting a string into a document, consumers SHOULD use relevant document attributes or APIs to apply any available language metadata to the string.</p>
+<p class="advisement">Consumers SHOULD apply language to a string when it is inserted into a document. Use relevant document attributes or APIs to apply any available language metadata to the string.</p>
 </div>
 
-<p>To get the best results, particularly with font selection and other text processing, the language of inserted text should be set in the document or in APIs that handle the text. In [[HTML]] or [[XML]] this is done by setting the <code>lang</code> attribute.</p>
+<p>To get the best results, particularly with font selection and other text processing, the language of inserted text should be set in the document or in APIs that handle the text. In [[HTML]] this is done by setting the <code>lang</code> attribute. In [[XML]] this is done by setting the <code>xml:lang</code> attribute.</p>
 
 <p class="issue">Insert link to list of APIs when the article is published.</p>
 
