@@ -529,7 +529,7 @@
 
 <p>It never causes a problem to wrap an inserted string value with bidirectional isolation, and doing so prevents [=spillover effects=] to produce the best result.</p>
 
-<p>In an [[HTML]] document, for example, this means placing a <code>dir</code> attribute on an element directly around the inserted string value. If the string is inserted inside another string, you can use an inline element such as <code>span</code>, <code>em</code>, or <code>bdi</code> to carry the <code>dir</code> attribute.</p>
+<p>In an [[HTML]] document, for example, this means placing a <code>dir</code> attribute on an existing element that directly wraps the inserted string value. If no existing markup is available, you can use an inline element such as <code>span</code>, or <code>bdi</code> to carry the <code>dir</code> attribute.</p>
 
 <p>In a plain text application, this might mean using Unicode isolating bidirectional controls around the string.</p>
 
