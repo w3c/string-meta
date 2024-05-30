@@ -518,7 +518,13 @@
 </div>
 
 <div class="req" id="bp-consumer-isolation">
-<p class="advisement">When displaying a string or inserting a string into a document, consumers SHOULD apply bidirectional isolation to the string value using the [=string direction=] found in document format or protocol metadata when available or first-strong isolation when it is not.</p>
+<div class="req" id="bp-consumer-isolation">
+<p class="advisement">When a string is displayed in or inserted into a document, consumers SHOULD isolate it directionally from the surrounding text.</p>
+</div>`
+
+<div class="req" id="bp-consumer-direction">
+<p class="advisement">Consumers SHOULD apply direction to a string when it is inserted into a document. If [=string direction=] is provided by metadata associated with a string, consumers SHOULD use that. If string metadata is not available, first-strong heuristics SHOULD be used to assign a direction.</p>
+</div>
 </div>
 
 <p>To prevent [=spillover effects=] and get the best results, it is always safe to wrap an inserted string value with bidirectional isolation.</p>
