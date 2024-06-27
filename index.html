@@ -529,23 +529,36 @@
 
 <p>It never causes a problem to wrap an inserted string value with bidirectional isolation, and doing so prevents [=spillover effects=] to produce the best result.</p>
 
-<aside class="example" id="consumer-isolation-example">
-   <p>In an [[HTML]] document, this means placing a <code>dir</code> attribute on an existing element that directly wraps the inserted string value. If no existing markup is available, use an inline element such as <code>span</code>, or <code>bdi</code> to carry the <code>dir</code> attribute. Further examples can be found in the articles <a href="https://www.w3.org/International/articles/inline-bidi-markup/index.en.html#whattodo">Inline markup and bidirectional text in HTML</a> and <a href="https://www.w3.org/International/questions/qa-html-dir.en.html#insertedtext">Structural markup and right-to-left text in HTML</a>. For example:</p>
+<aside class="example" id="consumer-isolation-example" title="Employing language and direction metadata">
+	
+	<p>Suppose your application expects to receive information about an e-book to insert into the user interface. This data includes the language and string direction metadata discussed in this document and might look like:</p>
+	
+<pre class="json">"title": {
+    "value": "&#x2067;HTML و CSS: تصميم و إنشاء مواقع الويب&#x2069;",
+	"direction": "rtl",
+	"language": "ar"
+}</pre>
+
+    <p>The application wishes to insert the data into a larger message. For example, it might use a <a href="https://www.unicode.org/reports/tr35/tr35-messageFormat.html">MessageFormat</a> pattern [[LDML]] such as:</p>
+<pre>You are currently reading {$title}</pre>
+
+   <p>In a plain text application, this might mean using Unicode isolating bidirectional controls around the inserted string. In this case, since the direction is <code translate="no">rtl</code>, the <span class="codepoint" translate="no"><img alt="RLI" src="images/2067.png"><code class="uname">U+2067 RIGHT-TO-LEFT ISOLATE</code></span> is inserted before the title and <span class="codepoint" translate="no"><img alt="PDI" src="images/2069.png"><code class="uname">U+2069 POP DIRECTIONAL ISOLATE</code></span> after it:</p>
+   
+   <pre class="text">
+You are currently reading \u2067&#x2067;HTML و CSS: تصميم و إنشاء مواقع الويب&#x2069;\u2069
+   </pre>
+    
+   <p>In an [[HTML]] document, the inserted string should be tightly wrapped with markup and the language and direction metadata applied to that markup. If there is an existing element, the <code>lang</code> and <code>dir</code> attributes should be set to match the metadata provided. If no existing markup is available, use an inline element such as <code>span</code>, or <code>bdi</code> to carry the <code>lang</code> and <code>dir</code> attributes. For example:</p>
    
    <pre class="html">
-   &lt;!-- Before --&gt;
-   &lt;p&gt;You are reading: {$title}&lt;/p&gt;
-   &lt;!-- After --&gt;
-   &lt;p&gt;You are reading: &lt;span lang="ar" dir="rtl"&gt;&#x2067;HTML و CSS: تصميم و إنشاء مواقع الويب&#x2069;&lt;/span&gt;&lt;/p&gt;
+   &lt;p&gt;You are currently reading &lt;span lang="ar" dir="rtl"&gt;&#x2067;HTML و CSS: تصميم و إنشاء مواقع الويب&#x2069;&lt;/span&gt;&lt;/p&gt;
    </pre>
 
-   <p>In a plain text application, this might mean using Unicode isolating bidirectional controls around the string:</p>
-   
-   <pre>
-You are reading: \u2067&#x2067;HTML و CSS: تصميم و إنشاء مواقع الويب&#x2069;\u2069
-   </pre>
+   <p>Further examples can be found in the articles <a href="https://www.w3.org/International/articles/inline-bidi-markup/index.en.html#whattodo">Inline markup and bidirectional text in HTML</a> and <a href="https://www.w3.org/International/questions/qa-html-dir.en.html#insertedtext">Structural markup and right-to-left text in HTML</a>.</p>
 
    <p>When [=string direction=] metadata is not available, the string should still be isolated and, unless the [=consumer=] knows better, first-strong detection applied. In [[HTML]] this means using the value <code>auto</code> for the attribute <code>dir</code>. In plain text, this might mean wrapping the string with <span class="codepoint" translate="no"><img alt="FSI" src="images/2068.png"><code class="uname">U+2068 FIRST STRONG ISOLATE</code></span> character paired with a closing <span class="codepoint" translate="no"><img alt="PDI" src="images/2069.png"><code class="uname">U+2069 POP DIRECTIONAL ISOLATE</code></span> character at the end of the string.</p>
+   
+   <p class="note">Notice that, because it starts with a strong LTR character, the example string displays incorrectly with "first strong" detection: <code translate="no" lang="ar">&#x2068;HTML و CSS: تصميم و إنشاء مواقع الويب&#x2069;</code></p>
 </aside>
 
 <div class="req" id="bp-consumer-lang-display">
