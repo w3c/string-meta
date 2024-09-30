@@ -1555,26 +1555,26 @@ myDataString:          "978-0-123-4567-X"^^i18n:_ltr          // language-neutra
 
 
 
+<section class="appendix" id="WebIDL">
+	
+<h2 id="webidl-definitions">WebIDL Definitions for Data Structures</h2>
 
-<section class="appendix" id="Localizable-String-Dictionary">
+<p id="Localizable-String-Dictionary">This section contains WebIDL definitions for various structures described in the main document above.</p>
 	
-<h2 id="use-the-localizable-data-structure">The Localizable WebIDL Dictionary</h2>
+	<p>To be effective, specification authors should consistently use the same formats and data structures so that the majority of data formats are interoperable (in other words, so that data can be copied between many formats without having to apply additional processing). We recommend adoption of <kbd>Localizable</kbd> for <a href="#single-linguistic-field">Single-Language Localizable</a> text fields and <kbd>LanguageMap</kbd> for <a href="#language-maps">Language Maps</a>.</p>
 	
-	<p>This section contains a WebIDL definition for a <code class="kw" translate="no">Localizable</code> dictionary.</p>
+    <p>By defining the language and direction in a WebIDL dictionary form, specifications can incorporate language and direction metadata for a given String value succinctly. Implementations can recyle the dictionary implementation straightforwardly.</p>
 	
-	<p>To be effective, specification authors should consistently use the same formats and data structures so that the majority of data formats are interoperable (in other words, so that data can be copied between many formats without having to apply additional processing). We recommend adoption of the Localizable WebIDL "dictionary" as the best available format for JSON-derived formats to do that.</p>
+<h4 id="localizable-idl"><code><dfn id="Localizable">Localizable</dfn></code> dictionary</h4>
 
-<p>By defining the language and direction in a WebIDL dictionary form, specifications can incorporate language and direction metadata for a given String value succinctly. Implementations can recyle the dictionary implementation straightforwardly.</p>
-	
-	<aside class="example">
-<p><code><dfn id="Localizable">Localizable</dfn></code> dictionary</p>
-<pre class="def idl" data-dfn-for="Localizable" data-link-for="Localizable">
-<span class="idlDictionary" data-idl="" data-title="Localizable">dictionary <span class="idlDictionaryID"><code>Localizable</code></span> {
-    <span class="idlMember" id="idl-def-localizable-value" data-idl="" data-title="value" data-dfn-for="localizable"><span class="idlMemberType"><a href="https://www.w3.org/TR/WebIDL-1/#idl-DOMString">DOMString</a></span> <span class="idlMemberName"><a data-lt="value" href="#localizable-value" class="internalDFN" data-link-type="dfn" data-for="Localizable"><code>value</code></a></span>;</span>
-    <span class="idlMember" id="idl-def-localizable-lang" data-idl="" data-title="lang" data-dfn-for="localizable"><span class="idlMemberType"><a href="https://www.w3.org/TR/WebIDL-1/#idl-DOMString">DOMString</a></span> <span class="idlMemberName"><a data-lt="lang" href="#localizable-lang" class="internalDFN" data-link-type="dfn" data-for="Localizable"><code>lang</code></a></span>;</span>
-    <span class="idlMember" id="idl-def-localizable-dir" data-idl="" data-title="dir" data-dfn-for="localizable"><span class="idlMemberType"><a href="#textdirection" class="internalDFN" data-link-type="dfn"><code>TextDirection</code></a></span> <span class="idlMemberName"><a data-lt="dir" href="#localizable-dir" class="internalDFN" data-link-type="dfn" data-for="Localizable"><code>dir</code></a></span> = <span class="idlMemberValue">"auto"</span>;</span>
-};</span>
-</pre><dl>
+<pre class="def idl" data-dfn-for="Localizable" data-link-for="Localizable" id="use-the-localizable-data-structure">
+dictionary Localizable {
+    DOMString value;
+    DOMString lang;
+    TextDirection dir = "auto";
+};
+</pre>
+<dl>
 	<dt><dfn data-dfn-for="localizable" data-dfn-type="dfn" id="localizable-value" data-idl="" data-title="value" class="lint-ignore">
 	
 	<code>value</code></dfn> member</dt>
@@ -1589,7 +1589,55 @@ dir</code></dfn> member</dt>
 <dd>Specifies the [=string direction=] for the human-readable members of an inheriting dictionary.</dd></dl>
 <div data-dfn-for="TextDirection" data-link-for="TextDirection" id="textdirection-enum" typeof="bibo:Chapter" resource="#textdirection-enum" property="bibo:hasPart">
 	<p id="h-textdirection-enum" resource="#h-textdirection-enum"><dfn data-dfn-for="" data-dfn-type="dfn" id="textdirection" data-idl="" data-title="TextDirection" class="lint-ignore">
-<code>TextDirection</code></dfn> enum</p>
+
+<h4 id="language-map-idl"><code>LanguageMap</code> dictionary</h4>
+<pre class="def idl" data-dfn-for="LanguageMap" data-link-for="LanguageMap">
+dictionary LanguageMap {
+	DOMString field;
+	sequence&lt;LanguageRecord> languageRecord;
+};
+</pre>
+<dl>
+	<dt><dfn data-dfn-for="LanguageMap" data-dfn-type="dfn" id="LanguageMap-field" data-idl="" data-title="field" class="lint-ignore"><code>field</code></dfn> member</dt>
+	<dd>Identifier for the field containing the Language Map</dd>
+	<dt><dfn data-dfn-for="LanguageMap" data-dfn-type="dfn" id="LanguageMap-languageRecord" data-idl="" data-title="languageRecord" class="lint-ignore"><code>languageRecord</code></dfn> sequence</dt>
+	<dd>A sequence of LanguageRecords that make up the Language Map.</dd>
+</dl>
+
+<h4 id="language-record-idl"><code>LanguageRecord</code> dictionary</h4>
+<pre class="def idl" data-dfn-for="LanguageRecord" data-link-for="LanguageRecord">
+dictionary LanguageRecord {
+	DOMString lang;
+	LanguageEntry entry;
+};
+</pre>
+<dl>
+	<dt><dfn data-dfn-for="LanguageRecord" data-dfn-type="dfn" id="LanguageRecord-lang" data-idl="" data-title="lang" class="lint-ignore"><code>lang</code></dfn> member</dt>
+	<dd>A [[BCP47]] language tag that identifies the language and [=locale=] of the entry.</dd>
+	<dt><dfn data-dfn-for="LanguageRecord" data-dfn-type="dfn" id="LanguageRecord-entry" data-idl="" data-title="entry" class="lint-ignore"><code>entry</code></dfn> member</dt>
+	<dd>A LanguageEntry containing the localized string value, plus any overriding metadata.</dd>
+
+</dl>
+
+<h4 id="language-entry-idl"><code>LanguageEntry</code> dictionary</h4>
+<pre class="def idl" data-dfn-for="LanguageEntry" data-link-for="LanguageEntry">
+dictionary LanguageEntry {
+    DOMString value;
+    DOMString? lang;     // Optional property for language tag
+    TextDirection? dir;  // Optional property for text direction
+};
+</pre>
+<dl>
+	<dt><dfn data-dfn-for="LanguageEntry" data-dfn-type="dfn" id="LanguageEntry-value" data-idl="" data-title="value" class="lint-ignore"><code>value</code></dfn> member</dt>
+	<dd>The string containing the data value (localized text) of this field.</dd>
+	<dt><dfn data-dfn-for="LanguageEntry" data-dfn-type="dfn" id="LanguageEntry-lang" data-idl="" data-title="lang" class="lint-ignore"><code>lang</code></dfn> member</dt>
+	<dd>(Optional) A [[BCP47]] language tag that overrides or amends the key in a LanguageMap. The need for this field is rare.</dd>
+	<dt><dfn data-dfn-for="LanguageEntry" data-dfn-type="dfn" id="LanguageEntry-dir" data-idl="" data-title="dir" class="lint-ignore"><code>dir</code></dfn> member</dt>
+	<dd>(Optional) TextDirection of the value.</dd>
+</dl>
+
+
+<h4 id="text-direction-idl"><code>TextDirection</code></dfn> enum</h4>
 <pre class="def idl">
 <span class="idlEnum" id="idl-def-textdirection" data-idl="" data-title="TextDirection">enum <span class="idlEnumID"><a data-lt="TextDirection" href="#textdirection" class="internalDFN" data-link-type="dfn" data-for=""><code>TextDirection</code></a></span> {    
     <a href="#textdirection-auto" class="idlEnumItem">"auto"</a>,
@@ -1605,7 +1653,6 @@ dir</code></dfn> member</dt>
 <dt><dfn data-dfn-for="textdirection" data-dfn-type="dfn" id="textdirection-rtl" data-idl="" data-title="rtl" class="lint-ignore">
 	<code>rtl</code></dfn></dt><dd>Right-to-left text.</dd></dl>
 </div>
-</aside>
 
 </section>
 
