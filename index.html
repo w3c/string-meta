@@ -299,6 +299,10 @@
 		  <section id="language-maps">
 		  <h4>Language Maps</h4>
 		  
+		  <div class="req" id="bp-lang-maps">
+			  <p class="advisement">Use a language map to store multiple language versions of a single field inside of a document. For [WebIDL]-defined data structures, use <a href="#language-map-idl"><code>LanguageMap</code></a> to define the field.</p>
+		  </div>
+		  
 		  <p>The world is not monolingual. Having documents that contain only a single language would mean providing many iterations of the document, one for each language, in order to localize the content. This also might require language negotiation when requesting the content.</p>
 		  
 		  <p>One way to address this is to allow multilingual values for each <a>localizable text</a> field inside the document.</p>
@@ -1564,7 +1568,7 @@ myDataString:          "978-0-123-4567-X"^^i18n:_ltr          // language-neutra
 	<p>To be effective, specification authors should consistently use the same formats and data structures so that the majority of data formats are interoperable (in other words, so that data can be copied between many formats without having to apply additional processing). We recommend adoption of <kbd>Localizable</kbd> for <a href="#single-linguistic-field">Single-Language Localizable</a> text fields and <kbd>LanguageMap</kbd> for <a href="#language-maps">Language Maps</a>.</p>
 	
     <p>By defining the language and direction in a WebIDL dictionary form, specifications can incorporate language and direction metadata for a given String value succinctly. Implementations can recyle the dictionary implementation straightforwardly.</p>
-	
+
 <h4 id="localizable-idl"><code><dfn id="Localizable">Localizable</dfn></code> dictionary</h4>
 
 <pre class="def idl" data-dfn-for="Localizable" data-link-for="Localizable" id="use-the-localizable-data-structure">
@@ -1587,8 +1591,6 @@ members of the inheriting dictionary.</dd>
 <dt><dfn data-dfn-for="localizable" data-dfn-type="dfn" id="localizable-dir" data-idl="" data-title="dir" class="lint-ignore"><code>
 dir</code></dfn> member</dt>
 <dd>Specifies the [=string direction=] for the human-readable members of an inheriting dictionary.</dd></dl>
-<div data-dfn-for="TextDirection" data-link-for="TextDirection" id="textdirection-enum" typeof="bibo:Chapter" resource="#textdirection-enum" property="bibo:hasPart">
-	<p id="h-textdirection-enum" resource="#h-textdirection-enum"><dfn data-dfn-for="" data-dfn-type="dfn" id="textdirection" data-idl="" data-title="TextDirection" class="lint-ignore">
 
 <h4 id="language-map-idl"><code>LanguageMap</code> dictionary</h4>
 <pre class="def idl" data-dfn-for="LanguageMap" data-link-for="LanguageMap">
@@ -1613,9 +1615,9 @@ dictionary LanguageRecord {
 </pre>
 <dl>
 	<dt><dfn data-dfn-for="LanguageRecord" data-dfn-type="dfn" id="LanguageRecord-lang" data-idl="" data-title="lang" class="lint-ignore"><code>lang</code></dfn> member</dt>
-	<dd>A [[BCP47]] language tag that identifies the language and [=locale=] of the entry.</dd>
+	<dd>A [[BCP47]] language tag that identifies the language ([=locale=]) of the entry.</dd>
 	<dt><dfn data-dfn-for="LanguageRecord" data-dfn-type="dfn" id="LanguageRecord-entry" data-idl="" data-title="entry" class="lint-ignore"><code>entry</code></dfn> member</dt>
-	<dd>A LanguageEntry containing the localized string value, plus any overriding metadata.</dd>
+	<dd>A <kbd>LanguageEntry</kbd> containing the localized string value, plus any overriding metadata.</dd>
 
 </dl>
 
@@ -1631,7 +1633,7 @@ dictionary LanguageEntry {
 	<dt><dfn data-dfn-for="LanguageEntry" data-dfn-type="dfn" id="LanguageEntry-value" data-idl="" data-title="value" class="lint-ignore"><code>value</code></dfn> member</dt>
 	<dd>The string containing the data value (localized text) of this field.</dd>
 	<dt><dfn data-dfn-for="LanguageEntry" data-dfn-type="dfn" id="LanguageEntry-lang" data-idl="" data-title="lang" class="lint-ignore"><code>lang</code></dfn> member</dt>
-	<dd>(Optional) A [[BCP47]] language tag that overrides or amends the key in a LanguageMap. The need for this field is rare.</dd>
+	<dd>(Optional) A [[BCP47]] language tag that overrides or amends the <kbd>lang</kbd> member in a <kbd>LanguageRecord</kbd> of a <kdb>LanguageMap</kdb>. This field is rarely used.</dd>
 	<dt><dfn data-dfn-for="LanguageEntry" data-dfn-type="dfn" id="LanguageEntry-dir" data-idl="" data-title="dir" class="lint-ignore"><code>dir</code></dfn> member</dt>
 	<dd>(Optional) TextDirection of the value.</dd>
 </dl>
