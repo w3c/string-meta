@@ -1439,6 +1439,10 @@ myDataString:          "978-0-123-4567-X"^^i18n:_ltr          // language-neutra
 	
 	<p>However, since this is not always possible, specifications sometimes allow multiple different language values to be returned for a given field. This might be to support runtime localization or because the <a>producer</a> has multiple different language values and cannot pre-select them appropriately.</p>
 	
+	<aside class="def" id="see-also-l10n">
+		<p>For more information on different approaches to localization, see <em>Common Approaches</em> in [[LOCALIZABLE-MANIFESTS]].</p>
+	</aside>
+	
 	<p>In these cases, localization of a content item is done by having the <a>producer</a> return multiple language representations for the item and letting the <a>consumer</a> choose the value to display. Such an approach is helpful when the <a>producer</a> cannot negotiate the language (such as when the resulting file is cached for multiple users) and when the number of languages is relatively small. Large collections of languages can result in overly large documents that are cumbersome to work with.</p>
 	
 	<p>One approach a specification might provide for returning multiple languages of a given field is called <dfn>language indexing</dfn>. In language indexing, a given field's value is map consisting of key-value pairs. The keys in the map are language tags. The values associated with each language tag are strings or, ideally, <a>LanguageEntry</a> objects. Here's an example of what a language indexed field <kbd>title</kbd> might look like:</p>
