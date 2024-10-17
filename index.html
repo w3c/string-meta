@@ -299,6 +299,10 @@
 		  <section id="language-maps">
 		  <h4>Language Maps</h4>
 		  
+		  <div class="req" id="bp-lang-maps">
+			  <p class="advisement">Use a language map to store multiple language versions of a single field inside of a document. For [WebIDL]-defined data structures, use <a href="#language-map-idl"><code>LanguageMap</code></a> to define the field.</p>
+		  </div>
+		  
 		  <p>The world is not monolingual. Having documents that contain only a single language would mean providing many iterations of the document, one for each language, in order to localize the content. This also might require language negotiation when requesting the content.</p>
 		  
 		  <p>One way to address this is to allow multilingual values for each <a>localizable text</a> field inside the document.</p>
@@ -1435,49 +1439,60 @@ myDataString:          "978-0-123-4567-X"^^i18n:_ltr          // language-neutra
 	
 	<p>However, since this is not always possible, specifications sometimes allow multiple different language values to be returned for a given field. This might be to support runtime localization or because the <a>producer</a> has multiple different language values and cannot pre-select them appropriately.</p>
 	
+	<aside class="def" id="see-also-l10n">
+		<p>For more information on different approaches to localization, see <em>Common Approaches</em> in [[LOCALIZABLE-MANIFESTS]].</p>
+	</aside>
+	
 	<p>In these cases, localization of a content item is done by having the <a>producer</a> return multiple language representations for the item and letting the <a>consumer</a> choose the value to display. Such an approach is helpful when the <a>producer</a> cannot negotiate the language (such as when the resulting file is cached for multiple users) and when the number of languages is relatively small. Large collections of languages can result in overly large documents that are cumbersome to work with.</p>
 	
-	<p>One approach a specification might provide for returning multiple languages of a given field is called <dfn>language indexing</dfn>. In language indexing, a given field's value is an array of key-value pairs. The keys in the array are language tags. The values of each language tag are strings or, ideally, <a>Localizable</a> objects. Here's an example of what a language indexed field <kbd>title</kbd> might look like:</p>
+	<p><dfn>Language indexing</dfn> is a strategy of using [=language tags=] to organize different language versions of a given field so that the most appropriate value can be selected by the [=consumer=]. Specifications can use data structures, such as {{LanguageMap}}, to provide multiple language versions for a given field. A given field's value is defined as a map. The keys in the map are [=language tags=]. The values associated with each language tag are strings or, ideally, {{LanguageEntry}} objects.</p>
 
-<aside class=example>
-<pre>
-	"title": [ "en": { "value": "Learning Web Design", "lang": "en" },
-	           "ar": { "value": "&#x0627;&#x0644;&#x062A;&#x0639;&#x0644;&#x0645; &#x0639;&#x0644;&#x0649; &#x0634;&#x0628;&#x0643;&#x0629; &#x0627;&#x0644;&#x0625;&#x0646;&#x062A;&#x0631;&#x0646;&#x062A; &#x0627;&#x0644;&#x062A;&#x0635;&#x0645;&#x064A;&#x0645;", "lang": "ar",  "dir": "rtl"}, 
-	           "ja": { "value": "Web&#x30C7;&#x30B6;&#x30A4;&#x30F3;&#x3092;&#x5B66;&#x3076;", "lang": "ja" },
-	           "zh-Hans": { "value": "&#x5B66;&#x4E60;&#x7F51;&#x9875;&#x8BBE;&#x8BA1;", "lang": "zh-Hans", "dir": "ltr"} ],
+<aside class=example title="Language Indexing for a field 'title'">
+	<p>Here's an example of what a language indexed field <kbd>title</kbd> might look like using a {{LanguageMap}}:</p>
+<pre class="json">
+"title": { 
+    "en": { "value": "Learning Web Design" },
+    "ar": { "value": "&#x0627;&#x0644;&#x062A;&#x0639;&#x0644;&#x0645; &#x0639;&#x0644;&#x0649; &#x0634;&#x0628;&#x0643;&#x0629; &#x0627;&#x0644;&#x0625;&#x0646;&#x062A;&#x0631;&#x0646;&#x062A; &#x0627;&#x0644;&#x062A;&#x0635;&#x0645;&#x064A;&#x0645;", "lang": "ar",  "dir": "rtl"}, 
+    "ja": { "value": "Web&#x30C7;&#x30B6;&#x30A4;&#x30F3;&#x3092;&#x5B66;&#x3076;", "lang": "ja" },
+    "zh-Hans": { "value": "&#x5B66;&#x4E60;&#x7F51;&#x9875;&#x8BBE;&#x8BA1;", "lang": "zh-Hans", "dir": "ltr"}
+},
 </pre>
 </aside>
 	
-<p>Using the language tag as a key to the value array allow for rapid selection of the correct value for a given request. Notice that, if the value of the language tag is a <a>Localizable</a>, the language might be repeated in the data structure.</p>
+<p>Using [=language tags=] as the keys to the values in the map allow for rapid selection of the correct value for a given request. Notice that, when the value associated with the language tag is a {{LanguageEntry}}, the language might be repeated (or overridden) in the value. This is not required, since the <a>LanguageTag</a> in the value is optional. (Don't include it unless it adds value.)</p>
 
-<p>For example, if the language requested were U.S. English (<kbd>en-US</kbd>), this format makes it easier to match and extract the best fitting title object <kbd>{"value": "Learning Web Design", "lang": "en"}</kbd>. An additional potential advantage is that the indexed language tag can indicate the intended audience of the value separately from the language tag of the actual data value. An example of this might be the use of <em>language ranges</em> from [[RFC4647]], as in the following example, where a more specific language value might be wrapped with a less-specific language tag. In this example, the content has been labeled with a specific language tag (<code class="kw" translate="no">de-DE</code>), but is available and applicable to users who speak other variants of German, such as <code class="kw" translate="no">de-CH</code> or <code class="kw" translate="no">de-AT</code>:</p>
+<p>For example, if the language requested were U.S. English (<code class="kw" translate="no">en-US</code>), this format makes it easier to match and extract the best fitting title object <code class="kw,json" translate="no">{"value": "Learning Web Design"}</code>. An additional potential advantage is that the indexed language tag can indicate the intended audience of the value separately from the language tag of the actual data value. An example of this might be the use of <a>language ranges</a> [[RFC4647]], as in the following example, where a more specific language value might be wrapped with a less-specific language tag. In this example, the content has been labeled with a specific language tag (<code class="kw" translate="no">de-DE</code>), but is available and applicable to users who speak other variants of German, such as <code class="kw" translate="no">de-CH</code> or <code class="kw" translate="no">de-AT</code>:</p>
 
 <aside class=example>
-<pre>
-"title": [ {
-   "de": {"value": "HTML und CSS verstehen", "language": "de-DE" },
-   ...
-],
+<pre class="json">
+"title": {
+    "de": {
+            "value": "HTML und CSS verstehen", 
+            "lang": "de-DE"  // the specific flavor of German
+          },
+},
 </pre>
 </aside>
 
 <p>A less common example would be when a system supplies a specific value in a different ("wrong") language from the indexing language tag, perhaps because the actual translated value is missing:</p>
 
 <aside class=example>
-<pre>
-"title": [ {
-   "de": {"value": "Understanding HTML and CSS", "language": "en-US" }, // German not available
-   ...
-],
+<pre class="json">
+"title": {
+    "de": { 
+            "value": "Understanding HTML and CSS", 
+            "lang": "en-US"  // German not available?
+          },
+},
 </pre>
 </aside>
 
 <p>The primary issue with this approach is the need to extract the indexing language tag from the content in order to generate the index. <a>Producers</a> might also need to have a <a>serialization agreement</a> with <a>consumers</a> about whether the indexing language tag will be in any way canonicalized. For example, the language tag <code class="kw" translate="no">cel-gaulish</code> is one of the [[BCP47]] grandfathered language tags. Some implementations, such as those following the rules in [[CLDR]], would prefer that this tag be replaced with a modern equivalent (<code class="kw" translate="no">xtg-x-cel-gaulish</code> in this case) for the purposes of language negotiation.</p>
 
-<p>[[JSON-LD]] defines a <a href="https://www.w3.org/TR/json-ld11/#language-indexing">specific implementation</a> of language indexing, which depends on the use of the <code class="kw" translate="no">@context</code> structure. This structure does not support the use of <a>Localizable</a> values (only strings or arrays of strings are supported), so changes would be needed to allow some of the above capabilities in [[JSON-LD]] documents.</p>
+<p>[[JSON-LD]] defines a <a href="https://www.w3.org/TR/json-ld11/#language-indexing">specific implementation</a> of language indexing, which depends on the use of the <code class="kw" translate="no">@context</code> structure. This structure does not support the use of <a>LanguageEntry</a> values (only strings or arrays of strings are supported), so changes would be needed to allow some of the above capabilities in [[JSON-LD]] documents.</p>
 
 <aside class=example title="JSON-LD Language Indexing">
-<pre>
+<pre class="json">
 {
   "@context": {
     "example": "http://example.com/example/",
@@ -1555,26 +1570,35 @@ myDataString:          "978-0-123-4567-X"^^i18n:_ltr          // language-neutra
 
 
 
+<section class="appendix" id="WebIDL">
+	
+<h2 id="webidl-definitions">WebIDL Definitions for Data Structures</h2>
 
-<section class="appendix" id="Localizable-String-Dictionary">
+<p id="Localizable-String-Dictionary">This section contains WebIDL definitions for various structures described in the main document above.</p>
 	
-<h2 id="use-the-localizable-data-structure">The Localizable WebIDL Dictionary</h2>
+	<p>To be effective, specification authors should consistently use the same formats and data structures so that the majority of data formats are interoperable (in other words, so that data can be copied between many formats without having to apply additional processing). We recommend adoption of <kbd>Localizable</kbd> for <a href="#single-linguistic-field">Single-Language Localizable</a> text fields and <kbd>LanguageMap</kbd> for <a href="#language-maps">Language Maps</a>.</p>
 	
-	<p>This section contains a WebIDL definition for a <code class="kw" translate="no">Localizable</code> dictionary.</p>
-	
-	<p>To be effective, specification authors should consistently use the same formats and data structures so that the majority of data formats are interoperable (in other words, so that data can be copied between many formats without having to apply additional processing). We recommend adoption of the Localizable WebIDL "dictionary" as the best available format for JSON-derived formats to do that.</p>
+    <p>By defining the language and direction in a WebIDL dictionary form, specifications can incorporate language and direction metadata for a given String value succinctly. Implementations can recyle the dictionary implementation straightforwardly.</p>
+    
+<h4 id="language-tag-typedef-idl"><code>LanguageTag</code> typedef</h4>
+<pre class="def idl" data-dfn-for="LanguageTag" data-link-for="LanguageTag">
+typedef DOMString LanguageTag;
+</pre>
+<dl>
+	<dt><dfn data-dfn-for="LanguageTag" data-dfn-type="dfn" id="LanguageTag" data-idl="" data-title="LanguageTag" class="lint-ignore"><code>LanguageTag</code> typedef</dfn></dt>
+	<dd>A {{DOMString}} containing a [=valid=] [[BCP47]] [=language tag=].</dd>
+</dl>
 
-<p>By defining the language and direction in a WebIDL dictionary form, specifications can incorporate language and direction metadata for a given String value succinctly. Implementations can recyle the dictionary implementation straightforwardly.</p>
-	
-	<aside class="example">
-<p><code><dfn id="Localizable">Localizable</dfn></code> dictionary</p>
-<pre class="def idl" data-dfn-for="Localizable" data-link-for="Localizable">
-<span class="idlDictionary" data-idl="" data-title="Localizable">dictionary <span class="idlDictionaryID"><code>Localizable</code></span> {
-    <span class="idlMember" id="idl-def-localizable-value" data-idl="" data-title="value" data-dfn-for="localizable"><span class="idlMemberType"><a href="https://www.w3.org/TR/WebIDL-1/#idl-DOMString">DOMString</a></span> <span class="idlMemberName"><a data-lt="value" href="#localizable-value" class="internalDFN" data-link-type="dfn" data-for="Localizable"><code>value</code></a></span>;</span>
-    <span class="idlMember" id="idl-def-localizable-lang" data-idl="" data-title="lang" data-dfn-for="localizable"><span class="idlMemberType"><a href="https://www.w3.org/TR/WebIDL-1/#idl-DOMString">DOMString</a></span> <span class="idlMemberName"><a data-lt="lang" href="#localizable-lang" class="internalDFN" data-link-type="dfn" data-for="Localizable"><code>lang</code></a></span>;</span>
-    <span class="idlMember" id="idl-def-localizable-dir" data-idl="" data-title="dir" data-dfn-for="localizable"><span class="idlMemberType"><a href="#textdirection" class="internalDFN" data-link-type="dfn"><code>TextDirection</code></a></span> <span class="idlMemberName"><a data-lt="dir" href="#localizable-dir" class="internalDFN" data-link-type="dfn" data-for="Localizable"><code>dir</code></a></span> = <span class="idlMemberValue">"auto"</span>;</span>
-};</span>
-</pre><dl>
+<h4 id="localizable-idl"><code><dfn id="Localizable">Localizable</dfn></code> dictionary</h4>
+
+<pre class="def idl" data-dfn-for="Localizable" data-link-for="Localizable" id="use-the-localizable-data-structure">
+dictionary Localizable {
+    DOMString value;
+    LanguageTag lang;
+    TextDirection dir = "auto";
+};
+</pre>
+<dl>
 	<dt><dfn data-dfn-for="localizable" data-dfn-type="dfn" id="localizable-value" data-idl="" data-title="value" class="lint-ignore">
 	
 	<code>value</code></dfn> member</dt>
@@ -1582,14 +1606,40 @@ myDataString:          "978-0-123-4567-X"^^i18n:_ltr          // language-neutra
 	<dt><dfn data-dfn-for="localizable" data-dfn-type="dfn" id="localizable-lang" data-idl="" data-title="lang" class="lint-ignore">
 	
 	<code>lang</code></dfn> member</dt>
-	<dd>A [[BCP47]] language tag that specifies the primary language for the values of the human-readable
+	<dd>A [[BCP47]] [=language tag=] that specifies the primary language for the values of the human-readable
 members of the inheriting dictionary.</dd>
 <dt><dfn data-dfn-for="localizable" data-dfn-type="dfn" id="localizable-dir" data-idl="" data-title="dir" class="lint-ignore"><code>
 dir</code></dfn> member</dt>
 <dd>Specifies the [=string direction=] for the human-readable members of an inheriting dictionary.</dd></dl>
-<div data-dfn-for="TextDirection" data-link-for="TextDirection" id="textdirection-enum" typeof="bibo:Chapter" resource="#textdirection-enum" property="bibo:hasPart">
-	<p id="h-textdirection-enum" resource="#h-textdirection-enum"><dfn data-dfn-for="" data-dfn-type="dfn" id="textdirection" data-idl="" data-title="TextDirection" class="lint-ignore">
-<code>TextDirection</code></dfn> enum</p>
+
+<h4 id="language-map-idl"><code>LanguageMap</code> typedef</h4>
+<pre class="def idl" data-dfn-for="LanguageMap" data-link-for="LanguageMap">
+typedef record&lt;DOMString,LanguageEntry&gt; LanguageMap;
+</pre>
+<dl>
+	<dt><dfn data-dfn-for="LanguageMap" data-dfn-type="dfn" id="LanguageMap" data-idl="" data-title="key" class="lint-ignore"><code>LanguageMap</code></dfn> record</dt>
+	<dd>A map whose keys are a <a>LanguageTag</a> and whose values are a <a>LanguageEntry</a> containing the localized string value associated with the key, plus any overriding metadata.</dd>
+</dl>
+
+<h4 id="language-entry-idl"><code>LanguageEntry</code> dictionary</h4>
+<pre class="def idl" data-dfn-for="LanguageEntry" data-link-for="LanguageEntry">
+dictionary LanguageEntry {
+    DOMString value;
+    LanguageTag? lang;   // Optional property for language tag
+    TextDirection? dir;  // Optional property for text direction
+};
+</pre>
+<dl>
+	<dt><dfn data-dfn-for="LanguageEntry" data-dfn-type="dfn" id="LanguageEntry-value" data-idl="" data-title="value" class="lint-ignore"><code>value</code></dfn> member</dt>
+	<dd>The string containing the data value (localized text) of this field.</dd>
+	<dt><dfn data-dfn-for="LanguageEntry" data-dfn-type="dfn" id="LanguageEntry-lang" data-idl="" data-title="lang" class="lint-ignore"><code>lang</code></dfn> member</dt>
+	<dd>(Optional) A {{LanguageTag}} that overrides or amends the <kbd translate="no">lang</kbd> member in a {{LanguageEntry}} of a {{LanguageMap}}. This field is rarely used.</dd>
+	<dt><dfn data-dfn-for="LanguageEntry" data-dfn-type="dfn" id="LanguageEntry-dir" data-idl="" data-title="dir" class="lint-ignore"><code>dir</code></dfn> member</dt>
+	<dd>(Optional) {{TextDirection}} of the value.</dd>
+</dl>
+
+
+<h4 id="text-direction-idl"><code>TextDirection</code></dfn> enum</h4>
 <pre class="def idl">
 <span class="idlEnum" id="idl-def-textdirection" data-idl="" data-title="TextDirection">enum <span class="idlEnumID"><a data-lt="TextDirection" href="#textdirection" class="internalDFN" data-link-type="dfn" data-for=""><code>TextDirection</code></a></span> {    
     <a href="#textdirection-auto" class="idlEnumItem">"auto"</a>,
@@ -1605,7 +1655,6 @@ dir</code></dfn> member</dt>
 <dt><dfn data-dfn-for="textdirection" data-dfn-type="dfn" id="textdirection-rtl" data-idl="" data-title="rtl" class="lint-ignore">
 	<code>rtl</code></dfn></dt><dd>Right-to-left text.</dd></dl>
 </div>
-</aside>
 
 </section>
 
@@ -1620,6 +1669,7 @@ the following contributors to this document:
     David Baron,
     Ivan Herman,
     Tobie Langel,
+    Emil Lundberg,
     Sangwhan Moon,
     Felix Sasaki, 
     Najib Tounsi, 
