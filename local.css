@@ -60,7 +60,7 @@ p.cjk-demo {
 .reqex::before {
     content: "\1f44d \00A0 Req. #: ";
     font-style: normal;
-    color: #63F;;
+    color: #63F;
 }
 
 kbd {
