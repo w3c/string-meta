@@ -1579,7 +1579,8 @@ myDataString:          "978-0-123-4567-X"^^i18n:_ltr          // language-neutra
 <p>Language metadata (consisting of [=language tags=]) are typically limited to a subset of ASCII. Implementations SHOULD check if the values are [=well-formed=] and possibly for length (see section 4.4 of [[RFC5646]], part of [[BCP47]] for more information) before using or applying these values.</p>
 <p>Apply escaping and access-control rules to localizable resources just as you do for other untrusted content.</p>
 
-<p>Incorrect or malicious direction metadata, or bidirectional control characters embedded in a string, can cause text to be displayed in a misleading order. This can obscure or spoof identifiers, URLs, filenames, and other text.</p>
+<p>Incorrect (including abusive use of intentionally incorrect) direction metadata can cause strings to be displayed with incorrect visual ordering, potentially misleading the user.</p>
+<p>Incorrect or malicious use of Unicode bidirectional formatting characters can be used to obscure or spoof the display of strings, including in identifiers, URLs, filenames, and other text. Detailed information on the perils and appropriately handling of these can be found in [[[UTS55]]].</p>
 </section>
 
 
