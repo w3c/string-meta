@@ -1587,7 +1587,13 @@ myDataString:          "978-0-123-4567-X"^^i18n:_ltr          // language-neutra
 <section id="privacy-considerations">
 <h2>Privacy Considerations</h2>
 
-<p>Language tags might reveal or support inferences about a person's locale, which can also contribute to fingerprinting.</p>
+<p>A user's language preferences can reveal information about the user. Users' language preferences might be used to fingerprint users. To the extent that content which contains language metadata represents potentially negotiated language information, language metadata for a given string might be used to fingerprint users.</p>
+
+<p>In particular, injection of non-standard values into a <a>language tag</a>, such as the addition of a non-standard suffix, could be used by a malicious entity to establish tracking of the user or their use of data in ways that the normal language information on its own might not enable.</p>
+
+<aside class="example" title="Non-standard language tag suffix used for tracking">
+<p>For example, a language tag such as <code>en-x-unique-subtag-sequence-12345</code> contains a private-use subtag that could serve as a unique identifier for tracking a specific user.</p>
+</aside>
 </section>
 
 
