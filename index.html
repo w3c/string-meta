@@ -1574,7 +1574,10 @@ myDataString:          "978-0-123-4567-X"^^i18n:_ltr          // language-neutra
 <section id="security-considerations">
 <h2>Security Considerations</h2>
 
-<p>Language and direction metadata is untrusted input when it originates outside an implementation's trust boundary. They should validate language tags and direction values before use and apply the same escaping and access-control rules to localizable strings that they apply to other untrusted content.</p>
+<p>Language and direction metadata are untrusted inputs when they originate outside an implementation's trust boundary.</p>
+<p>Direction metadata values SHOULD be limited to prescribed values and validated before use.</p>
+<p>Language metadata (consisting of [=language tags=]) are typically limited to a subset of ASCII. Implementations SHOULD check if the values are [=well-formed=] and possibly for length (see section 4.4 of [[RFC5646]], part of [[BCP47]] for more information) before using or applying these values.</p>
+<p>Apply escaping and access-control rules to localizable resources just as you do for other untrusted content.</p>
 
 <p>Incorrect or malicious direction metadata, or bidirectional control characters embedded in a string, can cause text to be displayed in a misleading order. This can obscure or spoof identifiers, URLs, filenames, and other text.</p>
 </section>
