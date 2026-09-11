@@ -222,14 +222,24 @@
               <p class="advisement">Use field-based metadata or string datatypes to indicate the language and the <a>string direction</a> for individual <a>localizable text</a> values.</p>
            </div>
 
-		  <p>For <a>localizable text</a> fields that appear in a single language, use a data structure to represent the value. The recommended representation is an object with three fields. The field <code>value</code> contains the actual string. The field <code>lang</code> contains a <a>valid</a> [[BCP47]] language tag. The field <code>dir</code> contains the string's <a>string direction</a> (one of the values <code>ltr</code>, <code>rtl</code>, and <code>auto</code>).</p>
-		  
+		  <p>For <a>localizable text</a> fields that appear in a single language,
+		  use a data structure to represent the value.</p>
+
+		  <p>The RECOMMENDED representation (based on the [[JSON-LD 1.1]]
+		  specification) is an object with three fields. The field
+		  <code>@value</code> contains the actual string. The field
+		  <code>@language</code> contains a <a>valid</a> [[BCP47]] language tag. The
+		  field <code>@direction</code> contains the string's <a>string
+		  direction</a> (one of the values <code>ltr</code>, <code>rtl</code>, and
+		  <code>auto</code>). Note: no other values may appear within the "language
+		  value object".</p>
+
 		  <aside class="example" title="Example of a localizable text field">
 		  <pre class="json" id="localizable-text-field">
 "field-name-goes-here": {
-    "value": "This is the string value",
-    "lang": "en-US",
-    "dir": "ltr"
+    "@value": "This is the string value",
+    "@language": "en-US",
+    "@direction": "ltr"
 }
 		  </pre>
 		  </aside>
