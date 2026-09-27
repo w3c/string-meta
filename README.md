@@ -4,7 +4,8 @@ How to add direction and language metadata to strings.
 
 ### Documents
 - [Editor's copy](https://w3c.github.io/string-meta/)
-- [Draft Note](https://www.w3.org/TR/string-meta/)
+- [Working Draft](https://www.w3.org/TR/string-meta/)
+- [Explainer](https://github.com/w3c/i18n-discuss/blob/gh-pages/explainers/string-meta-explainer.md)
 
 ### Feedback
 Please use the [GitHub issue list](https://github.com/w3c/string-meta/issues) to send feedback about this document.
