@@ -4,25 +4,34 @@
 
 .unicode:link {
 	color: #FF0000;
+	color: light-dark(#FF0000, #ff7b7b);
 	background-color: #FFFFFF;
+	background-color: light-dark(#FFFFFF, transparent);
 }
 
 .unicode:visited {
 	color: #808080;
+	color: light-dark(#808080, #b0b0b0);
 	background-color: #FFFFFF;
+	background-color: light-dark(#FFFFFF, transparent);
 }
 
 .unicode:active {
 	color: #0000FF;
+	color: light-dark(#0000FF, #99ccff);
 	background-color: #FFFFFF;
+	background-color: light-dark(#FFFFFF, transparent);
 }
 
 em.unicode {
 	font-style: normal;
 }
 
-ins {
+/* W3C-ED imports base.css after local.css, so use a slightly more specific
+ * selector to keep this override. */
+body ins {
 	background-color: #FF6;
+	background-color: light-dark(#FF6, #2d2d00);
 }
 
 p.cjk-demo {
@@ -47,6 +56,7 @@ p.cjk-demo {
 	border: 0;
 	font-size: 80%;
 	color: #999;
+	color: light-dark(#999, #aaa);
 	}
 
 
@@ -54,6 +64,7 @@ p.cjk-demo {
 
 .reqex {
     background-color: #FFC;
+    background-color: light-dark(#FFC, #333300);
     font-style: italic;
 }
 
@@ -61,12 +72,14 @@ p.cjk-demo {
     content: "\1f44d \00A0 Req. #: ";
     font-style: normal;
     color: #63F;
+    color: light-dark(#63F, #b9a6ff);
 }
 
 kbd {
    font-family: Menlo, Consolas, "DejaVu Sans Mono", Monaco, monospace;
    font-size: .95em;
    color: blue;
+   color: light-dark(blue, #99ccff);
    break-inside: avoid;
    hyphens: none;
    text-transform: none;
@@ -78,6 +91,7 @@ kbd {
 .summary {
     padding: 1em;
     background-color: antiquewhite;
+    background-color: light-dark(antiquewhite, #2a2723);
 }
 
 a.self {
@@ -87,16 +101,19 @@ a.self {
     transition: opacity 0.2s ease 0s;
     opacity: 0.5;
 	color: #999;
+	color: light-dark(#999, #aaa);
 	text-decoration: none;
 	display: inline;
 }
 
 a.self:visited {
 	color: #999;
+	color: light-dark(#999, #aaa);
 }
 
 a.self:hover {
 	color: red;
+	color: light-dark(red, #ff6666);
 }
 
 .self::after {
@@ -113,10 +130,15 @@ a.self:hover {
 .definition {
     position: relative;
     background-color: #efefef;
+    background-color: light-dark(#efefef, #202020);
+    color: #000;
+    color: light-dark(#000, #ddd);
     padding: 0.5em;
     border: 0.5em;
     border-left: 6pt solid green;
+    border-left-color: light-dark(green, #52e052);
     border-right: 6pt solid green;
+    border-right-color: light-dark(green, #52e052);
     margin: 1em auto;
 }
 
@@ -126,10 +148,15 @@ a.self:hover {
      */
     position: relative;
     background-color: #efefef;
+    background-color: light-dark(#efefef, #202020);
+    color: #000;
+    color: light-dark(#000, #ddd);
     padding: 0.5em;
     border: 0.5em;
     border-left: 6pt solid green;
+    border-left-color: light-dark(green, #52e052);
     border-right: 6pt solid green;
+    border-right-color: light-dark(green, #52e052);
     margin: 1em auto;
 }
 
@@ -139,7 +166,8 @@ a.self:hover {
      * the counter
      */
     position: relative;
-    background: #FBE9E9;
+    background-color: #FBE9E9;
+    background-color: light-dark(#FBE9E9, #2a1515);
     padding: 0.5em;
     border: 0.5em;
     border-left: 6pt solid #E05252;
